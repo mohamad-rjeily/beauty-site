@@ -84,6 +84,7 @@ npm run generate:types                       # refreshes src/payload-types.ts
 | `npm run lint`               | ESLint                                                   |
 | `npm run generate:types`     | Regenerates `src/payload-types.ts` from the config       |
 | `npm run generate:importmap` | Regenerates the admin import map after adding admin components |
+| `npm run verify:rules`       | Checks the booking and order rules against the database, then deletes its test data |
 
 ## Where things live
 
@@ -93,20 +94,35 @@ src/
   collections/           services, gallery, products, categories, bookings, orders,
                          testimonials, faq, media, users
   globals/               site-settings (brand name, WhatsApp, links), availability (hours)
-  hooks/bookings/        booking rules (working hours, notice, buffer, no overlaps)
-  hooks/orders/          server-side pricing, atomic stock changes
+  hooks/bookings/        booking rules (two modes, working hours, notice, break, no overlaps)
+  hooks/orders/          server-side pricing, atomic stock changes, delivered is final
+  hooks/products/        atomic "adjust stock by"
+  components/admin/      dollars input and column, cash-only note
+  access/                who may do what; isAdminRequest (admin exemptions)
   fields/                shared fields: money (cents + currency), phone, slug
   lib/                   time zone (Asia/Beirut), phone validation, transaction helper
-  migrations/            database migrations
+  migrations/            database migrations (booking_constraints is hand-written)
+scripts/
+  verify-rules.ts        rule checks against the database (npm run verify:rules)
 ```
 
 ## Business rules enforced on the server
 
 - **No double bookings.** A database exclusion constraint rejects overlapping non-cancelled
-  bookings, including the break after each appointment. The booking hook also checks working
-  hours, closed dates, start-time steps, minimum notice and how far ahead customers may book.
-- **Order prices** are recalculated from the products table when an order is created.
-  Prices sent by a client are ignored.
-- **Stock** goes down only when an order is confirmed, with an atomic conditional update,
-  and comes back when a confirmed order is cancelled.
+  bookings that have times, including the break after each appointment. Request bookings
+  without a time are ignored by it.
+- **Two booking modes.** `slot` bookings get their end time from the service duration.
+  `request` bookings (bridal, events) have no time until the owner confirms them and enters
+  the start and end herself.
+- **Website vs admin.** Bookings from the website (no logged-in user) must respect minimum
+  notice, the days-ahead window, working hours, the start-time step and closed dates.
+  Logged-in admins are exempt from those, never from no-overlap or the break.
+- **Orders via WhatsApp, cash only.** Prices are recalculated from the products table when
+  an order is created, and public orders always start as `new`. Delivery or pickup; the
+  address is required for delivery only.
+- **Stock** goes down only when an order is confirmed (atomic conditional update) and comes
+  back when a confirmed order is cancelled. Delivered orders are final. Stock is changed by
+  hand only through "Adjust stock by", which also stops an open form from overwriting it.
 - **Customer data** (bookings, orders, users) is readable only by logged-in admins.
+
+Run `npm run verify:rules` after changing any of these rules.

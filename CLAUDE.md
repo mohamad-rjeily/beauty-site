@@ -8,7 +8,7 @@ Business name is not decided yet: use the placeholder `[BRAND_NAME]` everywhere 
 Goals, in order of importance:
 1. Build trust (real work, real results, clear prices, easy contact).
 2. Make booking an appointment effortless on mobile.
-3. Let customers order products (cash on delivery / pay in person, NO online payment).
+3. Let customers order products through WhatsApp (cash only, in USD; delivery or pickup; NO online payment).
 4. Let the owner manage everything herself from an admin panel, without code.
 
 ## Stack (do not change without asking)
@@ -30,29 +30,38 @@ Goals, in order of importance:
 - Dates/times are stored in UTC and displayed in `Asia/Beirut`.
 
 ## Data model (Payload collections)
-- `services`: name, category (makeup / skincare), description, price, duration (minutes), images, active, sort order
+- `services`: name, category (makeup / skincare), description, price, duration (minutes), booking mode (`slot` / `request`), images, active, sort order
 - `gallery`: title, category, before image, after image (optional), service relation, featured flag
 - `products`: name, slug, category, brand, description, price, images, stock, active, type (`brand` / `homemade` / `fashion`)
   - homemade masks ALSO require: ingredients, made-on date, expiry date, storage instructions, usage instructions, patch-test note (shown on the product page)
   - fashion items (phase 2): variants (size, color) with per-variant stock
 - `categories`: for products
-- `availability` (global): weekly working hours + blocked dates/holidays + slot interval
-- `bookings`: customer name, phone, service, start time, end time, status (`pending` / `confirmed` / `cancelled` / `completed`), notes
-- `orders`: customer name, phone, address, area, items (snapshot of name + price at order time), total, payment method (`cod` / `in_person`), status (`new` / `confirmed` / `delivered` / `cancelled`)
+- `availability` (global): weekly working hours + blocked dates/holidays + slot interval + break between appointments (minutes) + minimum notice (hours) + how many days ahead customers can book
+- `bookings`: customer name, phone, service, mode (copied from the service), start time, end time, status (`pending` / `confirmed` / `cancelled` / `completed`), notes
+  - request bookings ALSO have: requested date, location type (`studio` / `onLocation`), on-location address, number of people, wants a trial
+- `orders`: customer name, phone, fulfillment (`delivery` / `pickup`), address + area (delivery only), items (snapshot of name + price at order time), total, status (`new` / `confirmed` / `delivered` / `cancelled`). No payment field: payment is always cash, in USD.
 - `testimonials`, `faq`: simple content collections
 - `site-settings` (global): brand name, WhatsApp number, Instagram URL, location text, map link, announcement bar
 
 ## Business rules (must never be broken)
-- NO double bookings: two non-cancelled bookings may never overlap. Enforce in the database/transaction, not only in the UI.
-- New bookings start as `pending`; only the owner confirms or cancels.
-- A booking slot must fit fully inside working hours and not touch a blocked date.
+- NO double bookings: two non-cancelled bookings that have times may never overlap, including the break after each appointment. Enforced by a database exclusion constraint (bookings without a start time are ignored), not only in the UI.
+- Two booking modes, set per service:
+  - `slot`: the customer picks an exact time; the end time is calculated from the service duration.
+  - `request` (bridal, events, occasions): the customer sends a requested date and details, with no time. The owner enters the start AND end time herself when she confirms; from then on it blocks the calendar like any booking.
+  - A booking's mode never changes: switching it to a service with the other mode is refused (cancel and create a new booking).
+- New bookings start as `pending`; only the owner confirms or cancels. A request can't be confirmed without start and end times.
+- Website bookings must respect minimum notice, the days-ahead window, working hours, the start-time step and closed dates. Logged-in admins (`req.user`) are exempt from those, never from no-overlap or the break. Public booking code must call the Local API WITHOUT a user so it always gets the full rules.
 - Order totals are recalculated on the server from current product prices; never trust prices sent by the client.
-- Stock decreases only when an order is confirmed; out-of-stock products cannot be ordered.
+- Orders created by the public checkout always start as `new`.
+- Stock decreases only when an order is confirmed (atomic conditional update), and comes back when a confirmed order is cancelled; out-of-stock products cannot be ordered. Stock is never edited directly: use the product's "adjust stock by" field.
+- Delivered orders are final: no status change away from `delivered`. Returns are handled by adjusting stock manually.
+- Prices are shown and typed in dollars in the admin (25.00) but stored as integer cents.
 - Customer data (names, phones, addresses) is private: never logged, never exposed in public API responses.
 
 ## WhatsApp
 - Floating WhatsApp button on every page (wa.me link with a pre-filled message). Number comes from `site-settings`.
-- After checkout or booking request, offer "Send on WhatsApp" with a pre-filled summary of the order/booking.
+- Orders are placed through WhatsApp: the checkout saves the order in the admin (status `new`) AND opens WhatsApp with a pre-filled order summary to the owner.
+- After a booking request, offer "Send on WhatsApp" with a pre-filled summary of the booking.
 - No WhatsApp Business API for now.
 
 ## Languages
@@ -103,6 +112,6 @@ Goals, in order of importance:
 2. Project setup: Next.js + Payload + Postgres, all collections, admin working
 3. Public site: home, services, gallery, about, contact, WhatsApp button
 4. Booking system with calendar and admin confirm/cancel
-5. Shop: products, cart, cash-on-delivery checkout, order notifications
+5. Shop: products, cart, WhatsApp checkout (saved order + pre-filled WhatsApp message), order notifications
 6. Deploy, domain, owner training
 7. Later: fashion items with sizes/colors, booking reminders, more languages
