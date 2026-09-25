@@ -2,7 +2,12 @@ import type { Metadata, Viewport } from 'next'
 import { notFound } from 'next/navigation'
 import type { ReactNode } from 'react'
 
-import { AnnouncementBar, Footer, StickyActions } from '@/components/layout/SiteChrome'
+import {
+  AnnouncementBar,
+  CompactHeader,
+  Footer,
+  StickyActions,
+} from '@/components/layout/SiteChrome'
 import { getDictionary } from '@/i18n'
 import { direction, isLocale, locales } from '@/i18n/config'
 import { getSiteChrome } from '@/lib/cms/site'
@@ -64,6 +69,7 @@ export default async function SiteLayout({
           {t.skipToContent}
         </a>
         <AnnouncementBar settings={settings} />
+        <CompactHeader settings={settings} locale={lang} t={t} />
         <main id="main">{children}</main>
         <Footer settings={settings} home={home} locale={lang} t={t} />
         <StickyActions settings={settings} locale={lang} t={t} />

@@ -43,7 +43,7 @@ export function ServicesShowcase({
         <span />
       </Reveal>
 
-      <div className={`${container} relative grid gap-8 py-16 lg:grid-cols-12 lg:gap-10 lg:py-28`}>
+      <div className={`${container} relative grid gap-8 py-16 lg:grid-cols-12 lg:gap-10 lg:py-21`}>
         <SectionHeading id="services-title" className="lg:col-span-4 lg:self-start lg:pt-4">
           <Emphasis text={heading} />
         </SectionHeading>
@@ -97,8 +97,17 @@ function ServiceCard({
   const label = t.categories[group.category]
   const href = bookingHref({ locale, whatsappNumber, subject: label })
 
+  // With a destination, the whole card is the Book link: the link's ::after stretches over the
+  // card. Hover lifts it 4px while a deeper shadow fades in (opacity on a pseudo-element, so
+  // only transform and opacity animate); a press scales it down a touch.
+  const interactive = href
+    ? 'isolate cursor-pointer transition-[translate,scale] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] before:absolute before:inset-0 before:-z-10 before:rounded-card before:opacity-0 before:shadow-[0_2px_4px_rgb(60_22_8/0.22),0_16px_32px_rgb(60_22_8/0.26),0_40px_72px_rgb(60_22_8/0.2)] before:transition-opacity before:duration-300 hover:-translate-y-1 hover:before:opacity-100 active:scale-[0.98] active:duration-[140ms] motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100'
+    : ''
+
   return (
-    <article className="flex gap-3.5 rounded-card bg-paper p-2.5 text-ink shadow-on-clay">
+    <article
+      className={`relative flex gap-3.5 rounded-card bg-paper p-2.5 text-ink shadow-on-clay ${interactive}`}
+    >
       <Picture
         photo={group.photo}
         hint={t.photoHints[group.category]}
@@ -126,7 +135,7 @@ function ServiceCard({
           <a
             href={href}
             {...externalLinkProps}
-            className="mt-auto inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-clay no-underline hover:text-clay-deep"
+            className="mt-auto inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-clay no-underline after:absolute after:inset-0 after:rounded-card hover:text-clay-deep"
           >
             {format(t.bookCategory, { category: label.toLowerCase() })}{' '}
             <Icon name="arrow" size={16} />

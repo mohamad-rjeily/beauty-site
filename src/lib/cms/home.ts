@@ -76,6 +76,9 @@ export type HomeData = {
   hours: HoursLine[]
 }
 
+/** How many products the home carousel shows. */
+const HOME_PRODUCTS = 8
+
 /** Mon–Sun order for display; Payload stores the weekday keys. */
 const DISPLAY_ORDER: Weekday[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
@@ -134,7 +137,7 @@ export const getHomeData = async (locale: Locale): Promise<HomeData> => {
       where: { and: [{ active: { equals: true } }, { featuredOnHome: { equals: true } }] },
       sort: '-updatedAt',
       depth: 1,
-      limit: 8,
+      limit: HOME_PRODUCTS,
       ...common,
     }),
     payload.find({
@@ -147,19 +150,30 @@ export const getHomeData = async (locale: Locale): Promise<HomeData> => {
     }),
   ])
 
-  // No featured products yet: fall back to the newest active ones.
-  const productDocs = featured.docs.length
-    ? featured.docs
-    : (
-        await payload.find({
-          collection: 'products',
-          where: { active: { equals: true } },
-          sort: '-createdAt',
-          depth: 1,
-          limit: 8,
-          ...common,
-        })
-      ).docs
+  // Featured products first, then the newest active ones fill the carousel up to eight.
+  const productDocs =
+    featured.docs.length >= HOME_PRODUCTS
+      ? featured.docs
+      : [
+          ...featured.docs,
+          ...(
+            await payload.find({
+              collection: 'products',
+              where: {
+                and: [
+                  { active: { equals: true } },
+                  ...(featured.docs.length
+                    ? [{ id: { not_in: featured.docs.map((p) => p.id) } }]
+                    : []),
+                ],
+              },
+              sort: '-createdAt',
+              depth: 1,
+              limit: HOME_PRODUCTS - featured.docs.length,
+              ...common,
+            })
+          ).docs,
+        ]
 
   return {
     home,

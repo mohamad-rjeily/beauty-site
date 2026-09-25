@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import { HideOnScrollDown } from '@/components/motion/HideOnScrollDown'
 import { IdleFlag } from '@/components/motion/IdleFlag'
+import { ShowOnScrollUp } from '@/components/motion/ShowOnScrollUp'
 import { ArchMark, Icon } from '@/components/ui/Icon'
 import { PillLink } from '@/components/ui/Pill'
 import { format, type Dictionary } from '@/i18n'
@@ -24,6 +25,74 @@ export function AnnouncementBar({ settings }: { settings: SiteSetting }) {
         inner
       )}
     </div>
+  )
+}
+
+/**
+ * Slim header that slides in on scroll up once the visitor is past the hero, and hides on
+ * scroll down: brand, language switch, Book and the menu, on paper with a soft shadow.
+ */
+export function CompactHeader({
+  settings,
+  locale,
+  t,
+}: {
+  settings: SiteSetting
+  locale: Locale
+  t: Dictionary
+}) {
+  const otherLocale = locale === 'en' ? 'ar' : 'en'
+  const book = bookingHref({ locale, whatsappNumber: settings.whatsappNumber })
+
+  return (
+    <ShowOnScrollUp className="fixed inset-x-0 top-0 z-50">
+      <header className="bg-paper shadow-soft">
+        <div className="mx-auto flex h-14 w-full max-w-[75rem] items-center justify-between gap-3 ps-6 pe-3 lg:ps-10 lg:pe-8">
+          <Link
+            href={`/${locale}`}
+            className="truncate font-display text-[1.1875rem] text-ink no-underline"
+          >
+            {settings.brandName}
+          </Link>
+          <nav className="flex shrink-0 items-center gap-1">
+            <Link
+              href={`/${otherLocale}`}
+              hrefLang={otherLocale}
+              lang={otherLocale}
+              aria-label={t.switchLanguageLabel}
+              className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-ink no-underline hover:bg-sand"
+            >
+              {t.switchLanguage}
+            </Link>
+            {book && (
+              <PillLink href={book} external className="min-h-11 px-4 text-sm">
+                {t.book}
+              </PillLink>
+            )}
+            <details className="relative">
+              <summary
+                aria-label={t.menu}
+                className="flex size-11 cursor-pointer list-none items-center justify-center rounded-full text-ink hover:bg-sand [&::-webkit-details-marker]:hidden"
+              >
+                <Icon name="menu" size={22} />
+              </summary>
+              <ul className="absolute end-0 top-full z-30 m-0 mt-2 flex min-w-44 list-none flex-col rounded-card bg-paper p-2 text-ink shadow-lift">
+                {(['services', 'shop', 'visit'] as const).map((key) => (
+                  <li key={key}>
+                    <Link
+                      href={`/${locale}#${key}`}
+                      className="flex min-h-11 items-center rounded-lg px-3 text-[0.9375rem] font-semibold text-ink no-underline hover:bg-sand"
+                    >
+                      {t.footerLinks[key]}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </nav>
+        </div>
+      </header>
+    </ShowOnScrollUp>
   )
 }
 

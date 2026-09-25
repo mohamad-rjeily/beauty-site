@@ -27,11 +27,11 @@ export function Intro({
   return (
     <section aria-labelledby="intro-title" className="grain relative bg-limestone">
       <div
-        className={`${container} relative grid gap-y-5 pt-12 pb-16 lg:grid-cols-12 lg:gap-x-10 lg:pt-24 lg:pb-28`}
+        className={`${container} relative grid gap-y-5 pt-12 pb-16 lg:grid-cols-12 lg:gap-x-10 lg:pt-18 lg:pb-21`}
       >
         <Reveal
           variant="riseFar"
-          className="absolute end-6 -top-14 z-10 w-[9.375rem] lg:static lg:order-2 lg:col-span-5 lg:col-start-8 lg:-mt-40 lg:w-full lg:max-w-[24rem] lg:justify-self-end"
+          className="absolute end-6 -top-8 z-10 w-[9.375rem] lg:static lg:order-2 lg:col-span-5 lg:col-start-8 lg:-mt-26 lg:w-full lg:max-w-[24rem] lg:justify-self-end"
         >
           <div className="overflow-hidden rounded-t-full rounded-b-lg border-4 border-paper shadow-lift">
             <Picture

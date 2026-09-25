@@ -39,6 +39,10 @@ export const ar: Dictionary = {
   outOfStock: 'غير متوفر حالياً',
   shopSoon: 'المتجر يفتح قريباً.',
 
+  previousProduct: 'المنتج السابق',
+  nextProduct: 'المنتج التالي',
+  productOf: 'المنتج {n} من {total}',
+
   previousReview: 'الرأي السابق',
   nextReview: 'الرأي التالي',
   reviewOf: 'الرأي {n} من {total}',

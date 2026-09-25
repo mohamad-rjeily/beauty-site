@@ -24,7 +24,7 @@ export function Reviews({
   return (
     <section aria-labelledby="reviews-title" className="grain bg-sand">
       <div
-        className={`${container} grid gap-6 pt-16 pb-28 lg:grid-cols-12 lg:gap-10 lg:pt-28 lg:pb-40`}
+        className={`${container} grid gap-6 pt-16 pb-28 lg:grid-cols-12 lg:gap-10 lg:pt-21 lg:pb-30`}
       >
         <SectionHeading id="reviews-title" className="lg:col-span-5">
           <Emphasis text={heading} />

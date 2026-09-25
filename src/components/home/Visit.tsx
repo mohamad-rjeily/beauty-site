@@ -34,8 +34,8 @@ export function Visit({
 
   return (
     <section aria-labelledby="visit-title" id="visit" className="grain relative bg-limestone">
-      <div className={`${container} grid gap-6 pb-16 lg:grid-cols-12 lg:gap-10 lg:pb-28`}>
-        <div className="relative z-10 -mt-[4.375rem] grid grid-cols-3 items-end gap-2 lg:col-span-7 lg:-mt-28 lg:gap-3">
+      <div className={`${container} grid gap-6 pb-16 lg:grid-cols-12 lg:gap-10 lg:pb-21`}>
+        <div className="relative z-10 -mt-[4.375rem] grid grid-cols-3 items-end gap-2 lg:col-span-7 lg:-mt-21 lg:gap-3">
           {studio.map((photo, i) => (
             <Reveal key={i} variant="riseFar" delay={i === 1 ? 0 : 0.1}>
               <div

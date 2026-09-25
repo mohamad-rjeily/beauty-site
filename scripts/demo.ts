@@ -251,20 +251,27 @@ const seed = async () => {
     save(state)
   }
 
-  // Product category + products (brand and homemade; two featured on home)
-  const category = await payload.create({
-    collection: 'categories',
-    locale: 'en',
-    data: { name: 'DEMO Skincare', slug: 'demo-skincare' },
-  })
-  await payload.update({
-    collection: 'categories',
-    id: category.id,
-    locale: 'ar',
-    data: { name: 'DEMO العناية بالبشرة' },
-  })
-  state.created.categories.push(category.id)
-  save(state)
+  // Product categories + eight products (brand and homemade; three featured on home)
+  const categories: Record<'skincare' | 'makeup', number> = { skincare: 0, makeup: 0 }
+  for (const c of [
+    { key: 'skincare', en: 'DEMO Skincare', ar: 'DEMO العناية بالبشرة' },
+    { key: 'makeup', en: 'DEMO Makeup', ar: 'DEMO مكياج' },
+  ] as const) {
+    const doc = await payload.create({
+      collection: 'categories',
+      locale: 'en',
+      data: { name: c.en, slug: `demo-${c.key}` },
+    })
+    await payload.update({
+      collection: 'categories',
+      id: doc.id,
+      locale: 'ar',
+      data: { name: c.ar },
+    })
+    categories[c.key] = doc.id
+    state.created.categories.push(doc.id)
+    save(state)
+  }
 
   const today = new Date()
   const inDays = (days: number) => new Date(today.getTime() + days * 86_400_000).toISOString()
@@ -273,6 +280,7 @@ const seed = async () => {
       en: 'DEMO Rose clay mask',
       ar: 'DEMO ماسك الطين الوردي',
       type: 'homemade',
+      category: 'skincare',
       amount: 1800,
       stock: 6,
       featured: true,
@@ -282,6 +290,7 @@ const seed = async () => {
       en: 'DEMO Hydrating serum',
       ar: 'DEMO سيروم مرطّب',
       type: 'brand',
+      category: 'skincare',
       amount: 3500,
       stock: 4,
       featured: true,
@@ -291,6 +300,7 @@ const seed = async () => {
       en: 'DEMO Oat & honey mask',
       ar: 'DEMO ماسك الشوفان والعسل',
       type: 'homemade',
+      category: 'skincare',
       amount: 1500,
       stock: 3,
       featured: false,
@@ -300,6 +310,7 @@ const seed = async () => {
       en: 'DEMO Lip tint',
       ar: 'DEMO صبغة شفاه',
       type: 'brand',
+      category: 'makeup',
       amount: 2200,
       stock: 0,
       featured: false,
@@ -309,19 +320,41 @@ const seed = async () => {
       en: 'DEMO Cleansing balm',
       ar: 'DEMO بلسم منظّف',
       type: 'brand',
+      category: 'skincare',
       amount: 2800,
       stock: 8,
-      featured: false,
+      featured: true,
       palette: 'sand',
     },
     {
       en: 'DEMO Green tea mask',
       ar: 'DEMO ماسك الشاي الأخضر',
       type: 'homemade',
+      category: 'skincare',
       amount: 1600,
       stock: 5,
       featured: false,
       palette: 'sage',
+    },
+    {
+      en: 'DEMO Brow gel',
+      ar: 'DEMO جل الحواجب',
+      type: 'brand',
+      category: 'makeup',
+      amount: 1900,
+      stock: 7,
+      featured: false,
+      palette: 'sand',
+    },
+    {
+      en: 'DEMO Turmeric glow mask',
+      ar: 'DEMO ماسك الكركم للنضارة',
+      type: 'homemade',
+      category: 'skincare',
+      amount: 1700,
+      stock: 4,
+      featured: false,
+      palette: 'clay',
     },
   ] as const
   for (const p of products) {
@@ -352,7 +385,7 @@ const seed = async () => {
       data: {
         name: p.en,
         type: p.type,
-        category: category.id,
+        category: categories[p.category],
         price: money(p.amount),
         images: [image],
         active: true,

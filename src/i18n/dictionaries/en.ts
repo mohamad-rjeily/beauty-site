@@ -39,6 +39,9 @@ export const en = {
   orderOnWhatsApp: 'Order on WhatsApp',
   outOfStock: 'Out of stock',
   shopSoon: 'The shop opens soon.',
+  previousProduct: 'Previous product',
+  nextProduct: 'Next product',
+  productOf: 'Product {n} of {total}',
 
   previousReview: 'Previous review',
   nextReview: 'Next review',

@@ -41,7 +41,8 @@ export function Hero({
   return (
     <section
       aria-labelledby="hero-title"
-      className="grain relative isolate bg-limestone [--photo-h:38.75rem] pb-28 lg:[--photo-h:min(78vh,46rem)] lg:pb-24"
+      data-hero
+      className="grain relative isolate bg-limestone [--photo-h:38.75rem] pb-28 lg:[--photo-h:min(78vh,46rem)] lg:pb-18"
     >
       <div className="absolute inset-x-0 top-0 -z-10 h-(--photo-h) overflow-hidden bg-earth">
         <Parallax className="absolute inset-0">

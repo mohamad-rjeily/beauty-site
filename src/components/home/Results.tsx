@@ -23,7 +23,7 @@ export function Results({
   return (
     <section aria-labelledby="results-title" id="results" className="grain bg-limestone">
       <div
-        className={`${container} grid gap-6 py-16 lg:grid-cols-12 lg:items-center lg:gap-10 lg:py-28`}
+        className={`${container} grid gap-6 py-16 lg:grid-cols-12 lg:items-center lg:gap-10 lg:py-21`}
       >
         <div className="flex flex-col gap-3 lg:col-span-5">
           <SectionHeading id="results-title">

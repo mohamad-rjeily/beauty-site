@@ -59,7 +59,7 @@ export function ReviewDeck({
     <LazyMotion features={domAnimation} strict>
       <div className="flex flex-col gap-6">
         <div
-          className="relative min-h-[17rem] touch-pan-y"
+          className="relative touch-pan-y"
           onPointerDown={(event) => (start.current = { x: event.clientX, t: event.timeStamp })}
           onPointerUp={(event) => {
             if (start.current === null || total < 2) return
@@ -84,7 +84,7 @@ export function ReviewDeck({
               />
             </>
           )}
-          <div aria-live="polite" className="relative min-h-[17rem]">
+          <div aria-live="polite" className="relative">
             <AnimatePresence initial={false} mode="popLayout" custom={direction}>
               <m.figure
                 key={review.id}
@@ -99,7 +99,7 @@ export function ReviewDeck({
                     : { type: 'spring', stiffness: 260, damping: 28, mass: 0.8 }
                 }
                 aria-label={fill(labels.reviewOf, { n: index + 1, total })}
-                className="absolute inset-0 m-0 flex flex-col gap-3.5 rounded-card bg-paper p-6 shadow-lift"
+                className="relative m-0 flex flex-col gap-3.5 rounded-card bg-paper p-6 shadow-lift"
               >
                 {review.rating ? (
                   <div
