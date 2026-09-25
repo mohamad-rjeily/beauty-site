@@ -91,6 +91,19 @@ export const HomePage: GlobalConfig = {
               en: 'Makeup & skin studio · Lebanon',
               ar: 'استوديو مكياج وعناية بالبشرة · لبنان',
             }),
+            localizedText(
+              'accentLine',
+              t(
+                'Accent line in the other language (optional)',
+                'سطر مميّز باللغة الأخرى (اختياري)',
+              ),
+              { en: 'جمالكِ، بعناية', ar: 'Beauty, with care' },
+              'text',
+              t(
+                'Shown small in sage next to the line above, in the other language. Leave empty to hide.',
+                'يظهر صغيراً بلون المريمية بجانب السطر أعلاه، باللغة الأخرى. اتركيه فارغاً لإخفائه.',
+              ),
+            ),
           ],
         },
         {
@@ -103,6 +116,14 @@ export const HomePage: GlobalConfig = {
                 'Candid, while working with a client. Vertical.',
                 'صورة عفوية أثناء العمل مع عميلة. عمودية.',
               ),
+            ),
+            localizedText(
+              'introAccent',
+              t(
+                'Greeting word in the other language (optional)',
+                'كلمة ترحيب باللغة الأخرى (اختياري)',
+              ),
+              { en: 'مرحبا', ar: 'Marhaba' },
             ),
             localizedText('introGreeting', t('Greeting', 'التحية'), {
               en: "Hello, I'm [FIRST_NAME].",
@@ -160,14 +181,32 @@ export const HomePage: GlobalConfig = {
         {
           label: t('Section titles', 'عناوين الأقسام'),
           fields: [
-            localizedText('servicesHeading', t('Services title', 'عنوان الخدمات'), {
-              en: 'Two crafts, one hand.',
-              ar: 'حِرفتان، ويدٌ واحدة.',
-            }),
-            localizedText('resultsHeading', t('Before & after title', 'عنوان قبل وبعد'), {
-              en: 'Drag to see the difference',
-              ar: 'اسحبي لتري الفرق',
-            }),
+            localizedText(
+              'servicesHeading',
+              t('Services title', 'عنوان الخدمات'),
+              {
+                en: 'Two crafts, one *hand.*',
+                ar: 'حِرفتان، ويدٌ *واحدة.*',
+              },
+              'text',
+              t(
+                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
+                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
+              ),
+            ),
+            localizedText(
+              'resultsHeading',
+              t('Before & after title', 'عنوان قبل وبعد'),
+              {
+                en: 'Drag to see the *difference*',
+                ar: 'اسحبي لتري *الفرق*',
+              },
+              'text',
+              t(
+                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
+                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
+              ),
+            ),
             {
               name: 'resultsNote',
               type: 'text',
@@ -183,18 +222,45 @@ export const HomePage: GlobalConfig = {
                 ),
               },
             },
-            localizedText('shopHeading', t('Shop title', 'عنوان المتجر'), {
-              en: 'Her shelf',
-              ar: 'من رفّها',
-            }),
-            localizedText('reviewsHeading', t('Reviews title', 'عنوان الآراء'), {
-              en: 'In their words',
-              ar: 'بكلماتهنّ',
-            }),
-            localizedText('visitHeading', t('Visit title', 'عنوان الزيارة'), {
-              en: 'Come by the studio',
-              ar: 'زوري الاستوديو',
-            }),
+            localizedText(
+              'shopHeading',
+              t('Shop title', 'عنوان المتجر'),
+              {
+                en: 'Her *shelf*',
+                ar: 'من *رفّها*',
+              },
+              'text',
+              t(
+                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
+                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
+              ),
+            ),
+            localizedText(
+              'reviewsHeading',
+              t('Reviews title', 'عنوان الآراء'),
+              {
+                en: 'In *their* words',
+                ar: '*بكلماتهنّ*',
+              },
+              'text',
+              t(
+                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
+                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
+              ),
+            ),
+            localizedText(
+              'visitHeading',
+              t('Visit title', 'عنوان الزيارة'),
+              {
+                en: 'Come *by* the studio',
+                ar: 'زوري *الاستوديو*',
+              },
+              'text',
+              t(
+                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
+                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
+              ),
+            ),
             localizedText(
               'footerSignoff',
               t('Footer sign-off before your signature', 'عبارة الختام قبل توقيعكِ'),

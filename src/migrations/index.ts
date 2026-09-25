@@ -1,6 +1,7 @@
 import * as migration_20260925_190515_initial from './20260925_190515_initial'
 import * as migration_20260925_190555_booking_constraints from './20260925_190555_booking_constraints'
 import * as migration_20260925_195710_home_page_and_featured_products from './20260925_195710_home_page_and_featured_products'
+import * as migration_20260925_205310_home_accent_lines from './20260925_205310_home_accent_lines'
 
 export const migrations = [
   {
@@ -17,5 +18,10 @@ export const migrations = [
     up: migration_20260925_195710_home_page_and_featured_products.up,
     down: migration_20260925_195710_home_page_and_featured_products.down,
     name: '20260925_195710_home_page_and_featured_products',
+  },
+  {
+    up: migration_20260925_205310_home_accent_lines.up,
+    down: migration_20260925_205310_home_accent_lines.down,
+    name: '20260925_205310_home_accent_lines',
   },
 ]

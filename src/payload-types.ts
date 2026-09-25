@@ -811,9 +811,14 @@ export interface Home {
   headlineLine3?: string | null;
   tagline?: string | null;
   /**
+   * Shown small in sage next to the line above, in the other language. Leave empty to hide.
+   */
+  accentLine?: string | null;
+  /**
    * Candid, while working with a client. Vertical.
    */
   introPhoto?: (number | null) | Media;
+  introAccent?: string | null;
   introGreeting?: string | null;
   introText?: string | null;
   signature?: string | null;
@@ -827,14 +832,29 @@ export interface Home {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+   */
   servicesHeading?: string | null;
+  /**
+   * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+   */
   resultsHeading?: string | null;
   /**
    * Only if true, e.g. "Same light, same angle, no filters."
    */
   resultsNote?: string | null;
+  /**
+   * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+   */
   shopHeading?: string | null;
+  /**
+   * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+   */
   reviewsHeading?: string | null;
+  /**
+   * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+   */
   visitHeading?: string | null;
   footerSignoff?: string | null;
   /**
@@ -924,7 +944,9 @@ export interface HomeSelect<T extends boolean = true> {
   headlineLine2?: T;
   headlineLine3?: T;
   tagline?: T;
+  accentLine?: T;
   introPhoto?: T;
+  introAccent?: T;
   introGreeting?: T;
   introText?: T;
   signature?: T;
