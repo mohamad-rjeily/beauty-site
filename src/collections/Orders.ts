@@ -1,11 +1,11 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, PayloadRequest } from 'payload'
 
 import { authenticated, never } from '@/access'
 import { moneyField } from '@/fields/money'
 import { phoneField } from '@/fields/phone'
 import { priceOrder } from '@/hooks/orders/priceOrder'
 import { syncStock } from '@/hooks/orders/syncStock'
-import { t } from '@/lib/i18n'
+import { msg, t } from '@/lib/i18n'
 
 export const ORDER_STATUSES = [
   { label: t('New', 'جديد'), value: 'new' },
@@ -14,14 +14,27 @@ export const ORDER_STATUSES = [
   { label: t('Cancelled', 'ملغى'), value: 'cancelled' },
 ]
 
-export const PAYMENT_METHODS = [
-  { label: t('Cash on delivery', 'الدفع عند الاستلام'), value: 'cod' },
-  { label: t('Pay in person', 'الدفع شخصياً'), value: 'in_person' },
+export const FULFILLMENT_OPTIONS = [
+  { label: t('Delivery', 'توصيل'), value: 'delivery' },
+  { label: t('Pickup from the studio', 'استلام من الاستوديو'), value: 'pickup' },
 ]
 
+const isDelivery = (data: unknown): boolean =>
+  (data as { fulfillment?: string } | undefined)?.fulfillment === 'delivery'
+
+/** Address and area are required for delivery only; the check runs on the server. */
+const requiredForDelivery = (
+  value: string | null | undefined,
+  { data, req }: { data: unknown; req: PayloadRequest },
+): string | true =>
+  !isDelivery(data) ||
+  Boolean(value?.trim()) ||
+  msg(req, 'Required for delivery.', 'مطلوب للتوصيل.')
+
 /**
- * Shop orders (no online payment). Customer data is private: admin-only access.
- * The public checkout (phase 5) creates orders from server code.
+ * Shop orders. Customers order through WhatsApp: the checkout (phase 5) saves the order here
+ * with status "new", then opens WhatsApp with a pre-filled summary to the owner.
+ * Payment is always cash, in USD. Customer data is private: admin-only access.
  * No drafts or versions. Hook order matters: prices are set first, then stock moves.
  */
 export const Orders: CollectionConfig = {
@@ -30,7 +43,7 @@ export const Orders: CollectionConfig = {
   admin: {
     useAsTitle: 'customerName',
     group: t('Shop', 'المتجر'),
-    defaultColumns: ['createdAt', 'customerName', 'area', 'status'],
+    defaultColumns: ['createdAt', 'customerName', 'fulfillment', 'area', 'status'],
   },
   defaultSort: '-createdAt',
   access: {
@@ -56,15 +69,29 @@ export const Orders: CollectionConfig = {
       ],
     },
     {
+      name: 'fulfillment',
+      type: 'select',
+      label: t('Delivery or pickup', 'توصيل أو استلام'),
+      required: true,
+      defaultValue: 'delivery',
+      options: FULFILLMENT_OPTIONS,
+    },
+    {
       type: 'row',
+      admin: { condition: (data) => isDelivery(data) },
       fields: [
         {
           name: 'address',
           type: 'textarea',
           label: t('Delivery address', 'عنوان التوصيل'),
-          required: true,
+          validate: requiredForDelivery,
         },
-        { name: 'area', type: 'text', label: t('Area / town', 'المنطقة / البلدة'), required: true },
+        {
+          name: 'area',
+          type: 'text',
+          label: t('Area / town', 'المنطقة / البلدة'),
+          validate: requiredForDelivery,
+        },
       ],
     },
     {
@@ -124,13 +151,12 @@ export const Orders: CollectionConfig = {
       access: { update: never },
     },
     {
-      name: 'paymentMethod',
-      type: 'select',
-      label: t('Payment', 'طريقة الدفع'),
-      required: true,
-      defaultValue: 'cod',
-      options: PAYMENT_METHODS,
-      admin: { position: 'sidebar' },
+      name: 'paymentNote',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: { Field: '/components/admin/CashOnlyNote#CashOnlyNote' },
+      },
     },
     {
       name: 'status',
@@ -142,8 +168,8 @@ export const Orders: CollectionConfig = {
       admin: {
         position: 'sidebar',
         description: t(
-          'Confirming takes the products out of stock; cancelling a confirmed order puts them back.',
-          'التأكيد يخصم المنتجات من المخزون؛ إلغاء طلب مؤكد يعيدها.',
+          'Confirming takes the products out of stock; cancelling a confirmed order puts them back. Delivered is final.',
+          'التأكيد يخصم المنتجات من المخزون؛ إلغاء طلب مؤكد يعيدها. حالة "تم التسليم" نهائية.',
         ),
       },
     },

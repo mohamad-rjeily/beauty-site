@@ -35,14 +35,17 @@ export const moneyField = ({
         {
           name: 'amount',
           type: 'number',
-          label: t('Amount in cents', 'المبلغ بالسنت'),
+          label: t('Amount (USD)', 'المبلغ (دولار)'),
           required: required && !readOnly,
           min: 0,
           admin: {
             readOnly,
-            step: 1,
             width: '60%',
-            description: readOnly ? undefined : t('Example: 2500 = $25.00', 'مثال: 2500 = 25.00$'),
+            // Shown and typed in dollars (25.00), stored as integer cents (2500).
+            components: {
+              Field: '/components/admin/DollarsField#DollarsField',
+              Cell: '/components/admin/DollarsCell#DollarsCell',
+            },
           },
           validate: (value: number | null | undefined, { req }: { req: PayloadRequest }) => {
             if (value === null || value === undefined) {
@@ -53,8 +56,8 @@ export const moneyField = ({
             if (!Number.isInteger(value) || value < 0) {
               return msg(
                 req,
-                'Enter a whole number of cents (0 or more).',
-                'أدخلي عدداً صحيحاً من السنتات (0 أو أكثر).',
+                'Enter a price of 0 or more, with up to 2 decimals.',
+                'أدخلي سعراً يساوي 0 أو أكثر، مع رقمين عشريين كحد أقصى.',
               )
             }
             return true

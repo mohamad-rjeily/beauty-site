@@ -1,8 +1,9 @@
 import type { CollectionConfig, Field, PayloadRequest } from 'payload'
 
-import { authenticated, publishedOrAuthenticated } from '@/access'
+import { authenticated, never, publishedOrAuthenticated } from '@/access'
 import { moneyField } from '@/fields/money'
 import { slugField } from '@/fields/slug'
+import { applyStockAdjustment } from '@/hooks/products/applyStockAdjustment'
 import { msg, t } from '@/lib/i18n'
 
 export const PRODUCT_TYPES = [
@@ -45,6 +46,9 @@ export const Products: CollectionConfig = {
     group: t('Shop', 'المتجر'),
     defaultColumns: ['name', 'type', 'category', 'stock', 'active'],
   },
+  hooks: {
+    beforeChange: [applyStockAdjustment],
+  },
   access: {
     read: publishedOrAuthenticated('active'),
     create: authenticated,
@@ -84,18 +88,41 @@ export const Products: CollectionConfig = {
       required: true,
       defaultValue: 0,
       min: 0,
+      // Never written from a form: only the server changes it (orders and "Adjust stock by").
+      access: { create: never, update: never },
       admin: {
-        step: 1,
+        readOnly: true,
         position: 'sidebar',
         description: t(
-          'Goes down automatically when an order is confirmed, and back up if it is cancelled.',
-          'تنخفض تلقائياً عند تأكيد الطلب، وتعود إذا أُلغي.',
+          'Goes down when an order is confirmed and back up if it is cancelled. To change it by hand, use "Adjust stock by".',
+          'تنخفض عند تأكيد الطلب وتعود إذا أُلغي. لتغييرها يدوياً استخدمي "تعديل المخزون بمقدار".',
         ),
       },
       validate: (value: number | null | undefined, { req }: { req: PayloadRequest }) =>
         value !== null && value !== undefined && Number.isInteger(value) && value >= 0
           ? true
           : msg(req, 'Enter a whole number, 0 or more.', 'أدخلي عدداً صحيحاً، 0 أو أكثر.'),
+    },
+    {
+      // Not stored: applied to `stock` with one atomic UPDATE on save, then gone.
+      name: 'stockAdjustment',
+      type: 'number',
+      virtual: true,
+      label: t('Adjust stock by', 'تعديل المخزون بمقدار'),
+      admin: {
+        step: 1,
+        position: 'sidebar',
+        placeholder: '+10 / -2',
+        description: t(
+          'Received 10 more: enter 10. Found 2 damaged: enter -2. Cleared after saving.',
+          'وصلت 10 إضافية: أدخلي 10. وجدتِ 2 تالفة: أدخلي -2. يُمسح بعد الحفظ.',
+        ),
+      },
+      validate: (value: number | null | undefined, { req }: { req: PayloadRequest }) =>
+        value === null ||
+        value === undefined ||
+        Number.isInteger(value) ||
+        msg(req, 'Enter a whole number, e.g. 10 or -2.', 'أدخلي عدداً صحيحاً، مثال: 10 أو -2.'),
     },
     {
       name: 'images',

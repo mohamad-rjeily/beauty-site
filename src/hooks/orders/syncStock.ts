@@ -11,9 +11,11 @@ const HOLDS_STOCK = new Set<Order['status']>(['confirmed', 'delivered'])
 type StockLine = { product?: unknown; quantity: number; productName?: string | null }
 
 /**
+ * Delivered orders are final: any status change away from "delivered" is refused.
+ *
  * Moves stock when an order enters or leaves a stock-holding status:
  * - new -> confirmed (or delivered): stock goes down
- * - confirmed/delivered -> cancelled (or back to new): stock comes back
+ * - confirmed -> cancelled (or back to new): stock comes back
  *
  * Everything runs as raw SQL on the operation's own transaction, so the stock change
  * and the status change are saved together or not at all.
@@ -48,6 +50,24 @@ export const syncStock: CollectionBeforeChangeHook<Order> = async ({
   }
 
   const to = data.status ?? from
+
+  // Delivered is final. Checked against the locked row, so two saves at once can't slip past.
+  if (from === 'delivered' && to !== 'delivered') {
+    throw new ValidationError({
+      collection: 'orders',
+      errors: [
+        {
+          path: 'status',
+          message: msg(
+            req,
+            'A delivered order is final. For a return, adjust the product stock by hand.',
+            'الطلب الذي تم تسليمه نهائي. في حال الإرجاع، عدّلي مخزون المنتج يدوياً.',
+          ),
+        },
+      ],
+      req,
+    })
+  }
   const heldBefore = HOLDS_STOCK.has(from)
   const heldAfter = HOLDS_STOCK.has(to)
   if (heldBefore === heldAfter) return data

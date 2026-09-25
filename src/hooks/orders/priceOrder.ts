@@ -1,5 +1,6 @@
 import { ValidationError, type CollectionBeforeChangeHook, type PayloadRequest } from 'payload'
 
+import { isAdminRequest } from '@/access/isAdminRequest'
 import { DEFAULT_CURRENCY } from '@/fields/money'
 import { relationId } from '@/lib/db'
 import { msg } from '@/lib/i18n'
@@ -14,7 +15,7 @@ const fail = (req: PayloadRequest, path: string, en: string, ar: string): never 
 }
 
 /**
- * On create only: rebuilds every order line from the products table and recalculates
+ * On create only: forces status "new" for the public checkout, rebuilds every order line from the products table and recalculates
  * the total on the server. Whatever names or prices the client sent are thrown away.
  * Also refuses inactive products and quantities above the current stock.
  *
@@ -23,6 +24,9 @@ const fail = (req: PayloadRequest, path: string, en: string, ar: string): never 
  */
 export const priceOrder: CollectionBeforeChangeHook<Order> = async ({ data, operation, req }) => {
   if (operation !== 'create') return data
+
+  // The public checkout always creates "new" orders; only a logged-in admin may pick a status.
+  if (!isAdminRequest(req)) data.status = 'new'
 
   const items = data.items ?? []
   if (items.length === 0)
