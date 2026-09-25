@@ -139,6 +139,19 @@ export const Products: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
     {
+      name: 'featuredOnHome',
+      type: 'checkbox',
+      label: t('Featured on the home page', 'مميز في الصفحة الرئيسية'),
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: t(
+          'When none are featured, the newest products are shown.',
+          'إذا لم يُميَّز أي منتج، تظهر أحدث المنتجات.',
+        ),
+      },
+    },
+    {
       name: 'homemade',
       type: 'group',
       label: t('Homemade mask details', 'تفاصيل الماسك المنزلي'),

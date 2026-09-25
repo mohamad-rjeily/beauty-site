@@ -18,6 +18,7 @@ import { Services } from './collections/Services'
 import { Testimonials } from './collections/Testimonials'
 import { Users } from './collections/Users'
 import { Availability } from './globals/Availability'
+import { HomePage } from './globals/HomePage'
 import { SiteSettings } from './globals/SiteSettings'
 import { DEFAULT_LOCALE } from './lib/i18n'
 import { BUSINESS_TIME_ZONE } from './lib/time'
@@ -62,7 +63,7 @@ export default buildConfig({
     Bookings,
     Users,
   ],
-  globals: [SiteSettings, Availability],
+  globals: [SiteSettings, HomePage, Availability],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

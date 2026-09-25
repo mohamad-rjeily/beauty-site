@@ -58,10 +58,12 @@ export interface Config {
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ar') | ('en' | 'ar')[];
   globals: {
     'site-settings': SiteSetting;
+    home: Home;
     availability: Availability;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    home: HomeSelect<false> | HomeSelect<true>;
     availability: AvailabilitySelect<false> | AvailabilitySelect<true>;
   };
   locale: 'en' | 'ar';
@@ -261,6 +263,10 @@ export interface Product {
   stockAdjustment?: number | null;
   images?: (number | Media)[] | null;
   active?: boolean | null;
+  /**
+   * When none are featured, the newest products are shown.
+   */
+  featuredOnHome?: boolean | null;
   /**
    * All of these are shown on the product page.
    */
@@ -615,6 +621,7 @@ export interface ProductsSelect<T extends boolean = true> {
   stockAdjustment?: T;
   images?: T;
   active?: T;
+  featuredOnHome?: T;
   homemade?:
     | T
     | {
@@ -791,6 +798,54 @@ export interface SiteSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home".
+ */
+export interface Home {
+  id: number;
+  /**
+   * A portrait of you in soft light, vertical. Keep your face in the upper half: the headline sits over the lower part.
+   */
+  heroPhoto?: (number | null) | Media;
+  headlineLine1?: string | null;
+  headlineLine2?: string | null;
+  headlineLine3?: string | null;
+  tagline?: string | null;
+  /**
+   * Candid, while working with a client. Vertical.
+   */
+  introPhoto?: (number | null) | Media;
+  introGreeting?: string | null;
+  introText?: string | null;
+  signature?: string | null;
+  /**
+   * Only real facts, e.g. "12 years" / "Experience". Leave empty to hide this row.
+   */
+  facts?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  servicesHeading?: string | null;
+  resultsHeading?: string | null;
+  /**
+   * Only if true, e.g. "Same light, same angle, no filters."
+   */
+  resultsNote?: string | null;
+  shopHeading?: string | null;
+  reviewsHeading?: string | null;
+  visitHeading?: string | null;
+  footerSignoff?: string | null;
+  /**
+   * Entrance, treatment room, and a detail. Shown in the three arches of the Visit section.
+   */
+  studioPhotos?: (number | Media)[] | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "availability".
  */
 export interface Availability {
@@ -855,6 +910,39 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         text?: T;
         link?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home_select".
+ */
+export interface HomeSelect<T extends boolean = true> {
+  heroPhoto?: T;
+  headlineLine1?: T;
+  headlineLine2?: T;
+  headlineLine3?: T;
+  tagline?: T;
+  introPhoto?: T;
+  introGreeting?: T;
+  introText?: T;
+  signature?: T;
+  facts?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  servicesHeading?: T;
+  resultsHeading?: T;
+  resultsNote?: T;
+  shopHeading?: T;
+  reviewsHeading?: T;
+  visitHeading?: T;
+  footerSignoff?: T;
+  studioPhotos?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
