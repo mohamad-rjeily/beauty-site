@@ -33,7 +33,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         t={t}
       />
       <ServicesMarquee names={data.marquee} label={t.footerLinks.services} />
-      <Intro home={home} photo={data.intro} t={t} />
+      <Intro home={home} photo={data.intro} locale={locale} t={t} />
       <ServicesShowcase
         heading={home.servicesHeading ?? ''}
         groups={data.services}

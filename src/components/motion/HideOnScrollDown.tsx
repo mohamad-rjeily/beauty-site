@@ -48,7 +48,7 @@ export function HideOnScrollDown({
   return (
     <div
       ref={ref}
-      className={`transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] data-[hidden=true]:translate-y-[calc(100%+1rem)] motion-reduce:transition-none ${className}`}
+      className={`transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] data-[hidden=true]:translate-y-[calc(100%+1rem)] motion-reduce:transition-opacity motion-reduce:data-[hidden=true]:translate-y-0 motion-reduce:data-[hidden=true]:opacity-0 motion-reduce:data-[hidden=true]:pointer-events-none ${className}`}
     >
       {children}
     </div>

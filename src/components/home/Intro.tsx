@@ -1,6 +1,7 @@
 import { Reveal } from '@/components/motion/Reveal'
 import { Picture } from '@/components/ui/Picture'
 import type { Dictionary } from '@/i18n'
+import type { Locale } from '@/i18n/config'
 import type { Photo } from '@/lib/cms/home'
 import type { Home } from '@/payload-types'
 
@@ -10,7 +11,17 @@ import { container } from './shared'
  * Her introduction. The arch photo breaks the grid: it rises over the marquee's edge.
  * The facts row appears only when the owner enters real facts in the admin.
  */
-export function Intro({ home, photo, t }: { home: Home; photo: Photo | null; t: Dictionary }) {
+export function Intro({
+  home,
+  photo,
+  locale,
+  t,
+}: {
+  home: Home
+  photo: Photo | null
+  locale: Locale
+  t: Dictionary
+}) {
   const facts = home.facts ?? []
 
   return (
@@ -34,9 +45,24 @@ export function Intro({ home, photo, t }: { home: Home; photo: Photo | null; t: 
         </Reveal>
 
         <div className="flex flex-col gap-5 lg:order-1 lg:col-span-7 lg:gap-7">
+          {home.introAccent && (
+            // Written in the other script, so its own direction is reversed: `text-end` puts it on
+            // the page's reading-start side, above the greeting and clear of the arch.
+            <p
+              lang={locale === 'ar' ? 'en' : 'ar'}
+              dir={locale === 'ar' ? 'ltr' : 'rtl'}
+              className={`-mb-3 text-sage ${
+                locale === 'ar'
+                  ? 'm-0 text-end font-[family-name:var(--font-fraunces)] text-xl italic'
+                  : 'm-0 text-end font-[family-name:var(--font-amiri)] text-[1.625rem]'
+              }`}
+            >
+              {home.introAccent}
+            </p>
+          )}
           <h2
             id="intro-title"
-            className="display m-0 min-h-[7.5rem] max-w-[10.5rem] text-[1.875rem] leading-[1.15] lg:min-h-0 lg:max-w-none lg:text-[3rem]"
+            className="display m-0 min-h-[7.5rem] max-w-[10.5rem] [overflow-wrap:anywhere] text-[1.875rem] leading-[1.15] lg:min-h-0 lg:max-w-none lg:text-[3rem]"
           >
             {home.introGreeting}
           </h2>

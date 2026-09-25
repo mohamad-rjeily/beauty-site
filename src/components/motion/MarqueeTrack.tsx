@@ -10,7 +10,8 @@ export function MarqueeTrack({ children, className }: { children: ReactNode; cla
   const ref = useRef<HTMLDivElement>(null)
 
   const setRate = (rate: number) => {
-    for (const animation of ref.current?.getAnimations() ?? []) animation.playbackRate = rate
+    // updatePlaybackRate keeps a compositor-driven animation in sync without a visible hitch.
+    for (const animation of ref.current?.getAnimations() ?? []) animation.updatePlaybackRate(rate)
   }
 
   return (

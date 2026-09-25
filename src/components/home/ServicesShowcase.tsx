@@ -6,7 +6,7 @@ import type { Locale } from '@/i18n/config'
 import type { ServiceGroup } from '@/lib/cms/home'
 import { bookingHref, externalLinkProps } from '@/lib/links'
 
-import { container, EmphasizeLast, EmptyNote, SectionHeading } from './shared'
+import { container, Emphasis, EmptyNote, SectionHeading } from './shared'
 
 /**
  * The one terracotta field on the page: her two crafts as two staggered paper cards.
@@ -29,15 +29,23 @@ export function ServicesShowcase({
   const askHref = bookingHref({ locale, whatsappNumber })
 
   return (
-    <Reveal
-      as="section"
-      variant="flood"
+    <section
       id="services"
-      className="grain relative bg-clay text-paper"
+      aria-labelledby="services-title"
+      className="grain relative overflow-x-clip bg-clay text-paper"
     >
-      <div className={`${container} grid gap-8 py-16 lg:grid-cols-12 lg:gap-10 lg:py-28`}>
+      {/* Colour flood on entry: a limestone layer fades away (opacity only). Invisible by
+          default, so the section is never covered without JavaScript. */}
+      <Reveal
+        variant="uncover"
+        className="grain pointer-events-none absolute inset-0 bg-limestone opacity-0"
+      >
+        <span />
+      </Reveal>
+
+      <div className={`${container} relative grid gap-8 py-16 lg:grid-cols-12 lg:gap-10 lg:py-28`}>
         <SectionHeading id="services-title" className="lg:col-span-4 lg:self-start lg:pt-4">
-          <EmphasizeLast text={heading} />
+          <Emphasis text={heading} />
         </SectionHeading>
 
         {anyServices ? (
@@ -56,7 +64,9 @@ export function ServicesShowcase({
           </ul>
         ) : (
           <div className="flex flex-col items-start gap-5 lg:col-span-8">
-            <EmptyNote className="text-clay-mist">{t.servicesSoon}</EmptyNote>
+            <EmptyNote className="text-clay-mist">
+              {askHref ? t.servicesSoon : t.servicesSoonNoContact}
+            </EmptyNote>
             {askHref && (
               <a
                 href={askHref}
@@ -69,7 +79,7 @@ export function ServicesShowcase({
           </div>
         )}
       </div>
-    </Reveal>
+    </section>
   )
 }
 
@@ -88,7 +98,7 @@ function ServiceCard({
   const href = bookingHref({ locale, whatsappNumber, subject: label })
 
   return (
-    <article className="flex gap-3.5 rounded-card bg-paper p-2.5 text-ink shadow-on-clay transition-transform duration-200 ease-out hover:-translate-y-1">
+    <article className="flex gap-3.5 rounded-card bg-paper p-2.5 text-ink shadow-on-clay">
       <Picture
         photo={group.photo}
         hint={t.photoHints[group.category]}
@@ -106,7 +116,11 @@ function ServiceCard({
           </ul>
         ) : null}
         <p className="m-0 text-[0.8125rem] font-semibold">
-          {group.fromPrice ? format(t.fromPrice, { price: group.fromPrice }) : t.pricesSoon}
+          {group.fromPrice
+            ? format(t.fromPrice, { price: group.fromPrice })
+            : href
+              ? t.pricesSoon
+              : t.pricesSoonNoContact}
         </p>
         {href && (
           <a

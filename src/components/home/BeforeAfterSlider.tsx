@@ -47,7 +47,17 @@ export function BeforeAfterSlider({
   const clip = useTransform(position, (p) =>
     rtl ? `inset(0 0 0 ${100 - p}%)` : `inset(0 ${100 - p}% 0 0)`,
   )
-  const handleStart = useTransform(position, (p) => `${p}%`)
+  // The handle layer spans the frame, so a translateX percentage equals the handle's position:
+  // compositor-only, no layout per frame. Mirrored in RTL.
+  const handleShift = useTransform(position, (p) => `translateX(${rtl ? -p : p}%)`)
+  const sweep = useRef<ReturnType<typeof animate> | null>(null)
+
+  /** Any real input takes over from the one-time invitation sweep. */
+  const takeOver = () => {
+    touched.current = true
+    sweep.current?.stop()
+    sweep.current = null
+  }
 
   const setTo = (next: number) => {
     const clamped = Math.min(100, Math.max(0, next))
@@ -57,12 +67,12 @@ export function BeforeAfterSlider({
 
   useEffect(() => {
     if (!inView || reduced || touched.current) return
-    const controls = animate(target, [50, 70, 50], {
+    sweep.current = animate(target, [50, 70, 50], {
       duration: 1.6,
       ease: [0.45, 0, 0.2, 1],
       delay: 0.2,
     })
-    return () => controls.stop()
+    return () => sweep.current?.stop()
   }, [inView, reduced, target])
 
   const fromPointer = (event: PointerEvent<HTMLDivElement>) => {
@@ -82,7 +92,7 @@ export function BeforeAfterSlider({
           ref={frameRef}
           className="relative aspect-[342/420] w-full touch-pan-y overflow-hidden rounded-t-full rounded-b-[0.875rem] bg-sand shadow-lift select-none lg:aspect-[4/5]"
           onPointerDown={(event) => {
-            touched.current = true
+            takeOver()
             dragging.current = true
             event.currentTarget.setPointerCapture(event.pointerId)
             fromPointer(event)
@@ -91,23 +101,26 @@ export function BeforeAfterSlider({
           onPointerUp={() => (dragging.current = false)}
           onPointerCancel={() => (dragging.current = false)}
         >
-          <Picture
-            photo={pair.after}
-            hint={labels.hint}
-            soon={labels.soon}
-            sizes="(min-width: 1024px) 40vw, 90vw"
-            className="absolute inset-0"
-          />
-          <m.div className="absolute inset-0" style={{ clipPath: clip }}>
+          {/* Keyed by pair: switching pairs cross-fades in the new photos (CSS, 250 ms). */}
+          <div key={pair.id} className="motion-fade absolute inset-0">
             <Picture
-              photo={pair.before}
+              photo={pair.after}
               hint={labels.hint}
               soon={labels.soon}
               sizes="(min-width: 1024px) 40vw, 90vw"
               className="absolute inset-0"
-              tone="dark"
             />
-          </m.div>
+            <m.div className="absolute inset-0" style={{ clipPath: clip }}>
+              <Picture
+                photo={pair.before}
+                hint={labels.hint}
+                soon={labels.soon}
+                sizes="(min-width: 1024px) 40vw, 90vw"
+                className="absolute inset-0"
+                tone="dark"
+              />
+            </m.div>
+          </div>
 
           <span className="absolute start-4 bottom-4 rounded-full bg-ink/80 px-3 py-1.5 text-[0.6875rem] font-semibold tracking-[0.14em] text-paper uppercase rtl:tracking-normal rtl:text-xs">
             {labels.before}
@@ -118,10 +131,11 @@ export function BeforeAfterSlider({
 
           <m.div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-paper rtl:translate-x-1/2"
-            style={{ insetInlineStart: handleStart }}
+            className="pointer-events-none absolute inset-0"
+            style={{ transform: handleShift }}
           >
-            <span className="absolute top-[58%] start-1/2 flex size-14 -translate-x-1/2 items-center justify-center rounded-full bg-paper text-ink shadow-lift rtl:translate-x-1/2">
+            <span className="absolute inset-y-0 start-0 w-0.5 -translate-x-1/2 bg-paper rtl:translate-x-1/2" />
+            <span className="absolute top-[58%] start-0 flex size-14 -translate-x-1/2 items-center justify-center rounded-full bg-paper text-ink shadow-lift rtl:translate-x-1/2">
               <svg
                 width="22"
                 height="22"
@@ -145,8 +159,10 @@ export function BeforeAfterSlider({
             aria-label={labels.compare}
             aria-valuetext={`${labels.before} ${value}% · ${labels.after} ${100 - value}%`}
             onChange={(event) => {
-              touched.current = true
+              takeOver()
               setTo(Number(event.target.value))
+              // Keyboard steps land instantly: keys shouldn't animate.
+              position.jump(Number(event.target.value))
             }}
             className="peer sr-only"
           />
@@ -164,7 +180,7 @@ export function BeforeAfterSlider({
                 type="button"
                 aria-pressed={i === index}
                 onClick={() => {
-                  touched.current = true
+                  takeOver()
                   setIndex(i)
                   setTo(50)
                 }}

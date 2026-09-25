@@ -4,17 +4,23 @@ import type { ReactNode } from 'react'
 export const container = 'mx-auto w-full max-w-[75rem] px-6 lg:px-10'
 
 /**
- * The approved design sets the last word of each heading in italic ("one *hand.*").
- * Owner-edited headings are plain text, so the emphasis is applied here. Arabic turns
- * italics off globally and keeps only the colour.
+ * Headings from the admin mark their emphasis with stars: "Two crafts, one *hand.*".
+ * Starred parts are set in italic (Arabic turns italics off globally and keeps the colour);
+ * text without stars renders plain.
  */
-export function EmphasizeLast({ text, className = '' }: { text: string; className?: string }) {
-  const trimmed = text.trim()
-  const cut = trimmed.lastIndexOf(' ')
-  if (cut === -1) return <em className={`italic ${className}`}>{trimmed}</em>
+export function Emphasis({ text, className = '' }: { text: string; className?: string }) {
+  const parts = text.split(/(\*[^*]+\*)/g).filter(Boolean)
   return (
     <>
-      {trimmed.slice(0, cut)} <em className={`italic ${className}`}>{trimmed.slice(cut + 1)}</em>
+      {parts.map((part, i) =>
+        part.startsWith('*') && part.endsWith('*') && part.length > 2 ? (
+          <em key={i} className={`italic ${className}`}>
+            {part.slice(1, -1)}
+          </em>
+        ) : (
+          part
+        ),
+      )}
     </>
   )
 }

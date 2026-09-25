@@ -7,6 +7,7 @@ export const en = {
   switchLanguage: 'عربي',
   switchLanguageLabel: 'اقرئي الموقع بالعربية',
   quickActions: 'Quick actions',
+  menu: 'Menu',
 
   book: 'Book now',
   bookBadgeRing: 'BOOK YOUR DATE · BOOK NOW · ',
@@ -23,13 +24,16 @@ export const en = {
   fromPrice: 'From {price}',
   bookCategory: 'Book {category}',
   pricesSoon: 'Prices coming soon. Ask on WhatsApp.',
+  pricesSoonNoContact: 'Prices coming soon.',
   servicesSoon: 'Services and prices are being added. Ask on WhatsApp in the meantime.',
+  servicesSoonNoContact: 'Services and prices are being added.',
   allServicesSoon: 'Full list and prices coming soon',
 
   before: 'Before',
   after: 'After',
   compare: 'Compare before and after',
   resultsSoon: 'Real results from the studio are coming soon.',
+  resultsEmptyHeading: 'Before & after',
 
   swipe: 'Swipe',
   orderOnWhatsApp: 'Order on WhatsApp',
@@ -60,7 +64,7 @@ export const en = {
     skincare: 'A skincare treatment',
     result: 'Before and after, same light and angle',
     product: 'Product photo',
-    studio: 'The studio',
+    studio: ['The entrance', 'The treatment room', 'A detail of the studio'],
   },
 
   footerRights: '© {year} {brand}',

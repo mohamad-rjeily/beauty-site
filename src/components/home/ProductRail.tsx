@@ -5,7 +5,7 @@ import type { Locale } from '@/i18n/config'
 import type { ProductCard } from '@/lib/cms/home'
 import { externalLinkProps, orderHref } from '@/lib/links'
 
-import { container, EmphasizeLast, EmptyNote, SectionHeading } from './shared'
+import { container, Emphasis, EmptyNote, SectionHeading } from './shared'
 
 /**
  * Sideways rail of real products with native scroll-snap (no JavaScript). Cards alternate
@@ -28,7 +28,7 @@ export function ProductRail({
     <section aria-labelledby="shop-title" id="shop" className="grain bg-paper">
       <div className={`${container} flex items-end justify-between gap-4 pt-16 lg:pt-28`}>
         <SectionHeading id="shop-title">
-          <EmphasizeLast text={heading} />
+          <Emphasis text={heading} />
         </SectionHeading>
         {products.length > 1 && (
           <span
@@ -59,12 +59,11 @@ export function ProductRail({
                   sizes="(min-width: 1024px) 16rem, 220px"
                   className="aspect-[200/240] w-full rounded-t-[6.25rem] rounded-b-[0.625rem]"
                 />
-                {product.category && (
-                  <span className="px-1.5 pt-1 text-[0.6875rem] font-semibold tracking-[0.14em] text-clay uppercase rtl:tracking-normal rtl:text-xs">
-                    {product.category}
-                  </span>
-                )}
+
                 <h3 className="display m-0 px-1.5 text-xl font-normal">{product.name}</h3>
+                {product.category && (
+                  <p className="m-0 -mt-1 px-1.5 text-xs text-ink-soft">{product.category}</p>
+                )}
                 <div className="mt-auto flex items-center justify-between gap-2 ps-1.5">
                   <span className="text-sm tabular-nums text-ink-soft">
                     {product.inStock ? product.price : t.outOfStock}

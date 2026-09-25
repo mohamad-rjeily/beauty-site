@@ -6,6 +6,7 @@ import type { SVGProps } from 'react'
  */
 const paths = {
   arrow: <path d="M4 12h16M14 6l6 6-6 6" />,
+  menu: <path d="M4 8h16M4 16h16" />,
   arrowUpEnd: <path d="M7 17L17 7M9 7h8v8" />,
   chevronStart: <path d="M15 6l-6 6 6 6" />,
   chevronEnd: <path d="M9 6l6 6-6 6" />,

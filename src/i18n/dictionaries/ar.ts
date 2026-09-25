@@ -6,6 +6,7 @@ export const ar: Dictionary = {
   switchLanguage: 'English',
   switchLanguageLabel: 'Read the site in English',
   quickActions: 'إجراءات سريعة',
+  menu: 'القائمة',
 
   book: 'احجزي الآن',
   bookBadgeRing: 'احجزي موعدكِ · احجزي الآن · احجزي موعدكِ · احجزي الآن · ',
@@ -22,13 +23,16 @@ export const ar: Dictionary = {
   fromPrice: 'ابتداءً من {price}',
   bookCategory: 'احجزي {category}',
   pricesSoon: 'الأسعار قريباً. اسألينا على واتساب.',
+  pricesSoonNoContact: 'الأسعار قريباً.',
   servicesSoon: 'نضيف الخدمات والأسعار حالياً. اسألينا على واتساب في هذه الأثناء.',
+  servicesSoonNoContact: 'نضيف الخدمات والأسعار حالياً.',
   allServicesSoon: 'القائمة الكاملة والأسعار قريباً',
 
   before: 'قبل',
   after: 'بعد',
   compare: 'قارني بين قبل وبعد',
   resultsSoon: 'نتائج حقيقية من الاستوديو قريباً.',
+  resultsEmptyHeading: 'قبل وبعد',
 
   swipe: 'اسحبي',
   orderOnWhatsApp: 'اطلبي عبر واتساب',
@@ -67,7 +71,7 @@ export const ar: Dictionary = {
     skincare: 'جلسة عناية بالبشرة',
     result: 'قبل وبعد، بنفس الإضاءة والزاوية',
     product: 'صورة المنتج',
-    studio: 'الاستوديو',
+    studio: ['المدخل', 'غرفة العلاج', 'تفصيل من الاستوديو'],
   },
 
   footerRights: '© {year} {brand}',

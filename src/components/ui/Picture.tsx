@@ -37,9 +37,12 @@ export function Picture({
   tone = 'light',
   priority,
 }: PictureProps) {
+  // The caller may position the frame (e.g. `absolute inset-0`); otherwise it is relative.
+  const position = /(^|\s)(absolute|fixed)(\s|$)/.test(className) ? '' : 'relative'
+
   if (photo) {
     return (
-      <div className={`relative overflow-hidden ${className}`}>
+      <div className={`${position} overflow-hidden ${className}`}>
         <Image
           src={photo.url}
           alt={photo.alt}
@@ -57,7 +60,7 @@ export function Picture({
     <div
       role="img"
       aria-label={`${soon}: ${hint}`}
-      className={`relative flex flex-col items-center justify-center gap-1.5 overflow-hidden p-3 text-center ${toneClass[tone]} ${className}`}
+      className={`${position} flex flex-col items-center justify-center gap-1.5 overflow-hidden p-3 text-center ${toneClass[tone]} ${className}`}
     >
       <Icon name="camera" size={22} className="opacity-70" />
       <span className="text-[0.625rem] font-semibold tracking-[0.16em] uppercase rtl:tracking-normal rtl:text-xs">

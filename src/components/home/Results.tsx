@@ -4,7 +4,7 @@ import type { Locale } from '@/i18n/config'
 import type { ResultPair } from '@/lib/cms/home'
 
 import { BeforeAfterSlider } from './BeforeAfterSlider'
-import { container, EmphasizeLast, EmptyNote, SectionHeading } from './shared'
+import { container, Emphasis, EmptyNote, SectionHeading } from './shared'
 
 /** Real before/after pairs marked "featured" in the gallery. No pairs yet: an honest empty arch. */
 export function Results({
@@ -27,9 +27,11 @@ export function Results({
       >
         <div className="flex flex-col gap-3 lg:col-span-5">
           <SectionHeading id="results-title">
-            <EmphasizeLast text={heading} />
+            {pairs.length > 0 ? <Emphasis text={heading} /> : t.resultsEmptyHeading}
           </SectionHeading>
-          {note && <p className="m-0 text-sm text-ink-soft lg:text-base">{note}</p>}
+          {note && pairs.length > 0 && (
+            <p className="m-0 text-sm text-ink-soft lg:text-base">{note}</p>
+          )}
         </div>
 
         <div className="lg:col-span-6 lg:col-start-7 lg:max-w-[30rem]">

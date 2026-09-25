@@ -62,7 +62,7 @@ export function StickyActions({
                 href={chat}
                 {...externalLinkProps}
                 aria-label={t.chatOnWhatsApp}
-                className="motion-pulse-later flex size-[3.25rem] shrink-0 items-center justify-center rounded-full bg-sage text-paper"
+                className="motion-pulse-later relative flex size-[3.25rem] shrink-0 items-center justify-center rounded-full bg-sage text-paper"
               >
                 <Icon name="whatsapp" size={24} />
               </a>
@@ -98,7 +98,7 @@ export function Footer({
 }) {
   const year = new Date().getFullYear()
   return (
-    <footer className="bg-earth text-limestone">
+    <footer className="grain bg-earth text-limestone">
       <div className="mx-auto flex w-full max-w-[75rem] flex-col gap-3.5 px-6 pt-12 pb-28 lg:px-10 lg:pb-16">
         <ArchMark className="text-earth-soft" />
         <p className="m-0 font-display text-[2.125rem]">{settings.brandName}</p>

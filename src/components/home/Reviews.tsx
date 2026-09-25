@@ -5,7 +5,7 @@ import type { Review } from '@/lib/cms/home'
 import { externalLinkProps } from '@/lib/links'
 
 import { ReviewDeck } from './ReviewDeck'
-import { container, EmphasizeLast, EmptyNote, SectionHeading } from './shared'
+import { container, Emphasis, EmptyNote, SectionHeading } from './shared'
 
 /** Published reviews only. None yet: say so, and point to Instagram where her work already lives. */
 export function Reviews({
@@ -27,7 +27,7 @@ export function Reviews({
         className={`${container} grid gap-6 pt-16 pb-28 lg:grid-cols-12 lg:gap-10 lg:pt-28 lg:pb-40`}
       >
         <SectionHeading id="reviews-title" className="lg:col-span-5">
-          <EmphasizeLast text={heading} />
+          <Emphasis text={heading} />
         </SectionHeading>
 
         <div className="lg:col-span-6 lg:col-start-7 lg:max-w-[34rem]">

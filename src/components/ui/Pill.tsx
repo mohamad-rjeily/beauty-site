@@ -36,7 +36,7 @@ export function PillLink({
       href={href}
       aria-label={ariaLabel}
       {...(external ? externalLinkProps : {})}
-      className={`inline-flex min-h-[3.25rem] items-center justify-center gap-2.5 rounded-full px-6 text-[0.9375rem] font-semibold no-underline transition-[background-color,color,transform] duration-200 ease-out active:scale-[0.97] ${variants[variant]} ${className}`}
+      className={`inline-flex min-h-[3.25rem] items-center justify-center gap-2.5 rounded-full px-6 text-[0.9375rem] font-semibold no-underline [transition:background-color_200ms_ease,color_200ms_ease,transform_220ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] active:[transition-duration:200ms,200ms,140ms] ${variants[variant]} ${className}`}
     >
       {children}
     </a>

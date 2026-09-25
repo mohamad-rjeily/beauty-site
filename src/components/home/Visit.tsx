@@ -10,7 +10,7 @@ import { formatPhone } from '@/lib/format'
 import { externalLinkProps } from '@/lib/links'
 import type { SiteSetting } from '@/payload-types'
 
-import { container, EmphasizeLast, SectionHeading } from './shared'
+import { container, Emphasis, SectionHeading } from './shared'
 
 /**
  * Where and when. Three arches (after Lebanese triple-arch windows) rise over the reviews'
@@ -43,7 +43,7 @@ export function Visit({
               >
                 <Picture
                   photo={photo}
-                  hint={t.photoHints.studio}
+                  hint={t.photoHints.studio[i]}
                   soon={t.photoSoon}
                   sizes="(min-width: 1024px) 14rem, 33vw"
                   className={`w-full ${i === 1 ? 'aspect-[3/7]' : 'aspect-[3/5]'}`}
@@ -55,7 +55,7 @@ export function Visit({
 
         <div className="flex flex-col gap-5 lg:col-span-5 lg:self-end">
           <SectionHeading id="visit-title">
-            <EmphasizeLast text={heading} />
+            <Emphasis text={heading} />
           </SectionHeading>
 
           <div className="flex flex-col rounded-card bg-paper px-5 py-2 shadow-soft">
