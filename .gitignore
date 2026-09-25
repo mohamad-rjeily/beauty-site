@@ -51,3 +51,6 @@ node_modules/
 
 # Impeccable review evidence (screenshots, backups)
 /.impeccable/review/
+
+# Demo seed state (npm run demo:seed / demo:clear)
+/.demo-seed.json
