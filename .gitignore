@@ -48,3 +48,6 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Impeccable review evidence (screenshots, backups)
+/.impeccable/review/

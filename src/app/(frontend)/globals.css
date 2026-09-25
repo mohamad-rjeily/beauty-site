@@ -1,0 +1,224 @@
+@import 'tailwindcss';
+
+/* Only the public site's files feed Tailwind; the design mockups and the admin stay out. */
+@source not '../../../design';
+@source not '../(payload)';
+
+/*
+ * Design tokens: "C1 · Sunlit Arch". Colours are sampled from the approved design.
+ * Tailwind v4 turns every --color-* / --font-* / --shadow-* here into utilities
+ * (bg-limestone, text-ink, font-display, shadow-lift, ...).
+ */
+@theme {
+  --color-limestone: #ede6da;
+  --color-paper: #f7f2ea;
+  --color-paper-bright: #fffcf7;
+  --color-sand: #e2d8c9;
+  --color-ink: #2a2521;
+  --color-ink-soft: #574c41;
+  --color-line: #d6cbbb;
+  --color-stone: #a39480;
+  --color-clay: #9c4f32;
+  --color-clay-deep: #733820;
+  --color-clay-tint: #d9a58a;
+  --color-clay-mist: #f2ddd0;
+  --color-sage: #5e6b55;
+  --color-earth: #3a2a22;
+  --color-earth-soft: #c9b9a4;
+
+  --font-display: var(--font-display-face);
+  --font-body: var(--font-body-face);
+  --font-script: var(--font-script-face);
+
+  /* Layered depth: a tight contact shadow plus soft ambient ones, always offset downward. */
+  --shadow-soft:
+    0 1px 2px rgb(42 37 33 / 0.08), 0 8px 18px rgb(42 37 33 / 0.08),
+    0 24px 44px rgb(42 37 33 / 0.08);
+  --shadow-lift:
+    0 1px 2px rgb(42 37 33 / 0.12), 0 10px 24px rgb(42 37 33 / 0.14),
+    0 30px 60px rgb(42 37 33 / 0.14);
+  --shadow-on-clay:
+    0 1px 2px rgb(60 22 8 / 0.2), 0 10px 24px rgb(60 22 8 / 0.22), 0 30px 60px rgb(60 22 8 / 0.18);
+  --shadow-bar: 0 -1px 0 rgb(42 37 33 / 0.08), 0 -10px 30px rgb(42 37 33 / 0.12);
+
+  --radius-card: 1.25rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ── Type pairing per language ─────────────────────────────────────────── */
+:root {
+  --font-display-face: var(--font-fraunces), 'Iowan Old Style', Georgia, serif;
+  --font-body-face: var(--font-manrope), 'Segoe UI', system-ui, sans-serif;
+  --font-script-face: var(--font-delafield), cursive;
+  --leading-body: 1.6;
+  --leading-display: 0.92;
+  --tracking-display: -0.03em;
+  --size-body: 1rem;
+}
+
+/* Arabic: Amiri (Naskh with calligraphic contrast) over Readex Pro, Ruqaa for the signature.
+   Taller ascenders need looser display leading; no negative tracking in a connected script. */
+:root:lang(ar) {
+  --font-display-face: var(--font-amiri), 'Noto Naskh Arabic', serif;
+  --font-body-face: var(--font-readex), var(--font-manrope), system-ui, sans-serif;
+  --font-script-face: var(--font-ruqaa), var(--font-amiri), serif;
+  --leading-body: 1.75;
+  --leading-display: 1.25;
+  --tracking-display: 0;
+  --size-body: 1.0625rem;
+}
+
+@layer base {
+  html {
+    background: var(--color-limestone);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-block-end: 6rem;
+  }
+
+  body {
+    font-size: var(--size-body);
+    line-height: var(--leading-body);
+    min-height: 100dvh;
+  }
+
+  /* Arabic has no italics: emphasis keeps its colour, never a slanted fake. */
+  :lang(ar) em,
+  :lang(ar) i {
+    font-style: normal;
+  }
+
+  ::selection {
+    background: var(--color-clay-tint);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-clay);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  img {
+    color: transparent;
+  }
+}
+
+@layer components {
+  /* Pre-rendered paper grain (public/textures/grain.webp, 7 KB). Painted with the section
+     background, so scrolling never re-rasterizes a live filter. */
+  .grain {
+    background-image: url('/textures/grain.webp');
+    background-size: 128px 128px;
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 300;
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  :lang(ar) .display {
+    font-weight: 400;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── CSS-only motion: runs from the HTML, before and without JavaScript ─── */
+@keyframes hero-settle {
+  from {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes bar-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-rtl {
+  to {
+    transform: translateX(50%);
+  }
+}
+
+@keyframes pulse-once {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(94 107 85 / 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgb(94 107 85 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .motion-hero-photo {
+    animation: hero-settle 1.6s var(--ease-out-expo) both;
+  }
+
+  .motion-rise {
+    animation: rise-in 0.9s var(--ease-out-expo) both;
+    animation-delay: calc(var(--i, 0) * 120ms + 150ms);
+  }
+
+  .motion-bar {
+    animation: bar-in 0.6s var(--ease-out-expo) 0.6s both;
+  }
+
+  .motion-spin {
+    animation: spin 24s linear infinite;
+  }
+
+  .motion-marquee {
+    animation: marquee var(--marquee-duration, 42s) linear infinite;
+  }
+
+  :lang(ar) .motion-marquee {
+    animation-name: marquee-rtl;
+  }
+
+  .motion-pulse-later {
+    animation: pulse-once 1.4s var(--ease-out-quart) 8s 1;
+  }
+}
