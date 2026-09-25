@@ -171,7 +171,7 @@ export function Hero({
         </h1>
 
         {(home.tagline || home.accentLine) && (
-          <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 lg:pe-44">
             {home.tagline && (
               <p className="m-0 text-sm text-ink-soft lg:text-base">{home.tagline}</p>
             )}

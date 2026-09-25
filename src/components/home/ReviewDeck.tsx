@@ -37,8 +37,12 @@ export function ReviewDeck({
   // Full transform strings (not x/y/scale shorthands) keep the springs on the compositor.
   // The exit is a function variant so it reads the CURRENT direction through `custom`:
   // after Next then Previous, the old card leaves on the correct side.
+  // Tailwind-free transform strings with the SAME function list in every state, so both
+  // the browser and Motion's JS path interpolate them without jumping.
   const variants = {
-    enter: reduced ? { opacity: 0 } : { opacity: 0, transform: 'translateY(12px) scale(0.97)' },
+    enter: reduced
+      ? { opacity: 0 }
+      : { opacity: 0, transform: 'translateX(0px) translateY(12px) scale(0.97) rotate(0deg)' },
     // The resting state is rendered on the server, where reduced motion is unknown: it must be
     // identical either way, or hydration mismatches. Only enter/exit depend on the preference.
     center: { opacity: 1, transform: 'translateX(0px) translateY(0px) scale(1) rotate(0deg)' },
@@ -47,7 +51,7 @@ export function ReviewDeck({
         ? { opacity: 0 }
         : {
             opacity: 0,
-            transform: `translateX(${out(-step * 160)}px) rotate(${out(-step * 6)}deg)`,
+            transform: `translateX(${out(-step * 160)}px) translateY(0px) scale(1) rotate(${out(-step * 6)}deg)`,
           },
   }
 
@@ -128,7 +132,7 @@ export function ReviewDeck({
               {reviews.map((r, i) => (
                 <span
                   key={r.id}
-                  className={`h-1.5 w-6 rounded-full transition-[transform,background-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${i === index ? 'scale-x-100 bg-ink' : 'scale-x-25 bg-stone'}`}
+                  className={`h-1.5 w-6 rounded-full transition-[scale,background-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${i === index ? 'scale-x-100 bg-ink' : 'scale-x-25 bg-stone'}`}
                 />
               ))}
             </div>

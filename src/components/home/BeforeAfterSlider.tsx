@@ -83,8 +83,6 @@ export function BeforeAfterSlider({
     setTo(fraction * 100)
   }
 
-  const pair = pairs[index]
-
   return (
     <LazyMotion features={domAnimation} strict>
       <div className="flex flex-col gap-4">
@@ -101,26 +99,35 @@ export function BeforeAfterSlider({
           onPointerUp={() => (dragging.current = false)}
           onPointerCancel={() => (dragging.current = false)}
         >
-          {/* Keyed by pair: switching pairs cross-fades in the new photos (CSS, 250 ms). */}
-          <div key={pair.id} className="motion-fade absolute inset-0">
-            <Picture
-              photo={pair.after}
-              hint={labels.hint}
-              soon={labels.soon}
-              sizes="(min-width: 1024px) 40vw, 90vw"
-              className="absolute inset-0"
-            />
-            <m.div className="absolute inset-0" style={{ clipPath: clip }}>
+          {/* All pairs stay stacked and loaded; the active one fades in over the previous
+              one, so on slow data it never fades through an empty arch. */}
+          {pairs.map((p, i) => (
+            <div
+              key={p.id}
+              aria-hidden={i !== index}
+              className={`absolute inset-0 transition-opacity duration-[250ms] ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:duration-200 ${
+                i === index ? 'z-[1] opacity-100' : 'z-0 opacity-0'
+              }`}
+            >
               <Picture
-                photo={pair.before}
+                photo={p.after}
                 hint={labels.hint}
                 soon={labels.soon}
                 sizes="(min-width: 1024px) 40vw, 90vw"
                 className="absolute inset-0"
-                tone="dark"
               />
-            </m.div>
-          </div>
+              <m.div className="absolute inset-0" style={{ clipPath: clip }}>
+                <Picture
+                  photo={p.before}
+                  hint={labels.hint}
+                  soon={labels.soon}
+                  sizes="(min-width: 1024px) 40vw, 90vw"
+                  className="absolute inset-0"
+                  tone="dark"
+                />
+              </m.div>
+            </div>
+          ))}
 
           <span className="absolute start-4 bottom-4 rounded-full bg-ink/80 px-3 py-1.5 text-[0.6875rem] font-semibold tracking-[0.14em] text-paper uppercase rtl:tracking-normal rtl:text-xs">
             {labels.before}

@@ -5,7 +5,7 @@ import type { Locale } from '@/i18n/config'
 import type { Photo } from '@/lib/cms/home'
 import type { Home } from '@/payload-types'
 
-import { container } from './shared'
+import { container, IsolatePlaceholders } from './shared'
 
 /**
  * Her introduction. The arch photo breaks the grid: it rises over the marquee's edge.
@@ -62,9 +62,9 @@ export function Intro({
           )}
           <h2
             id="intro-title"
-            className="display m-0 min-h-[7.5rem] max-w-[10.5rem] [overflow-wrap:anywhere] text-[1.875rem] leading-[1.15] lg:min-h-0 lg:max-w-none lg:text-[3rem]"
+            className="display m-0 min-h-[7.5rem] max-w-[10.5rem] text-[1.625rem] leading-[1.15] max-lg:rtl:text-[1.5rem] lg:min-h-0 lg:max-w-none lg:text-[3rem]"
           >
-            {home.introGreeting}
+            <IsolatePlaceholders text={home.introGreeting ?? ''} />
           </h2>
 
           {home.introText && (
@@ -78,7 +78,7 @@ export function Intro({
           {home.signature && (
             <Reveal variant="wipe" delay={0.3} className="w-fit">
               <p className="m-0 -rotate-[4deg] font-script text-[4rem] leading-none text-clay ltr:origin-left rtl:origin-right rtl:rotate-[3deg] rtl:text-[2.75rem]">
-                {home.signature}
+                <IsolatePlaceholders text={home.signature} />
               </p>
             </Reveal>
           )}

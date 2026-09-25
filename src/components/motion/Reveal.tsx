@@ -105,7 +105,9 @@ export function Reveal({
     const stop = inView(
       el,
       () => {
-        animate(el, to, { duration, delay: reduced ? 0 : delay, ease })
+        const controls = animate(el, to, { duration, delay: reduced ? 0 : delay, ease })
+        // A finished wipe must not leave a clip behind: long script descenders stay whole.
+        if (variant === 'wipe') void controls.then(() => el.style.removeProperty('clip-path'))
       },
       { amount: variant === 'uncover' ? 0.15 : 0.25 },
     )

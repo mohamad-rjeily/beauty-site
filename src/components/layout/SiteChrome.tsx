@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { HideOnScrollDown } from '@/components/motion/HideOnScrollDown'
+import { IdleFlag } from '@/components/motion/IdleFlag'
 import { ArchMark, Icon } from '@/components/ui/Icon'
 import { PillLink } from '@/components/ui/Pill'
 import { format, type Dictionary } from '@/i18n'
@@ -46,6 +47,7 @@ export function StickyActions({
 
   return (
     <>
+      {chat && <IdleFlag />}
       <nav
         aria-label={t.quickActions}
         className="motion-bar fixed inset-x-0 bottom-0 z-40 lg:hidden"

@@ -25,6 +25,27 @@ export function Emphasis({ text, className = '' }: { text: string; className?: s
   )
 }
 
+/**
+ * Keeps "[FIRST_NAME]"-style placeholders whole and direction-isolated (<bdi>), so a Latin
+ * token inside Arabic text keeps its brackets and punctuation in the right order.
+ */
+export function IsolatePlaceholders({ text }: { text: string }) {
+  const parts = text.split(/(\[[^\]]+\])/g).filter(Boolean)
+  return (
+    <>
+      {parts.map((part, i) =>
+        /^\[[^\]]+\]$/.test(part) ? (
+          <bdi key={i} className="whitespace-nowrap">
+            {part}
+          </bdi>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  )
+}
+
 export function SectionHeading({
   id,
   children,

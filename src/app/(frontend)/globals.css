@@ -195,12 +195,6 @@
   }
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .motion-hero-photo {
     animation: hero-settle 1.6s var(--ease-out-expo) both;
@@ -235,10 +229,11 @@
     border: 2px solid var(--color-sage);
     opacity: 0;
     pointer-events: none;
-    animation: ring-out 1.4s var(--ease-out-quart) 8s 1;
+    animation: none;
   }
 
-  .motion-fade {
-    animation: fade-in 250ms var(--ease-out-quart) both;
+  /* Plays once, after 8 s with no scrolling or touching (IdleFlag sets data-idle). */
+  :root[data-idle] .motion-pulse-later::after {
+    animation: ring-out 1.4s var(--ease-out-quart) 1;
   }
 }
