@@ -64,7 +64,7 @@ export function ServicesShowcase({
           </ul>
         ) : (
           <div className="flex flex-col items-start gap-5 lg:col-span-8">
-            <EmptyNote className="text-clay-mist">
+            <EmptyNote className="text-paper">
               {askHref ? t.servicesSoon : t.servicesSoonNoContact}
             </EmptyNote>
             {askHref && (
