@@ -35,6 +35,8 @@ export function BeforeAfterSlider({
   rtl: boolean
 }) {
   const [index, setIndex] = useState(0)
+  // The pair being left stays fully opaque underneath while the new one fades in on top.
+  const [previous, setPrevious] = useState<number | null>(null)
   const [value, setValue] = useState(50)
   const frameRef = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)
@@ -106,7 +108,11 @@ export function BeforeAfterSlider({
               key={p.id}
               aria-hidden={i !== index}
               className={`absolute inset-0 transition-opacity duration-[250ms] ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:duration-200 ${
-                i === index ? 'z-[1] opacity-100' : 'z-0 opacity-0'
+                i === index
+                  ? 'z-[2] opacity-100'
+                  : i === previous
+                    ? 'z-[1] opacity-100 transition-none'
+                    : 'z-0 opacity-0 transition-none'
               }`}
             >
               <Picture
@@ -188,6 +194,7 @@ export function BeforeAfterSlider({
                 aria-pressed={i === index}
                 onClick={() => {
                   takeOver()
+                  if (i !== index) setPrevious(index)
                   setIndex(i)
                   setTo(50)
                 }}
