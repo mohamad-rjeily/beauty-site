@@ -1,0 +1,112 @@
+# [BRAND_NAME] website
+
+Website, booking system and shop for a makeup artist and skincare specialist in Lebanon.
+Next.js (App Router) + Payload CMS 3 (admin at `/admin`) + PostgreSQL (Neon).
+
+Project rules, the data model and the build phases are in [CLAUDE.md](CLAUDE.md).
+The approved design is in [design/](design/).
+
+## Requirements
+
+- Node.js 20.9 or newer (developed on Node 22)
+- npm
+- A PostgreSQL database (Neon)
+
+## First-time setup
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Create `.env` (git-ignored, never commit it). Copy `.env.example` and fill in:
+
+   | Variable         | What it is                                                                                          |
+   | ---------------- | --------------------------------------------------------------------------------------------------- |
+   | `DATABASE_URL`   | Neon connection string, e.g. `postgresql://user:password@host/dbname?sslmode=require`                |
+   | `PAYLOAD_SECRET` | Long random string that signs admin logins. Generate one with the command below. Keep it secret.     |
+
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   ```
+
+3. Create the database tables by running the migrations (see below):
+
+   ```bash
+   npm run migrate
+   ```
+
+4. Start the dev server and open <http://localhost:3000/admin>:
+
+   ```bash
+   npm run dev
+   ```
+
+## Creating the first admin user
+
+When the database has no users yet, `/admin` shows a **Create first user** form.
+Fill in email and password: that account is the first admin.
+
+After that, public sign-up is closed. More admins (only the owner and the developer)
+are added by a logged-in admin under **Settings → Admin users → Create new**.
+
+Each admin can switch the admin panel between English and Arabic in their account settings.
+
+## Database migrations
+
+Automatic schema "push" is turned off (`push: false` in `src/payload.config.ts`). Every change
+to the database structure goes through a migration file in `src/migrations/`, committed to git.
+This keeps production safe and protects the hand-written no-double-booking constraint.
+
+| Command                         | What it does                                                           |
+| ------------------------------- | ---------------------------------------------------------------------- |
+| `npm run migrate`               | Applies all migrations that haven't run yet                            |
+| `npm run migrate:status`        | Lists migrations and whether each has run                              |
+| `npm run migrate:create <name>` | Generates a new migration from changes to collections, globals or fields |
+
+After changing any collection, global or field:
+
+```bash
+npm run migrate:create describe-the-change   # generates src/migrations/<date>_describe-the-change.ts
+# review the generated SQL, then:
+npm run migrate
+npm run generate:types                       # refreshes src/payload-types.ts
+```
+
+## Other scripts
+
+| Command                      | What it does                                             |
+| ---------------------------- | -------------------------------------------------------- |
+| `npm run dev`                | Dev server on port 3000                                  |
+| `npm run build` / `npm start` | Production build / run it                               |
+| `npm run typecheck`          | TypeScript check (run before calling anything done)      |
+| `npm run lint`               | ESLint                                                   |
+| `npm run generate:types`     | Regenerates `src/payload-types.ts` from the config       |
+| `npm run generate:importmap` | Regenerates the admin import map after adding admin components |
+
+## Where things live
+
+```
+src/
+  payload.config.ts      Payload config: locales (en, ar), admin languages, database
+  collections/           services, gallery, products, categories, bookings, orders,
+                         testimonials, faq, media, users
+  globals/               site-settings (brand name, WhatsApp, links), availability (hours)
+  hooks/bookings/        booking rules (working hours, notice, buffer, no overlaps)
+  hooks/orders/          server-side pricing, atomic stock changes
+  fields/                shared fields: money (cents + currency), phone, slug
+  lib/                   time zone (Asia/Beirut), phone validation, transaction helper
+  migrations/            database migrations
+```
+
+## Business rules enforced on the server
+
+- **No double bookings.** A database exclusion constraint rejects overlapping non-cancelled
+  bookings, including the break after each appointment. The booking hook also checks working
+  hours, closed dates, start-time steps, minimum notice and how far ahead customers may book.
+- **Order prices** are recalculated from the products table when an order is created.
+  Prices sent by a client are ignored.
+- **Stock** goes down only when an order is confirmed, with an atomic conditional update,
+  and comes back when a confirmed order is cancelled.
+- **Customer data** (bookings, orders, users) is readable only by logged-in admins.
