@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cedar Sunlit Arch home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&amp;family=Manrope:wght@400;500;600&amp;family=Amiri:wght@400&amp;family=Mrs+Saint+Delafield&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Manrope',sans-serif;background:#EDE6DA;color:#2A2521}
+a{color:#9C4F32}a:hover{color:#733820}
+.slot{background:repeating-linear-gradient(135deg,#E2D8C9 0 10px,#DBD0BF 10px 20px);border:1px dashed #A39480;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:#574C41;box-sizing:border-box;padding:12px}
+.slot.dark{background:repeating-linear-gradient(135deg,#7D6A58 0 12px,#735F4E 12px 24px);border-color:#A08A74;color:#F7F2EA}
+.slot.alt{background:repeating-linear-gradient(45deg,#CFC0AB 0 10px,#C6B6A0 10px 20px)}
+.slot b{font:600 10px/1.2 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase}
+.slot span{font:400 12px/1.4 'Manrope',sans-serif;max-width:220px}
+.marq{display:flex;width:max-content;animation:marq 42s linear infinite}
+@keyframes marq{to{transform:translateX(-50%)}}
+.spin{animation:spin 24s linear infinite;transform-origin:54px 54px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rail::-webkit-scrollbar{display:none}
+@media (prefers-reduced-motion:reduce){.marq,.spin{animation:none}}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 5580px; display: flex; flex-direction: column; background: #EDE6DA; overflow: hidden">
+
+<section style="position: relative; height: 844px; flex-shrink: 0">
+<div class="slot dark" style="position: absolute; left: 0; top: 0; width: 390px; height: 620px; padding-bottom: 300px; border: 0">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+<b>Photo slot · Hero, full bleed</b>
+<span>Her portrait in warm golden light. Keep her face in the upper half so the headline sits over the lower third.</span>
+</div>
+<header style="position: absolute; left: 0; top: 0; z-index: 5; width: 390px; height: 64px; box-sizing: border-box; padding: 0 6px 0 20px; display: flex; align-items: center; justify-content: space-between; color: #F7F2EA">
+<div style="font-family: 'Fraunces', serif; font-size: 21px">[BRAND_NAME]</div>
+<div style="display: flex">
+<a href="#shop" aria-label="Shop" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #F7F2EA"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8h14l-1 12H6z"></path><path d="M9 8a3 3 0 0 1 6 0"></path></svg></a>
+<button aria-label="Open menu" style="width: 44px; height: 44px; border: 0; background: none; color: #F7F2EA; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h16M4 16h16"></path></svg></button>
+</div>
+</header>
+<a href="#book" aria-label="Book your date" style="position: absolute; right: 18px; top: 300px; z-index: 6; width: 108px; height: 108px; border-radius: 54px; background: {{accent}}; color: #F7F2EA; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(42, 37, 33, 0.18), 0 12px 32px rgba(42, 37, 33, 0.3)">
+<svg class="spin" width="108" height="108" viewBox="0 0 108 108" style="position: absolute; left: 0; top: 0"><defs><path id="c1ring" d="M54,54 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0"></path></defs><text fill="#F7F2EA" font-size="10.5" letter-spacing="2" font-family="Manrope, sans-serif" font-weight="600"><textPath href="#c1ring">BOOK YOUR DATE · BOOK NOW · </textPath></text></svg>
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M9 7h8v8"></path></svg>
+</a>
+<h1 style="position: absolute; left: 18px; top: 452px; z-index: 4; margin: 0; font-family: 'Fraunces', serif; font-weight: 300; font-size: 88px; line-height: 0.9; letter-spacing: -0.03em">
+<span style="display: block; color: #F7F2EA; text-shadow: 0 2px 24px rgba(42, 37, 33, 0.35)">Beauty</span>
+<span style="display: block; color: #F7F2EA; text-shadow: 0 2px 24px rgba(42, 37, 33, 0.35)">rooted</span>
+<em style="display: block; color: {{accent}}">in care.</em>
+</h1>
+<div style="position: absolute; left: 24px; top: 716px; width: 342px; display: flex; align-items: center; justify-content: space-between">
+<span style="font-size: 14px; color: #574C41">Makeup &amp; skin studio · [CITY], Lebanon</span>
+<span lang="ar" dir="rtl" style="font-family: 'Amiri', serif; font-size: 20px; color: #5E6B55">جمالكِ، بعناية</span>
+</div>
+</section>
+
+<section aria-label="Services" style="height: 76px; flex-shrink: 0; background: #2A2521; color: #F7F2EA; display: flex; align-items: center; overflow: hidden">
+<div class="marq">
+<div style="display: flex; align-items: center; gap: 22px; padding-right: 22px; font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: 26px; white-space: nowrap">
+<span>Bridal makeup</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Signature facial</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Soirée looks</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Skin consultations</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Engagement</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Private lessons</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+</div>
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 22px; padding-right: 22px; font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: 26px; white-space: nowrap">
+<span>Bridal makeup</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Signature facial</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Soirée looks</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Skin consultations</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Engagement</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+<span>Private lessons</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#D9A58A"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"></path></svg>
+</div>
+</div>
+</section>
+
+<section style="position: relative; height: 640px; flex-shrink: 0; box-sizing: border-box; padding: 48px 24px 0; display: flex; flex-direction: column; gap: 18px">
+<div style="position: absolute; right: 24px; top: -56px; z-index: 3; width: 150px; height: 220px; border-radius: 75px 75px 8px 8px; border: 4px solid #F7F2EA; box-sizing: border-box; overflow: hidden; box-shadow: 0 1px 2px rgba(42, 37, 33, 0.12), 0 8px 20px rgba(42, 37, 33, 0.14), 0 28px 56px rgba(42, 37, 33, 0.16)">
+<div class="slot" style="width: 142px; height: 212px; border: 0"><b>Photo slot</b><span>Her, candid, at work</span></div>
+</div>
+<div style="width: 170px; display: flex; flex-direction: column; gap: 8px">
+<span lang="ar" dir="rtl" style="font-family: 'Amiri', serif; font-size: 26px; color: #5E6B55; text-align: left">مرحبا</span>
+<h2 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 300; font-size: 30px; line-height: 1.15">Hello, I'm [FIRST_NAME].</h2>
+</div>
+<p style="margin: 22px 0 0; font-family: 'Fraunces', serif; font-weight: 300; font-size: 21px; line-height: 1.45">I treat the skin first, then build a look that still feels like you: on your wedding day, at a soirée, or on an ordinary Tuesday.</p>
+<div style="font-family: 'Mrs Saint Delafield', cursive; font-size: 64px; line-height: 1; color: {{accent}}; transform: rotate(-4deg); transform-origin: left center; padding-left: 4px">[First name]</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; border-top: 1px solid #D6CBBB; padding-top: 18px">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Fraunces', serif; font-size: 26px">[X] yrs</span><span style="font-size: 12px; color: #574C41">Experience</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Fraunces', serif; font-size: 26px">[X]+</span><span style="font-size: 12px; color: #574C41">Brides</span></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Fraunces', serif; font-size: 26px">[CERT]</span><span style="font-size: 12px; color: #574C41">Certified</span></div>
+</div>
+</section>
+
+<section id="services" style="position: relative; height: 900px; flex-shrink: 0; box-sizing: border-box; padding: 64px 24px 0; background: {{accent}}; color: #F7F2EA; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #F2DDD0">Services</span>
+<h2 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 300; font-size: 44px; line-height: 1.05">Two crafts,<br>one <em>hand.</em></h2>
+</div>
+<div style="width: 300px; margin-top: 8px; background: #F7F2EA; color: #2A2521; border-radius: 20px; padding: 10px; box-sizing: border-box; display: flex; gap: 14px; box-shadow: 0 1px 2px rgba(60, 22, 8, 0.2), 0 10px 24px rgba(60, 22, 8, 0.22), 0 30px 60px rgba(60, 22, 8, 0.18)">
+<div class="slot" style="width: 110px; height: 190px; flex-shrink: 0; border-radius: 55px 55px 8px 8px; padding: 6px"><b>Photo slot</b><span>Bridal detail</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 6px">
+<h3 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 400; font-size: 24px">Makeup</h3>
+<span style="font-size: 13px; line-height: 1.6; color: #574C41">Bridal<br>Soirée &amp; engagement<br>Private lessons</span>
+<span style="font-size: 13px; font-weight: 600">From [PRICE]</span>
+<a href="#makeup" style="height: 44px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">Explore <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="width: 300px; align-self: flex-end; background: #F7F2EA; color: #2A2521; border-radius: 20px; padding: 10px; box-sizing: border-box; display: flex; gap: 14px; box-shadow: 0 1px 2px rgba(60, 22, 8, 0.2), 0 10px 24px rgba(60, 22, 8, 0.22), 0 30px 60px rgba(60, 22, 8, 0.18)">
+<div class="slot" style="width: 110px; height: 190px; flex-shrink: 0; border-radius: 55px 55px 8px 8px; padding: 6px"><b>Photo slot</b><span>Facial treatment</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 6px">
+<h3 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 400; font-size: 24px">Skincare</h3>
+<span style="font-size: 13px; line-height: 1.6; color: #574C41">Signature facial<br>Skin consultation<br>Glow course</span>
+<span style="font-size: 13px; font-weight: 600">From [PRICE]</span>
+<a href="#skincare" style="height: 44px; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600">Explore <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<a href="#all-services" style="height: 44px; display: flex; align-items: center; gap: 10px; color: #F7F2EA; font-size: 14px; font-weight: 600">All services and prices <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+<div style="position: absolute; right: 24px; bottom: -70px; z-index: 3; width: 140px; height: 140px; border-radius: 70px; border: 5px solid #EDE6DA; box-sizing: border-box; overflow: hidden; box-shadow: 0 2px 4px rgba(42, 37, 33, 0.15), 0 14px 36px rgba(42, 37, 33, 0.22)">
+<div class="slot" style="width: 130px; height: 130px; border: 0"><b>Photo slot</b><span>Brushes, flat-lay</span></div>
+</div>
+</section>
+
+<section id="gallery" style="height: 820px; flex-shrink: 0; box-sizing: border-box; padding: 96px 24px 0; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: {{accent}}">Before &amp; after</span>
+<h2 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 300; font-size: 40px; line-height: 1.05">Drag to see<br>the <em>difference</em></h2>
+<span style="font-size: 14px; color: #574C41">Same light, same angle, no filters.</span>
+</div>
+<div style="position: relative; width: 342px; height: 420px; margin-top: 8px; border-radius: 171px 171px 14px 14px; overflow: hidden; box-shadow: 0 1px 2px rgba(42, 37, 33, 0.12), 0 12px 30px rgba(42, 37, 33, 0.16), 0 36px 70px rgba(42, 37, 33, 0.14)">
+<div class="slot alt" style="position: absolute; left: 0; top: 0; width: 342px; height: 420px; border: 0; padding-left: 170px"><b>Photo slot · After</b><span>{{pair.label}}</span></div>
+<div style="position: absolute; left: 0; top: 0; width: {{pos}}%; height: 420px; overflow: hidden">
+<div class="slot" style="width: 342px; height: 420px; border: 0; padding-right: 170px"><b>Photo slot · Before</b><span>{{pair.label}}</span></div>
+</div>
+<span style="position: absolute; left: 16px; bottom: 16px; padding: 6px 12px; border-radius: 14px; background: rgba(42, 37, 33, 0.78); color: #F7F2EA; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase">Before</span>
+<span style="position: absolute; right: 16px; bottom: 16px; padding: 6px 12px; border-radius: 14px; background: {{accent}}; color: #F7F2EA; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase">After</span>
+<div style="position: absolute; top: 0; left: {{pos}}%; width: 2px; height: 420px; margin-left: -1px; background: #F7F2EA; pointer-events: none"></div>
+<div style="position: absolute; top: 250px; left: {{pos}}%; width: 56px; height: 56px; margin-left: -28px; border-radius: 28px; background: #F7F2EA; color: #2A2521; display: flex; align-items: center; justify-content: center; pointer-events: none; box-shadow: 0 2px 4px rgba(42, 37, 33, 0.2), 0 10px 24px rgba(42, 37, 33, 0.25)">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"></path></svg>
+</div>
+<input type="range" min="0" max="100" value="{{pos}}" onChange="{{onSlide}}" aria-label="Compare before and after" style="position: absolute; left: 0; top: 0; width: 342px; height: 420px; margin: 0; opacity: 0.001; cursor: ew-resize">
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #574C41"><span>[TREATMENT]</span><span>[NUMBER] sessions</span></div>
+<div style="display: flex; gap: 8px">
+<sc-for list="{{pairs}}" as="p" hint-placeholder-count="3">
+<button onClick="{{p.pick}}" style="height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid {{p.border}}; background: {{p.bg}}; color: {{p.fg}}; font: 600 13px 'Manrope', sans-serif; cursor: pointer">{{p.name}}</button>
+</sc-for>
+</div>
+</section>
+
+<section id="shop" style="height: 700px; flex-shrink: 0; box-sizing: border-box; padding: 64px 0 0 24px; background: #F7F2EA; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; padding-right: 24px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: {{accent}}">Shop</span>
+<h2 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 300; font-size: 40px; line-height: 1.05">Her <em>shelf</em></h2>
+</div>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #574C41">Swipe <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></span>
+</div>
+<div class="rail" style="display: flex; gap: 14px; overflow-x: auto; padding: 8px 24px 32px 0; scroll-snap-type: x mandatory; scrollbar-width: none">
+<sc-for list="{{products}}" as="pr" hint-placeholder-count="5">
+<div style="width: 220px; flex-shrink: 0; margin-top: {{pr.offset}}px; scroll-snap-align: start; background: #FFFCF7; border-radius: 20px; padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 1px 2px rgba(42, 37, 33, 0.08), 0 8px 18px rgba(42, 37, 33, 0.08), 0 24px 44px rgba(42, 37, 33, 0.08)">
+<div class="slot" style="height: 240px; border-radius: 100px 100px 10px 10px"><b>Photo slot · Product</b><span>Packshot on limestone</span></div>
+<span style="padding: 4px 6px 0; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: {{accent}}">{{pr.cat}}</span>
+<span style="padding: 0 6px; font-family: 'Fraunces', serif; font-size: 20px">[PRODUCT NAME]</span>
+<div style="padding: 0 0 0 6px; display: flex; align-items: center; justify-content: space-between"><span style="font-size: 14px; color: #574C41">[PRICE]</span><button aria-label="Add to bag" style="width: 44px; height: 44px; border-radius: 22px; border: 0; background: #2A2521; color: #F7F2EA; font-size: 20px; cursor: pointer">+</button></div>
+</div>
+</sc-for>
+</div>
+<a href="#shop-all" style="margin-right: 24px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; border: 1.5px solid #2A2521; color: #2A2521; text-decoration: none; font-size: 15px; font-weight: 600">Shop all products</a>
+</section>
+
+<section style="height: 580px; flex-shrink: 0; box-sizing: border-box; padding: 64px 24px 0; background: #E2D8C9; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #733820">Reviews</span>
+<h2 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 300; font-size: 40px; line-height: 1.05">In <em>their</em> words</h2>
+</div>
+<div style="position: relative; height: 270px">
+<div style="position: absolute; left: 10px; top: 10px; width: 322px; height: 250px; border-radius: 20px; background: #EFE7DB; transform: rotate(4deg); box-shadow: 0 6px 18px rgba(42, 37, 33, 0.08)"></div>
+<div style="position: absolute; left: 6px; top: 6px; width: 330px; height: 254px; border-radius: 20px; background: #F3ECE1; transform: rotate(-3deg); box-shadow: 0 6px 18px rgba(42, 37, 33, 0.08)"></div>
+<div style="position: absolute; left: 0; top: 0; width: 342px; height: 260px; border-radius: 20px; background: #F7F2EA; box-sizing: border-box; padding: 26px 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 1px 2px rgba(42, 37, 33, 0.1), 0 10px 24px rgba(42, 37, 33, 0.12), 0 30px 60px rgba(42, 37, 33, 0.12)">
+<div aria-label="5 out of 5 stars" style="display: flex; gap: 3px; color: #733820">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"></path></svg>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"></path></svg>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"></path></svg>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"></path></svg>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5-6.5-4.5L5.5 21l2-7.5L2 9h7z"></path></svg>
+</div>
+<p style="margin: 0; flex-grow: 1; font-family: 'Fraunces', serif; font-weight: 300; font-size: 22px; line-height: 1.4">“{{review.q}}”</p>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">[CLIENT NAME]</span><span style="font-size: 12px; color: #574C41">{{review.s}}</span></div>
+</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<div style="display: flex; gap: 8px; align-items: center">
+<sc-for list="{{dots}}" as="d" hint-placeholder-count="3"><span style="width: {{d.w}}px; height: 6px; border-radius: 3px; background: {{d.bg}}"></span></sc-for>
+</div>
+<div style="display: flex; gap: 8px">
+<button onClick="{{prevReview}}" aria-label="Previous review" style="width: 48px; height: 48px; border-radius: 24px; border: 1.5px solid #2A2521; background: none; color: #2A2521; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12H4M10 6l-6 6 6 6"></path></svg></button>
+<button onClick="{{nextReview}}" aria-label="Next review" style="width: 48px; height: 48px; border-radius: 24px; border: 0; background: #2A2521; color: #F7F2EA; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></button>
+</div>
+</div>
+</section>
+
+<section id="book" style="height: 700px; flex-shrink: 0; box-sizing: border-box; padding: 0 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="margin-top: -70px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: end; height: 240px; position: relative; z-index: 2">
+<div class="slot" style="height: 180px; border-radius: 54px 54px 6px 6px; padding: 6px; border: 3px solid #EDE6DA; box-shadow: 0 10px 26px rgba(42, 37, 33, 0.16)"><b>Slot</b><span>Entrance</span></div>
+<div class="slot" style="height: 240px; border-radius: 54px 54px 6px 6px; padding: 6px; border: 3px solid #EDE6DA; box-shadow: 0 14px 34px rgba(42, 37, 33, 0.22)"><b>Slot</b><span>Treatment room</span></div>
+<div class="slot" style="height: 180px; border-radius: 54px 54px 6px 6px; padding: 6px; border: 3px solid #EDE6DA; box-shadow: 0 10px 26px rgba(42, 37, 33, 0.16)"><b>Slot</b><span>Map</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: {{accent}}">Visit</span>
+<h2 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 300; font-size: 40px; line-height: 1.05">Come <em>by</em> the studio</h2>
+</div>
+<div style="background: #F7F2EA; border-radius: 20px; padding: 8px 20px; display: flex; flex-direction: column; box-shadow: 0 1px 2px rgba(42, 37, 33, 0.08), 0 10px 24px rgba(42, 37, 33, 0.08)">
+<div style="min-height: 56px; display: flex; align-items: center; gap: 14px; font-size: 15px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5E6B55" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg><span>[STREET], [AREA], [CITY]</span></div>
+<div style="min-height: 56px; display: flex; align-items: center; gap: 14px; border-top: 1px solid #E2D8C9; font-size: 15px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5E6B55" stroke-width="1.6"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg><span>[DAYS] · [HOURS]</span></div>
+<a href="tel:+961" style="min-height: 56px; display: flex; align-items: center; gap: 14px; border-top: 1px solid #E2D8C9; font-size: 15px; color: #2A2521; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5E6B55" stroke-width="1.6"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"></path></svg><span>+961 [PHONE]</span></a>
+<a href="#instagram" style="min-height: 56px; display: flex; align-items: center; gap: 14px; border-top: 1px solid #E2D8C9; font-size: 15px; color: #2A2521; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5E6B55" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="#5E6B55"></circle></svg><span>@[INSTAGRAM]</span></a>
+</div>
+<a href="#directions" style="height: 54px; border-radius: 27px; display: flex; align-items: center; justify-content: center; border: 1.5px solid #2A2521; color: #2A2521; text-decoration: none; font-size: 15px; font-weight: 600; box-sizing: border-box">Get directions</a>
+</section>
+
+<footer style="flex-grow: 1; box-sizing: border-box; padding: 48px 24px 104px; background: #3A2A22; color: #EDE6DA; display: flex; flex-direction: column; gap: 14px">
+<svg width="56" height="28" viewBox="0 0 56 28" fill="none" stroke="#C9B9A4" stroke-width="1.2"><path d="M2 27V14a8 8 0 0 1 16 0v13M20 27V12a8 8 0 0 1 16 0v15M38 27V14a8 8 0 0 1 16 0v13"></path></svg>
+<div style="font-family: 'Fraunces', serif; font-size: 34px">[BRAND_NAME]</div>
+<div style="font-family: 'Mrs Saint Delafield', cursive; font-size: 40px; line-height: 1; color: #D9A58A">with love, [First name]</div>
+<div style="display: flex; gap: 22px; font-size: 14px; font-weight: 600">
+<a href="#services" style="color: #EDE6DA; text-decoration: none">Services</a><a href="#shop" style="color: #EDE6DA; text-decoration: none">Shop</a><a href="#gallery" style="color: #EDE6DA; text-decoration: none">Gallery</a>
+</div>
+<div style="font-size: 12px; color: #C9B9A4">© [YEAR] [BRAND_NAME] · [CITY], Lebanon</div>
+</footer>
+
+<nav aria-label="Quick actions" style="position: absolute; left: 0; top: 772px; z-index: 40; width: 390px; height: 72px; box-sizing: border-box; padding: 10px 16px; background: #F7F2EA; display: flex; align-items: center; gap: 10px; box-shadow: 0 -1px 0 rgba(42, 37, 33, 0.08), 0 -10px 30px rgba(42, 37, 33, 0.12)">
+<a href="#book" style="flex-grow: 1; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; gap: 10px; background: {{accent}}; color: #F7F2EA; text-decoration: none; font-size: 15px; font-weight: 600">Book now <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+<a href="#whatsapp" aria-label="Chat on WhatsApp" style="width: 52px; height: 52px; flex-shrink: 0; border-radius: 26px; background: #5E6B55; color: #F7F2EA; display: flex; align-items: center; justify-content: center">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3.5 20.5l1.3-4A8.5 8.5 0 1 1 8 19.3z"></path><path d="M9 8.5c.3 3.3 3.2 6.2 6.5 6.5l1-1.6-2-1-1 .9c-1.1-.5-2.2-1.6-2.8-2.8l.9-1-1-2z"></path></svg>
+</a>
+</nav>
+
+<svg aria-hidden="true" width="390" height="5580" style="position: absolute; left: 0; top: 0; z-index: 60; pointer-events: none; opacity: 0.08; mix-blend-mode: multiply"><filter id="c1grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="390" height="5580" filter="url(#c1grain)"></rect></svg>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#9C4F32","options":["#9C4F32","#8A5A3B","#7C4A55","#5E6B55"]},"$preview":{"width":390,"height":5580}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { pos: 50, pair: 0, rev: 0 };
+}
+renderVals() {
+const accent = this.props.accent ?? '#9C4F32';
+const names = ['Bridal', 'Acne care', 'Glow course'];
+const reviews = [
+{ q: '[Client review 1 — one or two sentences in her own words.]', s: 'Bride · [MONTH YEAR]' },
+{ q: '[Client review 2 — about a facial or skin result.]', s: 'Skincare · [MONTH YEAR]' },
+{ q: '[Client review 3 — about a soirée or event look.]', s: 'Soirée · [MONTH YEAR]' }
+];
+const rev = this.state.rev;
+return {
+accent,
+pos: this.state.pos,
+onSlide: (e) => this.setState({ pos: Number(e.target.value) }),
+pair: { label: 'Pair ' + (this.state.pair + 1) + ' · ' + names[this.state.pair] },
+pairs: names.map((name, i) => {
+const on = i === this.state.pair;
+return { name, bg: on ? '#2A2521' : 'transparent', fg: on ? '#F7F2EA' : '#2A2521', border: on ? '#2A2521' : '#A39480', pick: () => this.setState({ pair: i, pos: 50 }) };
+}),
+products: [
+{ cat: 'Skincare', offset: 0 }, { cat: 'Makeup', offset: 28 }, { cat: 'Skincare', offset: 0 }, { cat: 'Makeup', offset: 28 }, { cat: 'Tools', offset: 0 }
+],
+review: reviews[rev],
+dots: reviews.map((r, i) => ({ w: i === rev ? 24 : 6, bg: i === rev ? '#2A2521' : '#A39480' })),
+nextReview: () => this.setState({ rev: (rev + 1) % reviews.length }),
+prevReview: () => this.setState({ rev: (rev + reviews.length - 1) % reviews.length })
+};
+}
+}
+</script>
+</body>
+</html>
