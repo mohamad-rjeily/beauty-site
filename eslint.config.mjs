@@ -35,4 +35,9 @@ export default defineConfig([
     'src/payload-generated-schema.ts',
     'src/app/(payload)/admin/importMap.js',
   ]),
+  {
+    // Payload generates migrations with the full (payload, req) signature.
+    files: ['src/migrations/**/*.ts'],
+    rules: { '@typescript-eslint/no-unused-vars': 'off' },
+  },
 ])

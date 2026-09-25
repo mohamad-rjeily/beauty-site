@@ -9,13 +9,18 @@ export const SERVICE_CATEGORIES = [
   { label: t('Skincare', 'العناية بالبشرة'), value: 'skincare' },
 ]
 
+export const BOOKING_MODES = [
+  { label: t('Pick a time slot', 'اختيار موعد محدد'), value: 'slot' },
+  { label: t('Send a request (bridal, events)', 'إرسال طلب (عرائس، مناسبات)'), value: 'request' },
+]
+
 export const Services: CollectionConfig = {
   slug: 'services',
   labels: { singular: t('Service', 'خدمة'), plural: t('Services', 'الخدمات') },
   admin: {
     useAsTitle: 'name',
     group: t('Content', 'المحتوى'),
-    defaultColumns: ['name', 'category', 'duration', 'active', 'sortOrder'],
+    defaultColumns: ['name', 'category', 'bookingMode', 'duration', 'active', 'sortOrder'],
   },
   defaultSort: 'sortOrder',
   access: {
@@ -36,6 +41,20 @@ export const Services: CollectionConfig = {
     { name: 'description', type: 'richText', label: t('Description', 'الوصف'), localized: true },
     moneyField({ name: 'price', label: t('Price', 'السعر') }),
     {
+      name: 'bookingMode',
+      type: 'select',
+      label: t('How customers book', 'طريقة الحجز'),
+      required: true,
+      defaultValue: 'slot',
+      options: BOOKING_MODES,
+      admin: {
+        description: t(
+          'Time slot: the customer picks an exact time. Request: she sends a date and details, and you set the time when confirming.',
+          'موعد محدد: تختار العميلة وقتاً محدداً. طلب: ترسل التاريخ والتفاصيل، وتحددين الوقت عند التأكيد.',
+        ),
+      },
+    },
+    {
       name: 'duration',
       type: 'number',
       label: t('Duration (minutes)', 'المدة (بالدقائق)'),
@@ -44,8 +63,8 @@ export const Services: CollectionConfig = {
       admin: {
         step: 5,
         description: t(
-          'Used to block the calendar when this service is booked.',
-          'تُستخدم لحجز الوقت في التقويم عند حجز هذه الخدمة.',
+          'Time-slot bookings block this long in the calendar. For requests it is only a guide.',
+          'مواعيد الوقت المحدد تحجز هذه المدة في التقويم. في الطلبات هي للإرشاد فقط.',
         ),
       },
     },

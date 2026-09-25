@@ -116,14 +116,15 @@ export interface Service {
     [k: string]: unknown;
   } | null;
   price: {
-    /**
-     * Example: 2500 = $25.00
-     */
     amount: number;
     currency: 'USD';
   };
   /**
-   * Used to block the calendar when this service is booked.
+   * Time slot: the customer picks an exact time. Request: she sends a date and details, and you set the time when confirming.
+   */
+  bookingMode: 'slot' | 'request';
+  /**
+   * Time-slot bookings block this long in the calendar. For requests it is only a guide.
    */
   duration: number;
   images?: (number | Media)[] | null;
@@ -247,16 +248,17 @@ export interface Product {
     [k: string]: unknown;
   } | null;
   price: {
-    /**
-     * Example: 2500 = $25.00
-     */
     amount: number;
     currency: 'USD';
   };
   /**
-   * Goes down automatically when an order is confirmed, and back up if it is cancelled.
+   * Goes down when an order is confirmed and back up if it is cancelled. To change it by hand, use "Adjust stock by".
    */
   stock: number;
+  /**
+   * Received 10 more: enter 10. Found 2 damaged: enter -2. Cleared after saving.
+   */
+  stockAdjustment?: number | null;
   images?: (number | Media)[] | null;
   active?: boolean | null;
   /**
@@ -298,8 +300,9 @@ export interface Order {
    * International format, starting with + and the country code.
    */
   phone: string;
-  address: string;
-  area: string;
+  fulfillment: 'delivery' | 'pickup';
+  address?: string | null;
+  area?: string | null;
   /**
    * Names and prices are copied from the products when the order is created, and never change afterwards.
    */
@@ -321,9 +324,8 @@ export interface Order {
     amount?: number | null;
     currency?: 'USD' | null;
   };
-  paymentMethod: 'cod' | 'in_person';
   /**
-   * Confirming takes the products out of stock; cancelling a confirmed order puts them back.
+   * Confirming takes the products out of stock; cancelling a confirmed order puts them back. Delivered is final.
    */
   status: 'new' | 'confirmed' | 'delivered' | 'cancelled';
   updatedAt: string;
@@ -341,10 +343,24 @@ export interface Booking {
    */
   phone: string;
   service: number | Service;
-  startTime: string;
-  startTime_tz: SupportedTimezones;
+  mode: 'slot' | 'request';
+  /**
+   * Requests: enter it when you confirm.
+   */
+  startTime?: string | null;
+  startTime_tz?: SupportedTimezones;
+  /**
+   * Time slots: calculated from the service. Requests: enter it yourself.
+   */
   endTime?: string | null;
+  endTime_tz?: SupportedTimezones;
   occupiedUntil?: string | null;
+  requestedDate?: string | null;
+  requestedDate_tz?: SupportedTimezones;
+  peopleCount?: number | null;
+  locationType?: ('studio' | 'onLocation') | null;
+  wantsTrial?: boolean | null;
+  locationAddress?: string | null;
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   notes?: string | null;
   updatedAt: string;
@@ -497,6 +513,7 @@ export interface ServicesSelect<T extends boolean = true> {
         amount?: T;
         currency?: T;
       };
+  bookingMode?: T;
   duration?: T;
   images?: T;
   active?: T;
@@ -595,6 +612,7 @@ export interface ProductsSelect<T extends boolean = true> {
         currency?: T;
       };
   stock?: T;
+  stockAdjustment?: T;
   images?: T;
   active?: T;
   homemade?:
@@ -627,6 +645,7 @@ export interface CategoriesSelect<T extends boolean = true> {
 export interface OrdersSelect<T extends boolean = true> {
   customerName?: T;
   phone?: T;
+  fulfillment?: T;
   address?: T;
   area?: T;
   items?:
@@ -655,7 +674,6 @@ export interface OrdersSelect<T extends boolean = true> {
         amount?: T;
         currency?: T;
       };
-  paymentMethod?: T;
   status?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -668,10 +686,18 @@ export interface BookingsSelect<T extends boolean = true> {
   customerName?: T;
   phone?: T;
   service?: T;
+  mode?: T;
   startTime?: T;
   startTime_tz?: T;
   endTime?: T;
+  endTime_tz?: T;
   occupiedUntil?: T;
+  requestedDate?: T;
+  requestedDate_tz?: T;
+  peopleCount?: T;
+  locationType?: T;
+  wantsTrial?: T;
+  locationAddress?: T;
   status?: T;
   notes?: T;
   updatedAt?: T;
