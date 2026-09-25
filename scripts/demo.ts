@@ -39,6 +39,10 @@ const PALETTES = {
 } as const
 type Palette = keyof typeof PALETTES
 
+/** Escapes text for use inside SVG markup ("Oat & honey" would otherwise break the file). */
+const xml = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
 const demoImage = async (label: string, palette: Palette, width: number, height: number) => {
   const [from, to] = PALETTES[palette]
   const size = Math.round(width / 11)
@@ -47,7 +51,7 @@ const demoImage = async (label: string, palette: Palette, width: number, height:
       <stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/></linearGradient></defs>
     <rect width="100%" height="100%" fill="url(#g)"/>
     <text x="50%" y="46%" text-anchor="middle" font-family="Georgia, serif" font-size="${size}" fill="#fffcf7" fill-opacity="0.9" letter-spacing="${size / 5}">DEMO</text>
-    <text x="50%" y="54%" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="${Math.round(size / 3)}" fill="#fffcf7" fill-opacity="0.85">${label}</text>
+    <text x="50%" y="54%" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="${Math.round(size / 3)}" fill="#fffcf7" fill-opacity="0.85">${xml(label)}</text>
   </svg>`
   return sharp(Buffer.from(svg)).png().toBuffer()
 }
