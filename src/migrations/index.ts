@@ -4,7 +4,7 @@ import * as migration_20260925_195710_home_page_and_featured_products from './20
 import * as migration_20260925_205310_home_accent_lines from './20260925_205310_home_accent_lines'
 import * as migration_20260926_142749_pages_about_gallery_style from './20260926_142749_pages_about_gallery_style'
 import * as migration_20260926_204058_service_slug from './20260926_204058_service_slug'
-import * as migration_20260926_204750_booking_rate_limits_owner_name from './20260926_204750_booking_rate_limits_owner_name'
+import * as migration_20260926_204750_booking_rate_limits from './20260926_204750_booking_rate_limits'
 
 export const migrations = [
   {
@@ -38,8 +38,8 @@ export const migrations = [
     name: '20260926_204058_service_slug',
   },
   {
-    up: migration_20260926_204750_booking_rate_limits_owner_name.up,
-    down: migration_20260926_204750_booking_rate_limits_owner_name.down,
-    name: '20260926_204750_booking_rate_limits_owner_name',
+    up: migration_20260926_204750_booking_rate_limits.up,
+    down: migration_20260926_204750_booking_rate_limits.down,
+    name: '20260926_204750_booking_rate_limits',
   },
 ]

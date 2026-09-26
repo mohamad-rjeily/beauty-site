@@ -5,7 +5,6 @@ import { phoneField } from '@/fields/phone'
 import { t } from '@/lib/i18n'
 
 export const BRAND_NAME_PLACEHOLDER = '[BRAND_NAME]'
-export const OWNER_NAME_PLACEHOLDER = '[FIRST_NAME]'
 
 /** The single source for the brand name and contact details used across the site. */
 export const SiteSettings: GlobalConfig = {
@@ -24,20 +23,6 @@ export const SiteSettings: GlobalConfig = {
       required: true,
       localized: true,
       defaultValue: BRAND_NAME_PLACEHOLDER,
-    },
-    {
-      // Used in customer-facing lines such as "…so Maya can confirm faster".
-      name: 'ownerFirstName',
-      type: 'text',
-      label: t('Your first name', 'اسمك الأول'),
-      localized: true,
-      defaultValue: OWNER_NAME_PLACEHOLDER,
-      admin: {
-        description: t(
-          'Shown to customers after they book, e.g. "so Maya can confirm faster".',
-          'يظهر للعميلات بعد الحجز، مثال: "لتتمكن مايا من التأكيد بسرعة".',
-        ),
-      },
     },
     phoneField({ name: 'whatsappNumber', label: t('WhatsApp number', 'رقم واتساب') }),
     {

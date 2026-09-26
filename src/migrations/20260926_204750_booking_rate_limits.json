@@ -3473,13 +3473,6 @@
           "notNull": true,
           "default": "'[BRAND_NAME]'"
         },
-        "owner_first_name": {
-          "name": "owner_first_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'[FIRST_NAME]'"
-        },
         "location_text": {
           "name": "location_text",
           "type": "varchar",
@@ -5570,6 +5563,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "a5a45259-d664-44d1-b5a6-dace382544d1",
+  "id": "e91085a2-5b43-4e88-8421-1d177a02f51c",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }
