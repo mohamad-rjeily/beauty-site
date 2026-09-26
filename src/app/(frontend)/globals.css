@@ -236,6 +236,20 @@
   }
 }
 
+/* Booking steps: a step's content rises in as it opens; times fade when the day changes. */
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
 /* One soft ring expanding away from the WhatsApp button: transform + opacity only.
    The button must be positioned (relative or fixed) for the ring to sit on it. */
 @keyframes ring-out {
@@ -272,6 +286,14 @@
     animation: bar-in 0.6s var(--ease-out-expo) 0.6s both;
   }
 
+  .motion-step {
+    animation: step-in 0.5s var(--ease-out-expo) both;
+  }
+
+  .motion-fade {
+    animation: fade-in 0.25s var(--ease-out-quart) both;
+  }
+
   .motion-spin {
     animation: spin 24s linear infinite;
   }
@@ -298,5 +320,13 @@
   /* Plays once, after 8 s with no scrolling or touching (IdleFlag sets data-idle). */
   :root[data-idle] .motion-pulse-later::after {
     animation: ring-out 1.4s var(--ease-out-quart) 1;
+  }
+}
+
+/* Reduced motion: booking steps and times only fade, briefly. */
+@media (prefers-reduced-motion: reduce) {
+  .motion-step,
+  .motion-fade {
+    animation: fade-in 0.3s ease both;
   }
 }

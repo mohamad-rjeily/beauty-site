@@ -4,6 +4,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 
 import { format, type Dictionary } from '@/i18n'
+import { loadFreeSlots } from '@/lib/booking'
 import { defaultLocale, type Locale } from '@/i18n/config'
 import { formatPrice } from '@/lib/format'
 import { inBusinessZone, WEEKDAYS, type Weekday } from '@/lib/time'
@@ -34,6 +35,7 @@ export const richTextParagraphs = (value: unknown): string[] => {
 
 export type ServiceItem = {
   id: number
+  slug: string
   name: string
   category: 'makeup' | 'skincare'
   mode: 'slot' | 'request'
@@ -53,6 +55,7 @@ export const formatDuration = (minutes: number, t: Dictionary): string => {
 
 const toServiceItem = (s: Service, locale: Locale): ServiceItem => ({
   id: s.id,
+  slug: s.slug,
   name: s.name,
   category: s.category,
   mode: s.bookingMode,
@@ -87,6 +90,36 @@ export const getServicesPage = async (locale: Locale) => {
     services: services.docs.map((s) => toServiceItem(s, locale)),
   }
 }
+
+// ── Booking ─────────────────────────────────────────────────────────────────
+
+/** Everything the booking page needs to start: bookable services and the owner's details. */
+export const getBookingPage = async (locale: Locale) => {
+  const payload = await getPayload({ config })
+  const [settings, home, availability, services] = await Promise.all([
+    payload.findGlobal({ slug: 'site-settings', depth: 0, ...common(locale) }),
+    payload.findGlobal({ slug: 'home', depth: 0, ...common(locale) }),
+    payload.findGlobal({ slug: 'availability', depth: 0, ...common(locale) }),
+    payload.find({
+      collection: 'services',
+      where: { active: { equals: true } },
+      sort: 'sortOrder',
+      depth: 1,
+      limit: 200,
+      ...common(locale),
+    }),
+  ])
+  return {
+    settings,
+    ownerName: home.signature ?? '',
+    maxDaysAhead: availability.maxDaysAhead,
+    services: services.docs.map((s) => toServiceItem(s, locale)),
+  }
+}
+
+/** Free times of a slot service, for a booking link that already names it (?service=...). */
+export const getInitialSlots = async (serviceId: number) =>
+  loadFreeSlots(await getPayload({ config }), serviceId)
 
 // ── Gallery ─────────────────────────────────────────────────────────────────
 
