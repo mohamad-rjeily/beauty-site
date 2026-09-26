@@ -161,12 +161,13 @@ export function SlotPicker({
                 key={day.date}
                 type="button"
                 disabled={!open}
+                // `relative` keeps the tile's screen-reader label inside the scrolling strip.
                 // Styled by data-closed, not :disabled: the whole step is also disabled for a
                 // moment while the page starts, and open days must not look closed then.
                 data-closed={open ? undefined : ''}
                 aria-pressed={day.date === date}
                 onClick={() => onDate(day.date)}
-                className="flex h-[5.75rem] w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-t-full rounded-b-lg border border-line bg-paper-bright pt-2 text-ink transition-[background-color,border-color,color,scale] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-ink active:scale-[0.96] data-closed:cursor-default data-closed:border-transparent data-closed:bg-transparent data-closed:text-stone data-closed:hover:border-transparent data-closed:active:scale-100 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper"
+                className="relative flex h-[5.75rem] w-[4.25rem] shrink-0 snap-start flex-col items-center justify-center gap-0.5 rounded-t-full rounded-b-lg border border-line bg-paper-bright pt-2 text-ink transition-[background-color,border-color,color,scale] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-ink active:scale-[0.96] data-closed:cursor-default data-closed:border-transparent data-closed:bg-transparent data-closed:text-stone data-closed:hover:border-transparent data-closed:active:scale-100 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper"
               >
                 <span className="text-[0.6875rem] font-semibold">
                   {formatDay(day.date, locale, { weekday: 'short' })}

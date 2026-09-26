@@ -41,7 +41,7 @@ export function ServicePicker({
             {group.services.map((service) => (
               <label
                 key={service.id}
-                className="group relative flex cursor-pointer items-center gap-4 rounded-2xl border-t border-sand px-1 py-4 first:border-t-0 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-clay"
+                className="group relative flex cursor-pointer items-center gap-4 border-t border-sand px-1 py-4 first:border-t-0 has-focus-visible:rounded-2xl has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-clay"
               >
                 <input
                   type="radio"

@@ -152,13 +152,13 @@ export function Step({
             tabIndex={-1}
             className={`display m-0 scroll-mt-24 font-normal outline-none ${
               state === 'open' ? 'text-[1.75rem] lg:text-[2.25rem]' : 'text-[1.375rem]'
-            } ${state === 'locked' ? 'text-stone' : ''}`}
+            } ${state === 'locked' ? 'text-ink-soft' : ''}`}
           >
             <span className="sr-only">{label}: </span>
             {title}
           </h2>
           {state === 'done' && summary && (
-            <p className="m-0 mt-1 truncate text-sm text-ink-soft">{summary}</p>
+            <p className="m-0 mt-1 text-sm text-ink-soft">{summary}</p>
           )}
         </div>
         {state === 'done' && onChange && (

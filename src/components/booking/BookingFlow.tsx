@@ -267,8 +267,8 @@ export function BookingFlow({
         ].join(' · ')
 
   return (
-    <div className="grid gap-10 lg:grid-cols-12">
-      <ol className="m-0 flex list-none flex-col gap-3 p-0 lg:col-span-7">
+    <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+      <ol className="m-0 flex min-w-0 list-none flex-col gap-3 p-0 lg:col-span-7">
         <Step
           n={1}
           label={format(b.stepLabel, { n: 1 })}

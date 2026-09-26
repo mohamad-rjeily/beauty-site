@@ -32,7 +32,7 @@ export const formatWhen = (iso: string, locale: Locale): string =>
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-  }).format(new Date(iso))}, ${formatTime(iso, locale)}`
+  }).format(new Date(iso))}${locale === 'ar' ? '،' : ','} ${formatTime(iso, locale)}`
 
 /**
  * Today's date in Beirut, "YYYY-MM-DD". Built from parts: a locale's date layout (even
