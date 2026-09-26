@@ -4,8 +4,9 @@
  *   npm run demo:clear   delete all of it and put the database back exactly as before
  *
  * Every record has "DEMO" in its name. Photos are flat palette gradients labelled DEMO:
- * no faces, no fake results. What was created and the previous state of the two globals
- * are saved in .demo-seed.json (git-ignored); seeding twice is refused.
+ * no faces, no fake results. What was created and the previous state of the globals it
+ * touches (site settings, home, about, page texts) are saved in .demo-seed.json
+ * (git-ignored); seeding twice is refused.
  */
 import config from '@payload-config'
 import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
@@ -13,18 +14,21 @@ import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { getPayload, type Payload } from 'payload'
 import sharp from 'sharp'
 
-import type { Home, SiteSetting } from '../src/payload-types'
+import type { About, Home, Page, SiteSetting } from '../src/payload-types'
 
 const STATE_FILE = '.demo-seed.json'
 
 type GlobalSnapshot<T> = { existed: boolean; en?: T; ar?: T }
+type Collection =
+  'media' | 'services' | 'categories' | 'products' | 'testimonials' | 'gallery' | 'faq'
+type GlobalSlug = 'site-settings' | 'home' | 'about' | 'pages'
 type State = {
-  created: Record<
-    'media' | 'services' | 'categories' | 'products' | 'testimonials' | 'gallery',
-    number[]
-  >
+  created: Record<Collection, number[]>
   siteSettings: GlobalSnapshot<SiteSetting>
   home: GlobalSnapshot<Home>
+  // Added with the about / page texts demo; older state files don't have them.
+  about?: GlobalSnapshot<About>
+  pages?: GlobalSnapshot<Page>
 }
 
 const mode = process.argv.at(-1)
@@ -90,10 +94,7 @@ const uploadDemo = async (
 const save = (state: State) => writeFileSync(STATE_FILE, JSON.stringify(state, null, 2))
 
 /** A global's current values in both languages, and whether it was ever saved. */
-const snapshot = async <T>(
-  slug: 'site-settings' | 'home',
-  table: string,
-): Promise<GlobalSnapshot<T>> => {
+const snapshot = async <T>(slug: GlobalSlug, table: string): Promise<GlobalSnapshot<T>> => {
   const rows = await db.execute(sql.raw(`SELECT count(*)::int AS n FROM ${table}`))
   const existed = (rows.rows[0] as { n: number }).n > 0
   if (!existed) return { existed }
@@ -116,6 +117,99 @@ const editable = <T extends object>(doc: T) => {
 
 const money = (amount: number) => ({ amount, currency: 'USD' as const })
 
+/** A one-paragraph Lexical rich-text value (service descriptions). */
+const richText = (text: string, direction: 'ltr' | 'rtl' = 'ltr') => ({
+  root: {
+    type: 'root',
+    format: '' as const,
+    indent: 0,
+    version: 1,
+    direction,
+    children: [
+      {
+        type: 'paragraph',
+        format: '' as const,
+        indent: 0,
+        version: 1,
+        direction,
+        textFormat: 0,
+        children: [
+          { type: 'text', text, format: 0, detail: 0, mode: 'normal', style: '', version: 1 },
+        ],
+      },
+    ],
+  },
+})
+
+type ConfigField = {
+  type: string
+  name?: string
+  localized?: boolean
+  defaultValue?: unknown
+  fields?: ConfigField[]
+  tabs?: ConfigField[]
+}
+
+/**
+ * The default values of a global's localized fields for one language, shaped like its data
+ * (named tabs and groups nest). Payload applies defaults only when a document is created, so
+ * a language that was never saved would otherwise fall back to the other one.
+ */
+const localeDefaults = (fields: ConfigField[], locale: 'en' | 'ar'): Record<string, unknown> => {
+  const out: Record<string, unknown> = {}
+  for (const field of fields) {
+    if (field.type === 'tabs') {
+      for (const tab of field.tabs ?? []) {
+        const inner = localeDefaults(tab.fields ?? [], locale)
+        if (tab.name) out[tab.name] = inner
+        else Object.assign(out, inner)
+      }
+    } else if (field.type === 'row' || field.type === 'collapsible') {
+      Object.assign(out, localeDefaults(field.fields ?? [], locale))
+    } else if (field.type === 'group' && field.name) {
+      out[field.name] = localeDefaults(field.fields ?? [], locale)
+    } else if (field.name && field.localized && field.defaultValue !== undefined) {
+      out[field.name] =
+        typeof field.defaultValue === 'function'
+          ? (field.defaultValue as (args: { locale: string }) => unknown)({ locale })
+          : field.defaultValue
+    }
+  }
+  return out
+}
+
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+/** Deep merge where empty (null / undefined) values never overwrite a real one. */
+const merge = (base: Record<string, unknown>, over: Record<string, unknown>) => {
+  const out = { ...base }
+  for (const [key, value] of Object.entries(over)) {
+    if (value === null || value === undefined) continue
+    out[key] = isPlainObject(value) && isPlainObject(out[key]) ? merge(out[key], value) : value
+  }
+  return out
+}
+
+/**
+ * Writes both languages of a global: that language's defaults, then what is already saved in
+ * it (read without falling back to the other language), then the demo values.
+ */
+const updateBoth = async (
+  slug: GlobalSlug,
+  shared: Record<string, unknown>,
+  byLocale: { en: Record<string, unknown>; ar: Record<string, unknown> },
+) => {
+  const fields = payload.config.globals.find((g) => g.slug === slug)?.fields ?? []
+  for (const locale of ['en', 'ar'] as const) {
+    const current = await payload.findGlobal({ slug, locale, fallbackLocale: false, depth: 0 })
+    const data = merge(
+      merge(localeDefaults(fields as ConfigField[], locale), editable(current)),
+      merge(shared, byLocale[locale]),
+    )
+    await payload.updateGlobal({ slug, locale, data: data as never })
+  }
+}
 // ── Seed ──────────────────────────────────────────────────────────────────
 const seed = async () => {
   if (existsSync(STATE_FILE))
@@ -129,9 +223,12 @@ const seed = async () => {
       products: [],
       testimonials: [],
       gallery: [],
+      faq: [],
     },
     siteSettings: await snapshot<SiteSetting>('site-settings', 'site_settings'),
     home: await snapshot<Home>('home', 'home'),
+    about: await snapshot<About>('about', 'about'),
+    pages: await snapshot<Page>('pages', 'pages'),
   }
   save(state)
 
@@ -139,7 +236,17 @@ const seed = async () => {
   await payload.updateGlobal({
     slug: 'site-settings',
     locale: 'en',
-    data: { whatsappNumber: '+9613000000', instagramUrl: 'https://www.instagram.com/demo.account' },
+    data: {
+      whatsappNumber: '+9613000000',
+      instagramUrl: 'https://www.instagram.com/demo.account',
+      locationText: 'DEMO street, building, floor\nDEMO area, city',
+      mapLink: 'https://maps.google.com/?q=Beirut',
+    },
+  })
+  await payload.updateGlobal({
+    slug: 'site-settings',
+    locale: 'ar',
+    data: { locationText: 'DEMO الشارع، المبنى، الطابق\nDEMO المنطقة، المدينة' },
   })
 
   // Home photos. Both languages are written in full, so the Arabic text keeps its own defaults.
@@ -150,21 +257,13 @@ const seed = async () => {
     await uploadDemo(state, 'Treatment room', 'sage', 600, 1400, 'غرفة العلاج'),
     await uploadDemo(state, 'Studio detail', 'clay', 600, 1000, 'تفصيل من الاستوديو'),
   ]
-  const homeEn = await payload.findGlobal({ slug: 'home', locale: 'en', depth: 0 })
-  const homeAr = await payload.findGlobal({ slug: 'home', locale: 'ar', depth: 0 })
-  const photos = { heroPhoto: hero, introPhoto: intro, studioPhotos: studio }
-  await payload.updateGlobal({
-    slug: 'home',
-    locale: 'en',
-    data: { ...editable(homeEn), ...photos },
-  })
-  await payload.updateGlobal({
-    slug: 'home',
-    locale: 'ar',
-    data: { ...editable(homeAr), ...photos },
-  })
+  await updateBoth(
+    'home',
+    { heroPhoto: hero, introPhoto: intro, studioPhotos: studio },
+    { en: {}, ar: {} },
+  )
 
-  // Services (one bridal "request" service)
+  // Services (bridal and event makeup are "request" services)
   const services = [
     {
       en: 'DEMO Bridal makeup',
@@ -174,6 +273,15 @@ const seed = async () => {
       duration: 180,
       mode: 'request',
       palette: 'clay',
+    },
+    {
+      en: 'DEMO Event makeup',
+      ar: 'DEMO مكياج مناسبات',
+      category: 'makeup',
+      amount: 15000,
+      duration: 120,
+      mode: 'request',
+      palette: 'sand',
     },
     {
       en: 'DEMO Soirée makeup',
@@ -243,9 +351,20 @@ const seed = async () => {
         images: [image],
         sortOrder: i,
         active: true,
-      },
+        description: richText(
+          'DEMO description: placeholder text showing where a short description of what is included will go.',
+        ),
+      } as never,
     })
-    await payload.update({ collection: 'services', id: doc.id, locale: 'ar', data: { name: s.ar } })
+    await payload.update({
+      collection: 'services',
+      id: doc.id,
+      locale: 'ar',
+      data: {
+        name: s.ar,
+        description: richText('DEMO وصف: نص مؤقت يوضّح مكان الوصف القصير لما تشمله الخدمة.', 'rtl'),
+      } as never,
+    })
     state.created.services.push(doc.id)
     serviceIds.push(doc.id)
     save(state)
@@ -445,48 +564,253 @@ const seed = async () => {
     save(state)
   }
 
-  // Before/after pairs: plain gradients labelled Before / After, never fake results.
-  for (const [i, pair] of [
-    { en: 'DEMO Bridal pair', ar: 'DEMO زوج عروس', category: 'makeup' },
-    { en: 'DEMO Skin pair', ar: 'DEMO زوج بشرة', category: 'skincare' },
-  ].entries()) {
-    const before = await uploadDemo(state, `Before ${i + 1}`, 'sand', 800, 980, `قبل ${i + 1}`)
-    const after = await uploadDemo(state, `After ${i + 1}`, 'clay', 800, 980, `بعد ${i + 1}`)
+  // Gallery: eight items across all four styles. Three are before/after pairs (plain
+  // gradients labelled Before / After, never fake results); the rest are single photos.
+  const galleryItems = [
+    {
+      en: 'DEMO Bridal pair',
+      ar: 'DEMO زوج عروس',
+      category: 'makeup',
+      style: 'bridal',
+      pair: true,
+      featured: true,
+      service: 0,
+    },
+    {
+      en: 'DEMO Skin pair',
+      ar: 'DEMO زوج بشرة',
+      category: 'skincare',
+      style: 'skin',
+      pair: true,
+      featured: true,
+      service: 4,
+    },
+    {
+      en: 'DEMO Soirée pair',
+      ar: 'DEMO زوج سهرة',
+      category: 'makeup',
+      style: 'soiree',
+      pair: true,
+      featured: false,
+      service: 2,
+    },
+    {
+      en: 'DEMO Bridal detail',
+      ar: 'DEMO تفصيل عروس',
+      category: 'makeup',
+      style: 'bridal',
+      pair: false,
+      featured: false,
+      service: 0,
+    },
+    {
+      en: 'DEMO Soirée look',
+      ar: 'DEMO إطلالة سهرة',
+      category: 'makeup',
+      style: 'soiree',
+      pair: false,
+      featured: false,
+      service: 2,
+    },
+    {
+      en: 'DEMO Everyday glow',
+      ar: 'DEMO إشراقة يومية',
+      category: 'makeup',
+      style: 'everyday',
+      pair: false,
+      featured: false,
+      service: 3,
+    },
+    {
+      en: 'DEMO Everyday lesson',
+      ar: 'DEMO درس يومي',
+      category: 'makeup',
+      style: 'everyday',
+      pair: false,
+      featured: false,
+      service: 3,
+    },
+    {
+      en: 'DEMO Skin close-up',
+      ar: 'DEMO البشرة عن قرب',
+      category: 'skincare',
+      style: 'skin',
+      pair: false,
+      featured: false,
+      service: 5,
+    },
+  ] as const
+  const palettes: Palette[] = ['clay', 'sage', 'sand']
+  for (const [i, item] of galleryItems.entries()) {
+    const label = item.en.replace('DEMO ', '')
+    const arLabel = item.ar.replace('DEMO ', '')
+    const before = await uploadDemo(
+      state,
+      item.pair ? `Before: ${label}` : label,
+      item.pair ? 'sand' : palettes[i % 3],
+      800,
+      1070,
+      item.pair ? `قبل: ${arLabel}` : arLabel,
+    )
+    const after = item.pair
+      ? await uploadDemo(state, `After: ${label}`, 'clay', 800, 1070, `بعد: ${arLabel}`)
+      : undefined
     const doc = await payload.create({
       collection: 'gallery',
       locale: 'en',
       data: {
-        title: pair.en,
-        category: pair.category as 'makeup' | 'skincare',
+        title: item.en,
+        category: item.category,
+        style: item.style,
         beforeImage: before,
-        afterImage: after,
-        featured: true,
-        service: serviceIds[i === 0 ? 0 : 3],
+        ...(after ? { afterImage: after } : {}),
+        featured: item.featured,
+        service: serviceIds[item.service],
       },
     })
     await payload.update({
       collection: 'gallery',
       id: doc.id,
       locale: 'ar',
-      data: { title: pair.ar },
+      data: { title: item.ar },
     })
     state.created.gallery.push(doc.id)
+    save(state)
+  }
+
+  // Page photos: the two service categories and the contact map.
+  const makeupPhoto = await uploadDemo(state, 'Makeup detail', 'clay', 600, 850, 'تفصيل مكياج')
+  const skincarePhoto = await uploadDemo(state, 'Facial treatment', 'sage', 600, 850, 'جلسة وجه')
+  const mapPhoto = await uploadDemo(state, 'Map of the street', 'sand', 1200, 1100, 'خريطة الشارع')
+  await updateBoth(
+    'pages',
+    { services: { makeupPhoto, skincarePhoto }, contact: { mapPhoto } },
+    {
+      en: { contact: { areaLabel: 'DEMO area, city' } },
+      ar: { contact: { areaLabel: 'DEMO المنطقة، المدينة' } },
+    },
+  )
+
+  // About page: photos, placeholder story, facts and certifications, all marked DEMO.
+  const portrait = await uploadDemo(state, 'Portrait', 'clay', 900, 1210, 'الصورة الشخصية')
+  const hands = await uploadDemo(state, 'Hands at work', 'sage', 500, 500, 'اليدان أثناء العمل')
+  const storyPhotos = [
+    await uploadDemo(state, 'The studio', 'sand', 600, 800, 'الاستوديو'),
+    await uploadDemo(state, 'Her tools', 'clay', 600, 660, 'أدواتها'),
+  ]
+  await updateBoth(
+    'about',
+    { portrait, handsPhoto: hands, storyPhotos },
+    {
+      en: {
+        opening:
+          'DEMO opening. Placeholder text for who she is and what she believes about beauty, in two sentences. The real words will be hers.',
+        started:
+          'DEMO: how she started. Placeholder text for her training, her first clients and the moment this became her work.',
+        working:
+          'DEMO: how she works today. Placeholder text for what a client can expect in the chair, skin first, then the look.',
+        quote: 'DEMO: a line she lives by.',
+        closing: 'DEMO closing. Placeholder text for why she does this work.',
+        facts: [
+          { value: 'DEMO', label: 'Experience' },
+          { value: 'DEMO', label: 'Brides' },
+          { value: 'DEMO', label: 'Certifications' },
+        ],
+        certifications: [
+          { name: 'DEMO certificate', school: 'DEMO academy', year: '20XX' },
+          { name: 'DEMO certificate', school: 'DEMO school', year: '20XX' },
+        ],
+      },
+      ar: {
+        opening:
+          'DEMO افتتاحية. نص مؤقت عن هويتها ورأيها في الجمال، في جملتين. الكلمات الحقيقية ستكون كلماتها.',
+        started:
+          'DEMO: كيف بدأت. نص مؤقت عن تدريبها وأولى عميلاتها واللحظة التي أصبح فيها هذا عملها.',
+        working:
+          'DEMO: كيف تعمل اليوم. نص مؤقت عمّا تتوقعه العميلة على الكرسي، البشرة أولاً ثم الإطلالة.',
+        quote: 'DEMO: عبارة تعيش بها.',
+        closing: 'DEMO خاتمة. نص مؤقت عن سبب قيامها بهذا العمل.',
+      },
+    },
+  )
+  // Array rows keep their ids across languages: the Arabic labels go on the same rows.
+  const aboutEn = await payload.findGlobal({ slug: 'about', locale: 'en', depth: 0 })
+  const aboutAr = await payload.findGlobal({
+    slug: 'about',
+    locale: 'ar',
+    fallbackLocale: false,
+    depth: 0,
+  })
+  await payload.updateGlobal({
+    slug: 'about',
+    locale: 'ar',
+    data: {
+      ...editable(aboutAr),
+      facts: (aboutEn.facts ?? []).map((f, i) => ({
+        id: f.id,
+        value: 'DEMO',
+        label: ['خبرة', 'عرائس', 'شهادات'][i],
+      })),
+      certifications: (aboutEn.certifications ?? []).map((c) => ({
+        id: c.id,
+        name: 'DEMO شهادة',
+        school: 'DEMO أكاديمية',
+        year: c.year,
+      })),
+    } as never,
+  })
+
+  // FAQ: six placeholder questions on the topics clients usually ask about.
+  const faqs = [
+    { en: 'DEMO question about booking ahead?', ar: 'DEMO سؤال عن الحجز المسبق؟' },
+    { en: 'DEMO question about bridal trials?', ar: 'DEMO سؤال عن تجربة العروس؟' },
+    {
+      en: 'DEMO question about coming to the venue?',
+      ar: 'DEMO سؤال عن الحضور إلى مكان المناسبة؟',
+    },
+    { en: 'DEMO question about payment?', ar: 'DEMO سؤال عن الدفع؟' },
+    { en: 'DEMO question about product delivery?', ar: 'DEMO سؤال عن توصيل المنتجات؟' },
+    { en: 'DEMO question about skin preparation?', ar: 'DEMO سؤال عن تحضير البشرة؟' },
+  ]
+  for (const [i, f] of faqs.entries()) {
+    const doc = await payload.create({
+      collection: 'faq',
+      locale: 'en',
+      data: {
+        question: f.en,
+        answer:
+          'DEMO answer. Placeholder text in two or three short sentences, not a real answer: it shows how answers will look here.',
+        published: true,
+        sortOrder: i,
+      },
+    })
+    await payload.update({
+      collection: 'faq',
+      id: doc.id,
+      locale: 'ar',
+      data: {
+        question: f.ar,
+        answer: 'DEMO جواب. نص مؤقت في جملتين أو ثلاث، وليس جواباً حقيقياً: يوضّح شكل الأجوبة هنا.',
+      },
+    })
+    state.created.faq.push(doc.id)
     save(state)
   }
 
   const counts = Object.entries(state.created)
     .map(([k, v]) => `${k}=${v.length}`)
     .join(' ')
-  console.log(`Demo content seeded: ${counts}, plus site settings and home photos.`)
+  console.log(`Demo content seeded: ${counts}, plus site settings, home, about and page texts.`)
 }
 
 // ── Clear ─────────────────────────────────────────────────────────────────
 const restoreGlobal = async <T extends object>(
   p: Payload,
-  slug: 'site-settings' | 'home',
+  slug: GlobalSlug,
   table: string,
-  snap: GlobalSnapshot<T>,
+  snap: GlobalSnapshot<T> | undefined,
 ) => {
+  if (!snap) return // state file from before this global was part of the demo
   if (!snap.existed || !snap.en || !snap.ar) {
     // It had never been saved: remove the row the demo created (child tables cascade).
     await db.execute(sql.raw(`DELETE FROM ${table}`))
@@ -502,10 +826,20 @@ const clear = async () => {
 
   // Globals first (they point at demo photos), then collections, photos last.
   await restoreGlobal(payload, 'home', 'home', state.home)
+  await restoreGlobal(payload, 'about', 'about', state.about)
+  await restoreGlobal(payload, 'pages', 'pages', state.pages)
   await restoreGlobal(payload, 'site-settings', 'site_settings', state.siteSettings)
-  const order = ['gallery', 'testimonials', 'products', 'categories', 'services', 'media'] as const
+  const order = [
+    'faq',
+    'gallery',
+    'testimonials',
+    'products',
+    'categories',
+    'services',
+    'media',
+  ] as const
   for (const collection of order) {
-    for (const id of state.created[collection]) {
+    for (const id of state.created[collection] ?? []) {
       await payload.delete({ collection, id }).catch(() => undefined) // already gone is fine
     }
   }
@@ -514,7 +848,7 @@ const clear = async () => {
   const leftovers = await Promise.all(
     order.map(
       async (c) =>
-        `${c}=${(await payload.count({ collection: c, where: { id: { in: state.created[c] } } })).totalDocs}`,
+        `${c}=${(await payload.count({ collection: c, where: { id: { in: state.created[c] ?? [] } } })).totalDocs}`,
     ),
   )
   console.log(`Demo content removed. Demo records left: ${leftovers.join(' ')}`)
