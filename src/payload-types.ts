@@ -796,6 +796,10 @@ export interface SiteSetting {
   id: number;
   brandName: string;
   /**
+   * Shown to customers after they book, e.g. "so Maya can confirm faster".
+   */
+  ownerFirstName?: string | null;
+  /**
    * International format, starting with + and the country code.
    */
   whatsappNumber: string;
@@ -1081,6 +1085,7 @@ export interface Availability {
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
   brandName?: T;
+  ownerFirstName?: T;
   whatsappNumber?: T;
   instagramUrl?: T;
   locationText?: T;

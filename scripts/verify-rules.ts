@@ -10,8 +10,11 @@ import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
 import config from '@payload-config'
 import { getPayload, type Payload } from 'payload'
 
+import { createPublicBooking, loadFreeSlots } from '../src/lib/booking'
 import { isBookingOverlapError } from '../src/lib/bookingErrors'
-import { BUSINESS_TIME_ZONE, businessDateKeyFromToday } from '../src/lib/time'
+import { consumeRateLimit } from '../src/lib/rateLimit'
+import { businessTime, freeSlots, type BookingRules, type DaySlots } from '../src/lib/slots'
+import { BUSINESS_TIME_ZONE, businessDateKeyFromToday, inBusinessZone } from '../src/lib/time'
 import type { Availability, User } from '../src/payload-types'
 
 /**
@@ -90,6 +93,124 @@ const beirut = (dateKey: string, hours: number, minutes = 0): string => {
 const stockOf = async (payload: Payload, id: number) =>
   (await payload.findByID({ collection: 'products', id, depth: 0 })).stock
 
+const hhmm = (minutes: number) =>
+  `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`
+
+/** Free times on one date as Beirut "HH:mm" strings. */
+const timesOn = (days: DaySlots[] | null, date: string): string[] =>
+  (days?.find((d) => d.date === date)?.times ?? []).map((t) => {
+    const z = inBusinessZone(t)
+    return hhmm(z.getHours() * 60 + z.getMinutes())
+  })
+
+/** "10:00".."13:00" every 30 minutes, both ends included. */
+const everyHalfHour = (from: string, to: string): string[] => {
+  const toMin = (t: string) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3))
+  const out: string[] = []
+  for (let m = toMin(from); m <= toMin(to); m += 30) out.push(hhmm(m))
+  return out
+}
+
+const same = (a: string[], b: string[]) => a.join(',') === b.join(',')
+
+/**
+ * The slot calculation on its own, with a fixed "now", so daylight-saving dates are exact.
+ * Now = Monday 19 Oct 2026, 09:00 Beirut. Beirut leaves summer time on Sunday 25 Oct 2026 at
+ * 00:00 (UTC+3 -> UTC+2) and starts it on Sunday 28 Mar 2027 at 00:00 (00:00–01:00 skipped).
+ */
+const slotCalculationChecks = () => {
+  const now = new Date(beirut('2026-10-19', 9))
+  const rules: BookingRules = {
+    weeklyHours: [
+      { day: 'mon', opens: '10:00', closes: '20:00' },
+      { day: 'tue', opens: '10:00', closes: '14:00' },
+      { day: 'tue', opens: '16:00', closes: '20:00' },
+      { day: 'wed', opens: '10:00', closes: '20:00' },
+      { day: 'thu', opens: '10:00', closes: '20:00' },
+      { day: 'sun', opens: '10:00', closes: '14:00' },
+    ],
+    blockedDates: [{ from: beirut('2026-10-22', 12), from_tz: BUSINESS_TIME_ZONE }],
+    slotIntervalMinutes: 30,
+    bufferMinutes: 15,
+    minNoticeHours: 24,
+    maxDaysAhead: 14,
+  }
+  const slots = (overrides: Partial<Parameters<typeof freeSlots>[0]> = {}) =>
+    freeSlots({ rules, busy: [], durationMinutes: 60, now, ...overrides })
+  const base = slots()
+
+  const tue = timesOn(base, '2026-10-20')
+  expectTrue(
+    'Slots · two ranges with a break between (Tue 10–14 and 16–20, 60 min service)',
+    same(tue, [...everyHalfHour('10:00', '13:00'), ...everyHalfHour('16:00', '19:00')]),
+    tue.join(' '),
+  )
+
+  expectTrue(
+    'Slots · minimum notice 24h: nothing today (Mon 19)',
+    timesOn(base, '2026-10-19').length === 0,
+    `Mon: ${timesOn(base, '2026-10-19').join(' ') || 'none'}`,
+  )
+  const later = timesOn(slots({ now: new Date(beirut('2026-10-19', 10, 10)) }), '2026-10-20')
+  expectTrue(
+    'Slots · minimum notice: at 10:10 on Mon, Tue starts at 10:30',
+    later[0] === '10:30',
+    `Tue first: ${later[0]}`,
+  )
+
+  const withBooking = timesOn(
+    slots({ busy: [{ start: beirut('2026-10-20', 11), until: beirut('2026-10-20', 12, 15) }] }),
+    '2026-10-20',
+  ).filter((t) => t < '14:00')
+  expectTrue(
+    'Slots · buffer: a booking 11:00–12:00 (+15 min break) leaves only 12:30 and 13:00 before 14:00',
+    same(withBooking, ['12:30', '13:00']),
+    withBooking.join(' '),
+  )
+
+  expectTrue(
+    'Slots · blocked date: Thu 22 Oct closed, Wed 21 open',
+    timesOn(base, '2026-10-22').length === 0 && timesOn(base, '2026-10-21').length > 0,
+    `Thu ${timesOn(base, '2026-10-22').length} times, Wed ${timesOn(base, '2026-10-21').length}`,
+  )
+
+  expectTrue(
+    'Slots · days-ahead 14: 15 dates, last 2 Nov; a day with no hours (Sat) is empty',
+    base.length === 15 &&
+      base.at(-1)?.date === '2026-11-02' &&
+      timesOn(base, '2026-10-24').length === 0,
+    `${base.length} dates, last ${base.at(-1)?.date}, Sat ${timesOn(base, '2026-10-24').length}`,
+  )
+
+  const firstUtc = (days: DaySlots[], date: string) => days.find((d) => d.date === date)?.times[0]
+  expectTrue(
+    'Slots · DST end: 10:00 Beirut is 07:00Z on Tue 20 Oct, 08:00Z on Tue 27 Oct',
+    firstUtc(base, '2026-10-20') === '2026-10-20T07:00:00.000Z' &&
+      firstUtc(base, '2026-10-27') === '2026-10-27T08:00:00.000Z',
+    `${firstUtc(base, '2026-10-20')} / ${firstUtc(base, '2026-10-27')}`,
+  )
+  expectTrue(
+    'Slots · on the DST-end day (Sun 25 Oct): 10:00–13:00 local, 10:00 = 08:00Z',
+    same(timesOn(base, '2026-10-25'), everyHalfHour('10:00', '13:00')) &&
+      firstUtc(base, '2026-10-25') === '2026-10-25T08:00:00.000Z',
+    `${timesOn(base, '2026-10-25').join(' ')} / ${firstUtc(base, '2026-10-25')}`,
+  )
+
+  const spring = freeSlots({
+    rules: { ...rules, weeklyHours: [{ day: 'sun', opens: '00:00', closes: '03:00' }] },
+    busy: [],
+    durationMinutes: 60,
+    now: new Date(beirut('2027-03-20', 12)),
+  })
+  expectTrue(
+    'Slots · DST start (Sun 28 Mar 2027): 00:00 and 00:30 do not exist; 01:00 = 22:00Z the day before',
+    businessTime('2027-03-28', 0) === null &&
+      same(timesOn(spring, '2027-03-28'), ['01:00', '01:30', '02:00']) &&
+      firstUtc(spring, '2027-03-28') === '2027-03-27T22:00:00.000Z',
+    `${timesOn(spring, '2027-03-28').join(' ')} / ${firstUtc(spring, '2027-03-28')}`,
+  )
+}
+
 const main = async () => {
   const payload = await getPayload({ config })
   const db = (payload.db as unknown as PostgresAdapter).drizzle
@@ -106,6 +227,8 @@ const main = async () => {
   })
 
   try {
+    slotCalculationChecks()
+
     // ── Setup ──────────────────────────────────────────────────────────────
     await payload.updateGlobal({
       slug: 'availability',
@@ -276,7 +399,99 @@ const main = async () => {
       (error) => isBookingOverlapError(error),
     )
 
-    // ── 6. Confirming an order with more quantity than stock ───────────────
+    // ── 6. The booking page's server code against the database ─────────────
+    // `day` now has A (10:00–11:00, break to 11:30), D (11:30–12:30, break to 13:00) and
+    // R1 (05:00–07:00). Hours 09:00–20:00, 60-minute service, 30-minute break.
+    const pageSlots = await loadFreeSlots(payload, slotService.id)
+    const onDay = timesOn(pageSlots, day)
+    expectTrue(
+      'Page slots · first free time is 13:00 (09:00 would run into A with its break)',
+      onDay[0] === '13:00' && !onDay.includes('10:00') && !onDay.includes('11:00'),
+      onDay.join(' '),
+    )
+    const slotsJson = JSON.stringify(pageSlots)
+    expectTrue(
+      'Page slots · the response holds only dates and times, no customer data',
+      !slotsJson.includes('TEST') &&
+        !slotsJson.includes('+961') &&
+        (pageSlots ?? []).every((d) => Object.keys(d).join() === 'date,times'),
+      `${slotsJson.length} bytes, keys: ${Object.keys(pageSlots?.[0] ?? {}).join()}`,
+    )
+    expectTrue(
+      'Page slots · a request service gets no slot list',
+      (await loadFreeSlots(payload, requestService.id)) === null,
+      'null',
+    )
+
+    const form = { serviceId: slotService.id, name: 'TEST public', phone: '+961 3 000 000' }
+    const taken = await createPublicBooking(payload, { ...form, startTime: beirut(day, 10) })
+    expectTrue(
+      'Page submit · 10:00 is taken → slotTaken',
+      !taken.ok && taken.reason === 'slotTaken',
+      JSON.stringify(taken),
+    )
+    const badPhone = await createPublicBooking(payload, {
+      ...form,
+      phone: '03 123',
+      startTime: beirut(day, 13),
+    })
+    expectTrue(
+      'Page submit · invalid phone → field error, nothing saved',
+      !badPhone.ok && badPhone.reason === 'invalid' && badPhone.fields.includes('phone'),
+      JSON.stringify(badPhone),
+    )
+    const booked = await createPublicBooking(payload, { ...form, startTime: beirut(day, 13) })
+    const afterBooking = timesOn(await loadFreeSlots(payload, slotService.id), day)
+    expectTrue(
+      'Page submit · 13:00 saved; then 13:00 and 13:30 (its break) disappear from the list',
+      booked.ok && !afterBooking.includes('13:00') && !afterBooking.includes('13:30'),
+      `${JSON.stringify(booked)}; now starts ${afterBooking.slice(0, 3).join(' ')}…`,
+    )
+    const lastDay = [...(pageSlots ?? [])].reverse().find((d) => d.times.length > 0)
+    const edge = lastDay
+      ? await createPublicBooking(payload, { ...form, startTime: lastDay.times.at(-1) })
+      : undefined
+    expectTrue(
+      "Page submit · the window's last offered slot (today + 60) is accepted by the hook",
+      Boolean(edge?.ok) && lastDay?.date === businessDateKeyFromToday(60),
+      `${lastDay?.date} ${timesOn(pageSlots, lastDay?.date ?? '').at(-1)}: ${JSON.stringify(edge)}`,
+    )
+    const noAddress = await createPublicBooking(payload, {
+      serviceId: requestService.id,
+      name: 'TEST public request',
+      phone: '+961 71 000 000',
+      requestedDate: businessDateKeyFromToday(90),
+      locationType: 'onLocation',
+      locationAddress: '',
+      peopleCount: 2,
+    })
+    expectTrue(
+      'Page submit · on-location request without an address → field error',
+      !noAddress.ok &&
+        noAddress.reason === 'invalid' &&
+        noAddress.fields.includes('locationAddress'),
+      JSON.stringify(noAddress),
+    )
+
+    const rateKey = crypto.randomUUID()
+    const hits: boolean[] = []
+    for (let i = 0; i < 6; i++) {
+      hits.push(
+        await consumeRateLimit(payload, {
+          bucket: 'verify',
+          key: rateKey,
+          limit: 5,
+          windowSeconds: 600,
+        }),
+      )
+    }
+    expectTrue(
+      'Rate limit · 5 requests per 10 minutes, the 6th is refused',
+      same(hits.map(String), ['true', 'true', 'true', 'true', 'true', 'false']),
+      hits.join(' '),
+    )
+
+    // ── 7. Confirming an order with more quantity than stock ───────────────
     const p = await payload.create({
       collection: 'products',
       data: {
@@ -331,7 +546,7 @@ const main = async () => {
       )
     }
 
-    // ── 7. A delivered order changed to cancelled ──────────────────────────
+    // ── 8. A delivered order changed to cancelled ──────────────────────────
     const q = await payload.create({
       collection: 'products',
       data: {
@@ -384,14 +599,36 @@ const main = async () => {
     )
   } finally {
     // ── Cleanup: delete everything this script created ─────────────────────
-    for (const id of created.orders) await payload.delete({ collection: 'orders', id })
-    for (const id of created.bookings) await payload.delete({ collection: 'bookings', id })
-    for (const id of created.products) await payload.delete({ collection: 'products', id })
-    for (const id of created.services) await payload.delete({ collection: 'services', id })
-    if (admin) await payload.delete({ collection: 'users', id: admin.id })
-    await db.execute(sql`DELETE FROM bookings WHERE customer_name LIKE 'TEST%'`)
+    // Each step runs even if an earlier one fails, and the owner's settings come back first.
+    const step = async (name: string, run: () => Promise<unknown>) => {
+      try {
+        await run()
+      } catch (error) {
+        console.error(`Cleanup step failed: ${name}: ${reason(error)}`)
+      }
+    }
     const { id: _id, createdAt: _c, updatedAt: _u, ...restore } = originalAvailability
-    await payload.updateGlobal({ slug: 'availability', data: restore })
+    await step('availability', () => payload.updateGlobal({ slug: 'availability', data: restore }))
+    for (const id of created.orders) {
+      await step(`order ${id}`, () => payload.delete({ collection: 'orders', id }))
+    }
+    // Every test booking, including the ones the booking-page code created.
+    await step('bookings', () =>
+      db.execute(sql`DELETE FROM bookings WHERE customer_name LIKE 'TEST%'`),
+    )
+    await step('rate limits', () =>
+      db.execute(sql`DELETE FROM rate_limits WHERE key LIKE 'verify:%'`),
+    )
+    for (const id of created.products) {
+      await step(`product ${id}`, () => payload.delete({ collection: 'products', id }))
+    }
+    for (const id of created.services) {
+      await step(`service ${id}`, () => payload.delete({ collection: 'services', id }))
+    }
+    if (admin) {
+      const adminId = admin.id
+      await step('admin', () => payload.delete({ collection: 'users', id: adminId }))
+    }
 
     const leftovers = await db.execute(sql`
       SELECT (SELECT count(*) FROM bookings) AS bookings, (SELECT count(*) FROM orders) AS orders,

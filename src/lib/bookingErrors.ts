@@ -13,8 +13,8 @@ const EXCLUSION_VIOLATION = '23P01'
  * is the database refusing two overlapping bookings.
  *
  * The booking hook normally catches overlaps first, under an advisory lock. This is the
- * safety net for anything that still reaches the database. Phase 4's booking server action
- * should use it too, to show the same friendly message.
+ * safety net for anything that still reaches the database. The booking page catches both
+ * through isBookingTakenError (below).
  */
 export const isBookingOverlapError = (error: unknown): boolean => {
   let current: unknown = error
@@ -56,4 +56,19 @@ export const bookingOverlapAfterError: AfterErrorHook = ({ error, req }) => {
       ],
     },
   }
+}
+
+const TAKEN_MESSAGES = new Set([
+  bookingTakenMessage({ i18n: { language: 'en' } } as Parameters<typeof msg>[0]),
+  bookingTakenMessage({ i18n: { language: 'ar' } } as Parameters<typeof msg>[0]),
+])
+
+/**
+ * True when a booking was refused because its time is taken: either the hook's overlap check
+ * (a ValidationError with the "just taken" message) or the database's exclusion constraint.
+ */
+export const isBookingTakenError = (error: unknown): boolean => {
+  if (isBookingOverlapError(error)) return true
+  const errors = (error as { data?: { errors?: { message?: string }[] } })?.data?.errors ?? []
+  return errors.some((e) => e.message !== undefined && TAKEN_MESSAGES.has(e.message))
 }

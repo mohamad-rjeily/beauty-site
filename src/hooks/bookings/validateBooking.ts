@@ -5,13 +5,8 @@ import { isAdminRequest } from '@/access/isAdminRequest'
 import { bookingTakenMessage } from '@/lib/bookingErrors'
 import { getTransactionDb, relationId } from '@/lib/db'
 import { msg } from '@/lib/i18n'
-import {
-  businessDateKey,
-  businessDateKeyFromToday,
-  inBusinessZone,
-  minutesOfDay,
-  WEEKDAYS,
-} from '@/lib/time'
+import { checkWorkingHours, HOUR, isClosedDate, MINUTE } from '@/lib/slots'
+import { businessDateKey, businessDateKeyFromToday, inBusinessZone, WEEKDAYS } from '@/lib/time'
 import type { Availability, Booking } from '@/payload-types'
 
 /**
@@ -21,9 +16,6 @@ import type { Availability, Booking } from '@/payload-types'
  * the migrations stays the final guarantee underneath.
  */
 const BOOKINGS_LOCK_KEY = 72_140_001
-
-const MINUTE = 60_000
-const HOUR = 60 * MINUTE
 
 type DateInput = Date | string | null | undefined
 
@@ -235,34 +227,25 @@ export const validateBooking: CollectionBeforeChangeHook<Booking> = async ({
     const startMinute = zonedStart.getHours() * 60 + zonedStart.getMinutes()
     const endMinute = startMinute + (end.getTime() - start.getTime()) / MINUTE
 
-    const range = (availability.weeklyHours ?? []).find(
-      (r) =>
-        r.day === weekday &&
-        minutesOfDay(r.opens) <= startMinute &&
-        endMinute <= minutesOfDay(r.closes),
-    )
-    if (!range) {
+    // Shared with the booking page's slot list (src/lib/slots.ts).
+    const hours = checkWorkingHours(availability, weekday, startMinute, endMinute)
+    if (hours.result === 'outside') {
       fail(
         req,
         'startTime',
         'The whole appointment must fit inside working hours.',
         'يجب أن يكون الموعد بالكامل ضمن ساعات العمل.',
       )
-    } else if ((startMinute - minutesOfDay(range.opens)) % availability.slotIntervalMinutes !== 0) {
+    } else if (hours.result === 'offStep') {
       fail(
         req,
         'startTime',
-        `Appointments start every ${availability.slotIntervalMinutes} minutes from ${range.opens}.`,
-        `تبدأ المواعيد كل ${availability.slotIntervalMinutes} دقيقة ابتداءً من ${range.opens}.`,
+        `Appointments start every ${availability.slotIntervalMinutes} minutes from ${hours.opens}.`,
+        `تبدأ المواعيد كل ${availability.slotIntervalMinutes} دقيقة ابتداءً من ${hours.opens}.`,
       )
     }
 
-    const closed = (availability.blockedDates ?? []).some((b) => {
-      const from = businessDateKey(b.from)
-      const to = b.to ? businessDateKey(b.to) : from
-      return dateKey >= from && dateKey <= to
-    })
-    if (closed) {
+    if (isClosedDate(dateKey, availability.blockedDates)) {
       fail(req, 'startTime', 'The studio is closed on this date.', 'الاستوديو مغلق في هذا التاريخ.')
     }
   }
