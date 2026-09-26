@@ -52,6 +52,13 @@ const paths = {
     </>
   ),
   sparkle: <path d="M12 3l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" />,
+  award: (
+    <>
+      <circle cx="12" cy="9" r="5" />
+      <path d="M9 13.5L8 21l4-2 4 2-1-7.5" />
+    </>
+  ),
+  plus: <path d="M12 5v14M5 12h14" />,
 } as const
 
 export type IconName = keyof typeof paths

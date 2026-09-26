@@ -12,1156 +12,1157 @@
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "supportedTimezones".
  */
-export type SupportedTimezones = 'Asia/Beirut';
+export type SupportedTimezones = 'Asia/Beirut'
 
 export interface Config {
   auth: {
-    users: UserAuthOperations;
-  };
-  blocks: {};
+    users: UserAuthOperations
+  }
+  blocks: {}
   collections: {
-    services: Service;
-    gallery: Gallery;
-    testimonials: Testimonial;
-    faq: Faq;
-    media: Media;
-    products: Product;
-    categories: Category;
-    orders: Order;
-    bookings: Booking;
-    users: User;
-    'payload-kv': PayloadKv;
-    'payload-locked-documents': PayloadLockedDocument;
-    'payload-preferences': PayloadPreference;
-    'payload-migrations': PayloadMigration;
-  };
-  collectionsJoins: {};
+    services: Service
+    gallery: Gallery
+    testimonials: Testimonial
+    faq: Faq
+    media: Media
+    products: Product
+    categories: Category
+    orders: Order
+    bookings: Booking
+    users: User
+    'payload-kv': PayloadKv
+    'payload-locked-documents': PayloadLockedDocument
+    'payload-preferences': PayloadPreference
+    'payload-migrations': PayloadMigration
+  }
+  collectionsJoins: {}
   collectionsSelect: {
-    services: ServicesSelect<false> | ServicesSelect<true>;
-    gallery: GallerySelect<false> | GallerySelect<true>;
-    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
-    faq: FaqSelect<false> | FaqSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    products: ProductsSelect<false> | ProductsSelect<true>;
-    categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    orders: OrdersSelect<false> | OrdersSelect<true>;
-    bookings: BookingsSelect<false> | BookingsSelect<true>;
-    users: UsersSelect<false> | UsersSelect<true>;
-    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
-    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
-  };
+    services: ServicesSelect<false> | ServicesSelect<true>
+    gallery: GallerySelect<false> | GallerySelect<true>
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>
+    faq: FaqSelect<false> | FaqSelect<true>
+    media: MediaSelect<false> | MediaSelect<true>
+    products: ProductsSelect<false> | ProductsSelect<true>
+    categories: CategoriesSelect<false> | CategoriesSelect<true>
+    orders: OrdersSelect<false> | OrdersSelect<true>
+    bookings: BookingsSelect<false> | BookingsSelect<true>
+    users: UsersSelect<false> | UsersSelect<true>
+    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>
+    'payload-locked-documents':
+      PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
+  }
   db: {
-    defaultIDType: number;
-  };
-  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ar') | ('en' | 'ar')[];
+    defaultIDType: number
+  }
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ar') | ('en' | 'ar')[]
   globals: {
-    'site-settings': SiteSetting;
-    home: Home;
-    about: About;
-    pages: Page;
-    availability: Availability;
-  };
+    'site-settings': SiteSetting
+    home: Home
+    about: About
+    pages: Page
+    availability: Availability
+  }
   globalsSelect: {
-    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
-    home: HomeSelect<false> | HomeSelect<true>;
-    about: AboutSelect<false> | AboutSelect<true>;
-    pages: PagesSelect<false> | PagesSelect<true>;
-    availability: AvailabilitySelect<false> | AvailabilitySelect<true>;
-  };
-  locale: 'en' | 'ar';
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>
+    home: HomeSelect<false> | HomeSelect<true>
+    about: AboutSelect<false> | AboutSelect<true>
+    pages: PagesSelect<false> | PagesSelect<true>
+    availability: AvailabilitySelect<false> | AvailabilitySelect<true>
+  }
+  locale: 'en' | 'ar'
   widgets: {
-    collections: CollectionsWidget;
-  };
-  user: User;
+    collections: CollectionsWidget
+  }
+  user: User
   jobs: {
-    tasks: unknown;
-    workflows: unknown;
-  };
+    tasks: unknown
+    workflows: unknown
+  }
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   login: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   registerFirstUser: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   unlock: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
 export interface Service {
-  id: number;
-  name: string;
-  category: 'makeup' | 'skincare';
+  id: number
+  name: string
+  category: 'makeup' | 'skincare'
   description?: {
     root: {
-      type: string;
+      type: string
       children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+        type: any
+        version: number
+        [k: string]: unknown
+      }[]
+      direction: ('ltr' | 'rtl') | null
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+      indent: number
+      version: number
+    }
+    [k: string]: unknown
+  } | null
   price: {
-    amount: number;
-    currency: 'USD';
-  };
+    amount: number
+    currency: 'USD'
+  }
   /**
    * Time slot: the customer picks an exact time. Request: she sends a date and details, and you set the time when confirming.
    */
-  bookingMode: 'slot' | 'request';
+  bookingMode: 'slot' | 'request'
   /**
    * Time-slot bookings block this long in the calendar. For requests it is only a guide.
    */
-  duration: number;
-  images?: (number | Media)[] | null;
-  active?: boolean | null;
+  duration: number
+  images?: (number | Media)[] | null
+  active?: boolean | null
   /**
    * Lower numbers come first.
    */
-  sortOrder?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  sortOrder?: number | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: number;
+  id: number
   /**
    * What the photo shows, for screen readers and search engines.
    */
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+  alt: string
+  updatedAt: string
+  createdAt: string
+  url?: string | null
+  thumbnailURL?: string | null
+  filename?: string | null
+  mimeType?: string | null
+  filesize?: number | null
+  width?: number | null
+  height?: number | null
+  focalX?: number | null
+  focalY?: number | null
   sizes?: {
     thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+  }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "gallery".
  */
 export interface Gallery {
-  id: number;
-  title: string;
-  category: 'makeup' | 'skincare';
+  id: number
+  title: string
+  category: 'makeup' | 'skincare'
   /**
    * Used by the filter on the Gallery page. Only styles with photos show up as filters.
    */
-  style?: ('bridal' | 'soiree' | 'everyday' | 'skin') | null;
-  beforeImage: number | Media;
+  style?: ('bridal' | 'soiree' | 'everyday' | 'skin') | null
+  beforeImage: number | Media
   /**
    * Same light and angle as the before photo.
    */
-  afterImage?: (number | null) | Media;
-  service?: (number | null) | Service;
-  featured?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
+  afterImage?: (number | null) | Media
+  service?: (number | null) | Service
+  featured?: boolean | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials".
  */
 export interface Testimonial {
-  id: number;
+  id: number
   /**
    * Only publish with her permission, e.g. "Rana K."
    */
-  clientName: string;
-  quote: string;
-  context?: string | null;
-  service?: (number | null) | Service;
-  rating?: number | null;
-  published?: boolean | null;
-  sortOrder?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  clientName: string
+  quote: string
+  context?: string | null
+  service?: (number | null) | Service
+  rating?: number | null
+  published?: boolean | null
+  sortOrder?: number | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "faq".
  */
 export interface Faq {
-  id: number;
-  question: string;
-  answer: string;
-  published?: boolean | null;
-  sortOrder?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  id: number
+  question: string
+  answer: string
+  published?: boolean | null
+  sortOrder?: number | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products".
  */
 export interface Product {
-  id: number;
-  name: string;
+  id: number
+  name: string
   /**
    * Lowercase letters, numbers and dashes. Filled from the English name if left empty.
    */
-  slug: string;
-  type: 'brand' | 'homemade' | 'fashion';
-  category?: (number | null) | Category;
-  brand?: string | null;
+  slug: string
+  type: 'brand' | 'homemade' | 'fashion'
+  category?: (number | null) | Category
+  brand?: string | null
   description?: {
     root: {
-      type: string;
+      type: string
       children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+        type: any
+        version: number
+        [k: string]: unknown
+      }[]
+      direction: ('ltr' | 'rtl') | null
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | ''
+      indent: number
+      version: number
+    }
+    [k: string]: unknown
+  } | null
   price: {
-    amount: number;
-    currency: 'USD';
-  };
+    amount: number
+    currency: 'USD'
+  }
   /**
    * Goes down when an order is confirmed and back up if it is cancelled. To change it by hand, use "Adjust stock by".
    */
-  stock: number;
+  stock: number
   /**
    * Received 10 more: enter 10. Found 2 damaged: enter -2. Cleared after saving.
    */
-  stockAdjustment?: number | null;
-  images?: (number | Media)[] | null;
-  active?: boolean | null;
+  stockAdjustment?: number | null
+  images?: (number | Media)[] | null
+  active?: boolean | null
   /**
    * When none are featured, the newest products are shown.
    */
-  featuredOnHome?: boolean | null;
+  featuredOnHome?: boolean | null
   /**
    * All of these are shown on the product page.
    */
   homemade?: {
-    ingredients?: string | null;
-    madeOn?: string | null;
-    expiresOn?: string | null;
-    storageInstructions?: string | null;
-    usageInstructions?: string | null;
-    patchTestNote?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
+    ingredients?: string | null
+    madeOn?: string | null
+    expiresOn?: string | null
+    storageInstructions?: string | null
+    usageInstructions?: string | null
+    patchTestNote?: string | null
+  }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
 export interface Category {
-  id: number;
-  name: string;
+  id: number
+  name: string
   /**
    * Lowercase letters, numbers and dashes. Filled from the English name if left empty.
    */
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
+  slug: string
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "orders".
  */
 export interface Order {
-  id: number;
-  customerName: string;
+  id: number
+  customerName: string
   /**
    * International format, starting with + and the country code.
    */
-  phone: string;
-  fulfillment: 'delivery' | 'pickup';
-  address?: string | null;
-  area?: string | null;
+  phone: string
+  fulfillment: 'delivery' | 'pickup'
+  address?: string | null
+  area?: string | null
   /**
    * Names and prices are copied from the products when the order is created, and never change afterwards.
    */
   items: {
-    product: number | Product;
-    quantity: number;
-    productName?: string | null;
+    product: number | Product
+    quantity: number
+    productName?: string | null
     unitPrice?: {
-      amount?: number | null;
-      currency?: 'USD' | null;
-    };
+      amount?: number | null
+      currency?: 'USD' | null
+    }
     lineTotal?: {
-      amount?: number | null;
-      currency?: 'USD' | null;
-    };
-    id?: string | null;
-  }[];
+      amount?: number | null
+      currency?: 'USD' | null
+    }
+    id?: string | null
+  }[]
   total?: {
-    amount?: number | null;
-    currency?: 'USD' | null;
-  };
+    amount?: number | null
+    currency?: 'USD' | null
+  }
   /**
    * Confirming takes the products out of stock; cancelling a confirmed order puts them back. Delivered is final.
    */
-  status: 'new' | 'confirmed' | 'delivered' | 'cancelled';
-  updatedAt: string;
-  createdAt: string;
+  status: 'new' | 'confirmed' | 'delivered' | 'cancelled'
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "bookings".
  */
 export interface Booking {
-  id: number;
-  customerName: string;
+  id: number
+  customerName: string
   /**
    * International format, starting with + and the country code.
    */
-  phone: string;
-  service: number | Service;
-  mode: 'slot' | 'request';
+  phone: string
+  service: number | Service
+  mode: 'slot' | 'request'
   /**
    * Requests: enter it when you confirm.
    */
-  startTime?: string | null;
-  startTime_tz?: SupportedTimezones;
+  startTime?: string | null
+  startTime_tz?: SupportedTimezones
   /**
    * Time slots: calculated from the service. Requests: enter it yourself.
    */
-  endTime?: string | null;
-  endTime_tz?: SupportedTimezones;
-  occupiedUntil?: string | null;
-  requestedDate?: string | null;
-  requestedDate_tz?: SupportedTimezones;
-  peopleCount?: number | null;
-  locationType?: ('studio' | 'onLocation') | null;
-  wantsTrial?: boolean | null;
-  locationAddress?: string | null;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
-  notes?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  endTime?: string | null
+  endTime_tz?: SupportedTimezones
+  occupiedUntil?: string | null
+  requestedDate?: string | null
+  requestedDate_tz?: SupportedTimezones
+  peopleCount?: number | null
+  locationType?: ('studio' | 'onLocation') | null
+  wantsTrial?: boolean | null
+  locationAddress?: string | null
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+  notes?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
+  id: number
+  name?: string | null
+  updatedAt: string
+  createdAt: string
+  email: string
+  resetPasswordToken?: string | null
+  resetPasswordExpiration?: string | null
+  salt?: string | null
+  hash?: string | null
+  resetPasswordRequestedAt?: string | null
+  loginAttempts?: number | null
+  lockUntil?: string | null
   sessions?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        id: string
+        createdAt?: string | null
+        expiresAt: string
       }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
+    | null
+  password?: string | null
+  collection: 'users'
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: number;
-  key: string;
+  id: number
+  key: string
   data:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
+    | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: number
   document?:
     | ({
-        relationTo: 'services';
-        value: number | Service;
+        relationTo: 'services'
+        value: number | Service
       } | null)
     | ({
-        relationTo: 'gallery';
-        value: number | Gallery;
+        relationTo: 'gallery'
+        value: number | Gallery
       } | null)
     | ({
-        relationTo: 'testimonials';
-        value: number | Testimonial;
+        relationTo: 'testimonials'
+        value: number | Testimonial
       } | null)
     | ({
-        relationTo: 'faq';
-        value: number | Faq;
+        relationTo: 'faq'
+        value: number | Faq
       } | null)
     | ({
-        relationTo: 'media';
-        value: number | Media;
+        relationTo: 'media'
+        value: number | Media
       } | null)
     | ({
-        relationTo: 'products';
-        value: number | Product;
+        relationTo: 'products'
+        value: number | Product
       } | null)
     | ({
-        relationTo: 'categories';
-        value: number | Category;
+        relationTo: 'categories'
+        value: number | Category
       } | null)
     | ({
-        relationTo: 'orders';
-        value: number | Order;
+        relationTo: 'orders'
+        value: number | Order
       } | null)
     | ({
-        relationTo: 'bookings';
-        value: number | Booking;
+        relationTo: 'bookings'
+        value: number | Booking
       } | null)
     | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null);
-  globalSlug?: string | null;
+        relationTo: 'users'
+        value: number | User
+      } | null)
+  globalSlug?: string | null
   user: {
-    relationTo: 'users';
-    value: number | User;
-  };
-  updatedAt: string;
-  createdAt: string;
+    relationTo: 'users'
+    value: number | User
+  }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: number
   user: {
-    relationTo: 'users';
-    value: number | User;
-  };
-  key?: string | null;
+    relationTo: 'users'
+    value: number | User
+  }
+  key?: string | null
   value?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
+    | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
-  name?: string | null;
-  batch?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  id: number
+  name?: string | null
+  batch?: number | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
-  name?: T;
-  category?: T;
-  description?: T;
+  name?: T
+  category?: T
+  description?: T
   price?:
     | T
     | {
-        amount?: T;
-        currency?: T;
-      };
-  bookingMode?: T;
-  duration?: T;
-  images?: T;
-  active?: T;
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
+        amount?: T
+        currency?: T
+      }
+  bookingMode?: T
+  duration?: T
+  images?: T
+  active?: T
+  sortOrder?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "gallery_select".
  */
 export interface GallerySelect<T extends boolean = true> {
-  title?: T;
-  category?: T;
-  style?: T;
-  beforeImage?: T;
-  afterImage?: T;
-  service?: T;
-  featured?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  title?: T
+  category?: T
+  style?: T
+  beforeImage?: T
+  afterImage?: T
+  service?: T
+  featured?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "testimonials_select".
  */
 export interface TestimonialsSelect<T extends boolean = true> {
-  clientName?: T;
-  quote?: T;
-  context?: T;
-  service?: T;
-  rating?: T;
-  published?: T;
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  clientName?: T
+  quote?: T
+  context?: T
+  service?: T
+  rating?: T
+  published?: T
+  sortOrder?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "faq_select".
  */
 export interface FaqSelect<T extends boolean = true> {
-  question?: T;
-  answer?: T;
-  published?: T;
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  question?: T
+  answer?: T
+  published?: T
+  sortOrder?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+  alt?: T
+  updatedAt?: T
+  createdAt?: T
+  url?: T
+  thumbnailURL?: T
+  filename?: T
+  mimeType?: T
+  filesize?: T
+  width?: T
+  height?: T
+  focalX?: T
+  focalY?: T
   sizes?:
     | T
     | {
         thumbnail?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products_select".
  */
 export interface ProductsSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  type?: T;
-  category?: T;
-  brand?: T;
-  description?: T;
+  name?: T
+  slug?: T
+  type?: T
+  category?: T
+  brand?: T
+  description?: T
   price?:
     | T
     | {
-        amount?: T;
-        currency?: T;
-      };
-  stock?: T;
-  stockAdjustment?: T;
-  images?: T;
-  active?: T;
-  featuredOnHome?: T;
+        amount?: T
+        currency?: T
+      }
+  stock?: T
+  stockAdjustment?: T
+  images?: T
+  active?: T
+  featuredOnHome?: T
   homemade?:
     | T
     | {
-        ingredients?: T;
-        madeOn?: T;
-        expiresOn?: T;
-        storageInstructions?: T;
-        usageInstructions?: T;
-        patchTestNote?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
+        ingredients?: T
+        madeOn?: T
+        expiresOn?: T
+        storageInstructions?: T
+        usageInstructions?: T
+        patchTestNote?: T
+      }
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories_select".
  */
 export interface CategoriesSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  slug?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
-  customerName?: T;
-  phone?: T;
-  fulfillment?: T;
-  address?: T;
-  area?: T;
+  customerName?: T
+  phone?: T
+  fulfillment?: T
+  address?: T
+  area?: T
   items?:
     | T
     | {
-        product?: T;
-        quantity?: T;
-        productName?: T;
+        product?: T
+        quantity?: T
+        productName?: T
         unitPrice?:
           | T
           | {
-              amount?: T;
-              currency?: T;
-            };
+              amount?: T
+              currency?: T
+            }
         lineTotal?:
           | T
           | {
-              amount?: T;
-              currency?: T;
-            };
-        id?: T;
-      };
+              amount?: T
+              currency?: T
+            }
+        id?: T
+      }
   total?:
     | T
     | {
-        amount?: T;
-        currency?: T;
-      };
-  status?: T;
-  updatedAt?: T;
-  createdAt?: T;
+        amount?: T
+        currency?: T
+      }
+  status?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "bookings_select".
  */
 export interface BookingsSelect<T extends boolean = true> {
-  customerName?: T;
-  phone?: T;
-  service?: T;
-  mode?: T;
-  startTime?: T;
-  startTime_tz?: T;
-  endTime?: T;
-  endTime_tz?: T;
-  occupiedUntil?: T;
-  requestedDate?: T;
-  requestedDate_tz?: T;
-  peopleCount?: T;
-  locationType?: T;
-  wantsTrial?: T;
-  locationAddress?: T;
-  status?: T;
-  notes?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  customerName?: T
+  phone?: T
+  service?: T
+  mode?: T
+  startTime?: T
+  startTime_tz?: T
+  endTime?: T
+  endTime_tz?: T
+  occupiedUntil?: T
+  requestedDate?: T
+  requestedDate_tz?: T
+  peopleCount?: T
+  locationType?: T
+  wantsTrial?: T
+  locationAddress?: T
+  status?: T
+  notes?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
+  name?: T
+  updatedAt?: T
+  createdAt?: T
+  email?: T
+  resetPasswordToken?: T
+  resetPasswordExpiration?: T
+  salt?: T
+  hash?: T
+  resetPasswordRequestedAt?: T
+  loginAttempts?: T
+  lockUntil?: T
   sessions?:
     | T
     | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
+        id?: T
+        createdAt?: T
+        expiresAt?: T
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
-  key?: T;
-  data?: T;
+  key?: T
+  data?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T;
-  globalSlug?: T;
-  user?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  document?: T
+  globalSlug?: T
+  user?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T;
-  key?: T;
-  value?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  user?: T
+  key?: T
+  value?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T;
-  batch?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  batch?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
-  id: number;
-  brandName: string;
+  id: number
+  brandName: string
   /**
    * International format, starting with + and the country code.
    */
-  whatsappNumber: string;
-  instagramUrl?: string | null;
-  locationText?: string | null;
-  mapLink?: string | null;
+  whatsappNumber: string
+  instagramUrl?: string | null
+  locationText?: string | null
+  mapLink?: string | null
   announcementBar?: {
-    enabled?: boolean | null;
-    text?: string | null;
-    link?: string | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+    enabled?: boolean | null
+    text?: string | null
+    link?: string | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home".
  */
 export interface Home {
-  id: number;
+  id: number
   /**
    * A portrait of you in soft light, vertical. Keep your face in the upper half: the headline sits over the lower part.
    */
-  heroPhoto?: (number | null) | Media;
-  headlineLine1?: string | null;
-  headlineLine2?: string | null;
-  headlineLine3?: string | null;
-  tagline?: string | null;
+  heroPhoto?: (number | null) | Media
+  headlineLine1?: string | null
+  headlineLine2?: string | null
+  headlineLine3?: string | null
+  tagline?: string | null
   /**
    * Shown small in sage next to the line above, in the other language. Leave empty to hide.
    */
-  accentLine?: string | null;
+  accentLine?: string | null
   /**
    * Candid, while working with a client. Vertical.
    */
-  introPhoto?: (number | null) | Media;
-  introAccent?: string | null;
-  introGreeting?: string | null;
-  introText?: string | null;
-  signature?: string | null;
+  introPhoto?: (number | null) | Media
+  introAccent?: string | null
+  introGreeting?: string | null
+  introText?: string | null
+  signature?: string | null
   /**
    * Only real facts, e.g. "12 years" / "Experience". Leave empty to hide this row.
    */
   facts?:
     | {
-        value: string;
-        label: string;
-        id?: string | null;
+        value: string
+        label: string
+        id?: string | null
       }[]
-    | null;
+    | null
   /**
    * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
    */
-  servicesHeading?: string | null;
+  servicesHeading?: string | null
   /**
    * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
    */
-  resultsHeading?: string | null;
+  resultsHeading?: string | null
   /**
    * Only if true, e.g. "Same light, same angle, no filters."
    */
-  resultsNote?: string | null;
+  resultsNote?: string | null
   /**
    * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
    */
-  shopHeading?: string | null;
+  shopHeading?: string | null
   /**
    * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
    */
-  reviewsHeading?: string | null;
+  reviewsHeading?: string | null
   /**
    * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
    */
-  visitHeading?: string | null;
-  footerSignoff?: string | null;
+  visitHeading?: string | null
+  footerSignoff?: string | null
   /**
    * Entrance, treatment room, and a detail. Shown in the three arches of the Visit section.
    */
-  studioPhotos?: (number | Media)[] | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
+  studioPhotos?: (number | Media)[] | null
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "about".
  */
 export interface About {
-  id: number;
+  id: number
   /**
    * Shown small in sage above the title, in the other language. Leave empty to hide.
    */
-  accent?: string | null;
+  accent?: string | null
   /**
    * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
    */
-  greeting?: string | null;
+  greeting?: string | null
   /**
    * Waist up, in the studio window light, vertical. Keep your face in the upper third.
    */
-  portrait?: (number | null) | Media;
+  portrait?: (number | null) | Media
   /**
    * Your hands at work, shown in a small circle over the portrait.
    */
-  handsPhoto?: (number | null) | Media;
-  opening?: string | null;
-  started?: string | null;
+  handsPhoto?: (number | null) | Media
+  opening?: string | null
+  started?: string | null
   /**
    * Your studio, your tools, or a training moment. Shown side by side in two arches.
    */
-  storyPhotos?: (number | Media)[] | null;
-  working?: string | null;
-  quote?: string | null;
-  closing?: string | null;
+  storyPhotos?: (number | Media)[] | null
+  working?: string | null
+  quote?: string | null
+  closing?: string | null
   /**
    * Only real facts, e.g. "12 years" / "Experience". Leave empty to hide this row.
    */
   facts?:
     | {
-        value: string;
-        label: string;
-        id?: string | null;
+        value: string
+        label: string
+        id?: string | null
       }[]
-    | null;
+    | null
   /**
    * Only certificates you really hold. Leave empty to hide.
    */
   certifications?:
     | {
-        name: string;
-        school?: string | null;
-        year?: string | null;
-        id?: string | null;
+        name: string
+        school?: string | null
+        year?: string | null
+        id?: string | null
       }[]
-    | null;
-  signature?: string | null;
+    | null
+  signature?: string | null
   /**
    * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
    */
-  ctaHeading?: string | null;
-  ctaText?: string | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
+  ctaHeading?: string | null
+  ctaText?: string | null
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
-  id: number;
+  id: number
   services?: {
     /**
      * Shown small in sage above the title, in the other language. Leave empty to hide.
      */
-    accent?: string | null;
+    accent?: string | null
     /**
      * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
      */
-    title?: string | null;
-    intro?: string | null;
-    makeupIntro?: string | null;
-    skincareIntro?: string | null;
+    title?: string | null
+    intro?: string | null
+    makeupIntro?: string | null
+    skincareIntro?: string | null
     /**
      * A makeup detail, vertical.
      */
-    makeupPhoto?: (number | null) | Media;
+    makeupPhoto?: (number | null) | Media
     /**
      * A facial treatment, vertical.
      */
-    skincarePhoto?: (number | null) | Media;
+    skincarePhoto?: (number | null) | Media
     /**
      * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
      */
-    requestHeading?: string | null;
+    requestHeading?: string | null
     /**
      * Shown above bridal and event services (the ones booked by request).
      */
-    requestNote?: string | null;
+    requestNote?: string | null
     /**
      * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
      */
-    askLine?: string | null;
-  };
+    askLine?: string | null
+  }
   gallery?: {
     /**
      * Shown small in sage above the title, in the other language. Leave empty to hide.
      */
-    accent?: string | null;
+    accent?: string | null
     /**
      * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
      */
-    title?: string | null;
-    intro?: string | null;
+    title?: string | null
+    intro?: string | null
     /**
      * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
      */
-    beforeAfterHeading?: string | null;
-    beforeAfterNote?: string | null;
+    beforeAfterHeading?: string | null
+    beforeAfterNote?: string | null
     /**
      * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
      */
-    ctaHeading?: string | null;
-    ctaText?: string | null;
-  };
+    ctaHeading?: string | null
+    ctaText?: string | null
+  }
   contact?: {
     /**
      * Shown small in sage above the title, in the other language. Leave empty to hide.
      */
-    accent?: string | null;
+    accent?: string | null
     /**
      * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
      */
-    title?: string | null;
+    title?: string | null
     /**
      * A screenshot of the studio's street on the map, entrance marked. Tapping it opens the map link from Site settings.
      */
-    mapPhoto?: (number | null) | Media;
-    areaLabel?: string | null;
+    mapPhoto?: (number | null) | Media
+    areaLabel?: string | null
     /**
      * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
      */
-    hoursHeading?: string | null;
-    hoursNote?: string | null;
+    hoursHeading?: string | null
+    hoursNote?: string | null
     /**
      * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
      */
-    faqHeading?: string | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+    faqHeading?: string | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "availability".
  */
 export interface Availability {
-  id: number;
+  id: number
   /**
    * Beirut time. Add two ranges for the same day to take a break (e.g. 10:00–14:00 and 16:00–20:00). Days with no range are closed.
    */
   weeklyHours?:
     | {
-        day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
-        opens: string;
-        closes: string;
-        id?: string | null;
+        day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
+        opens: string
+        closes: string
+        id?: string | null
       }[]
-    | null;
+    | null
   /**
    * No booking may touch these days. Leave "To" empty for a single day.
    */
   blockedDates?:
     | {
-        from: string;
-        from_tz: SupportedTimezones;
-        to?: string | null;
-        to_tz?: SupportedTimezones;
-        note?: string | null;
-        id?: string | null;
+        from: string
+        from_tz: SupportedTimezones
+        to?: string | null
+        to_tz?: SupportedTimezones
+        note?: string | null
+        id?: string | null
       }[]
-    | null;
+    | null
   /**
    * 30 = customers can start at 10:00, 10:30, 11:00...
    */
-  slotIntervalMinutes: number;
+  slotIntervalMinutes: number
   /**
    * Kept free after every appointment.
    */
-  bufferMinutes: number;
+  bufferMinutes: number
   /**
    * How long before the start a booking must be made.
    */
-  minNoticeHours: number;
+  minNoticeHours: number
   /**
    * How far into the future customers can book.
    */
-  maxDaysAhead: number;
-  updatedAt?: string | null;
-  createdAt?: string | null;
+  maxDaysAhead: number
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
-  brandName?: T;
-  whatsappNumber?: T;
-  instagramUrl?: T;
-  locationText?: T;
-  mapLink?: T;
+  brandName?: T
+  whatsappNumber?: T
+  instagramUrl?: T
+  locationText?: T
+  mapLink?: T
   announcementBar?:
     | T
     | {
-        enabled?: T;
-        text?: T;
-        link?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        enabled?: T
+        text?: T
+        link?: T
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
-  heroPhoto?: T;
-  headlineLine1?: T;
-  headlineLine2?: T;
-  headlineLine3?: T;
-  tagline?: T;
-  accentLine?: T;
-  introPhoto?: T;
-  introAccent?: T;
-  introGreeting?: T;
-  introText?: T;
-  signature?: T;
+  heroPhoto?: T
+  headlineLine1?: T
+  headlineLine2?: T
+  headlineLine3?: T
+  tagline?: T
+  accentLine?: T
+  introPhoto?: T
+  introAccent?: T
+  introGreeting?: T
+  introText?: T
+  signature?: T
   facts?:
     | T
     | {
-        value?: T;
-        label?: T;
-        id?: T;
-      };
-  servicesHeading?: T;
-  resultsHeading?: T;
-  resultsNote?: T;
-  shopHeading?: T;
-  reviewsHeading?: T;
-  visitHeading?: T;
-  footerSignoff?: T;
-  studioPhotos?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        value?: T
+        label?: T
+        id?: T
+      }
+  servicesHeading?: T
+  resultsHeading?: T
+  resultsNote?: T
+  shopHeading?: T
+  reviewsHeading?: T
+  visitHeading?: T
+  footerSignoff?: T
+  studioPhotos?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "about_select".
  */
 export interface AboutSelect<T extends boolean = true> {
-  accent?: T;
-  greeting?: T;
-  portrait?: T;
-  handsPhoto?: T;
-  opening?: T;
-  started?: T;
-  storyPhotos?: T;
-  working?: T;
-  quote?: T;
-  closing?: T;
+  accent?: T
+  greeting?: T
+  portrait?: T
+  handsPhoto?: T
+  opening?: T
+  started?: T
+  storyPhotos?: T
+  working?: T
+  quote?: T
+  closing?: T
   facts?:
     | T
     | {
-        value?: T;
-        label?: T;
-        id?: T;
-      };
+        value?: T
+        label?: T
+        id?: T
+      }
   certifications?:
     | T
     | {
-        name?: T;
-        school?: T;
-        year?: T;
-        id?: T;
-      };
-  signature?: T;
-  ctaHeading?: T;
-  ctaText?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        name?: T
+        school?: T
+        year?: T
+        id?: T
+      }
+  signature?: T
+  ctaHeading?: T
+  ctaText?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1171,42 +1172,42 @@ export interface PagesSelect<T extends boolean = true> {
   services?:
     | T
     | {
-        accent?: T;
-        title?: T;
-        intro?: T;
-        makeupIntro?: T;
-        skincareIntro?: T;
-        makeupPhoto?: T;
-        skincarePhoto?: T;
-        requestHeading?: T;
-        requestNote?: T;
-        askLine?: T;
-      };
+        accent?: T
+        title?: T
+        intro?: T
+        makeupIntro?: T
+        skincareIntro?: T
+        makeupPhoto?: T
+        skincarePhoto?: T
+        requestHeading?: T
+        requestNote?: T
+        askLine?: T
+      }
   gallery?:
     | T
     | {
-        accent?: T;
-        title?: T;
-        intro?: T;
-        beforeAfterHeading?: T;
-        beforeAfterNote?: T;
-        ctaHeading?: T;
-        ctaText?: T;
-      };
+        accent?: T
+        title?: T
+        intro?: T
+        beforeAfterHeading?: T
+        beforeAfterNote?: T
+        ctaHeading?: T
+        ctaText?: T
+      }
   contact?:
     | T
     | {
-        accent?: T;
-        title?: T;
-        mapPhoto?: T;
-        areaLabel?: T;
-        hoursHeading?: T;
-        hoursNote?: T;
-        faqHeading?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        accent?: T
+        title?: T
+        mapPhoto?: T
+        areaLabel?: T
+        hoursHeading?: T
+        hoursNote?: T
+        faqHeading?: T
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1216,28 +1217,28 @@ export interface AvailabilitySelect<T extends boolean = true> {
   weeklyHours?:
     | T
     | {
-        day?: T;
-        opens?: T;
-        closes?: T;
-        id?: T;
-      };
+        day?: T
+        opens?: T
+        closes?: T
+        id?: T
+      }
   blockedDates?:
     | T
     | {
-        from?: T;
-        from_tz?: T;
-        to?: T;
-        to_tz?: T;
-        note?: T;
-        id?: T;
-      };
-  slotIntervalMinutes?: T;
-  bufferMinutes?: T;
-  minNoticeHours?: T;
-  maxDaysAhead?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        from?: T
+        from_tz?: T
+        to?: T
+        to_tz?: T
+        note?: T
+        id?: T
+      }
+  slotIntervalMinutes?: T
+  bufferMinutes?: T
+  minNoticeHours?: T
+  maxDaysAhead?: T
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1245,18 +1246,17 @@ export interface AvailabilitySelect<T extends boolean = true> {
  */
 export interface CollectionsWidget {
   data?: {
-    [k: string]: unknown;
-  };
-  width: 'full';
+    [k: string]: unknown
+  }
+  width: 'full'
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
-
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}

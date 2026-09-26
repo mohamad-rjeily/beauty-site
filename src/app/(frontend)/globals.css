@@ -143,15 +143,17 @@
     font-weight: 400;
   }
 
-  /* A heading pinned with position: sticky (top: 0). While the compact header is shown it
+  /* Phones: a heading pinned with position: sticky (top: 0). While the compact header is shown it
      steps down by the header's height (3.5rem) on the same curve, so the two never overlap.
      `translate` is its own property: it never fights a Motion transform. */
-  .pin-under-header {
-    transition: translate 500ms var(--ease-out-expo);
-  }
+  @media (width < 64rem) {
+    .pin-under-header {
+      transition: translate 500ms var(--ease-out-expo);
+    }
 
-  :root:has(.compact-header[data-shown]) .pin-under-header {
-    translate: 0 3.5rem;
+    :root:has(.compact-header[data-shown]) .pin-under-header {
+      translate: 0 3.5rem;
+    }
   }
 
   .no-scrollbar {
@@ -198,6 +200,14 @@
   from {
     opacity: 0;
     transform: translateY(24px);
+  }
+}
+
+/* A small chip settling onto a photo (the contact location chip). */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
 }
 
@@ -252,6 +262,10 @@
   .motion-rise {
     animation: rise-in 0.9s var(--ease-out-expo) both;
     animation-delay: calc(var(--i, 0) * 120ms + 150ms);
+  }
+
+  .motion-pop {
+    animation: pop-in 0.2s var(--ease-out-quart) 0.7s both;
   }
 
   .motion-bar {

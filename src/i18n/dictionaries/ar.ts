@@ -89,6 +89,7 @@ export const ar: Dictionary = {
   },
   mainNav: 'القائمة الرئيسية',
 
+  bookShort: 'احجزي',
   sendRequest: 'أرسلي طلباً',
   byRequest: 'بطلب مسبق',
   duration: 'المدة',

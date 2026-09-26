@@ -35,7 +35,8 @@ export function IsolatePlaceholders({ text }: { text: string }) {
     <>
       {parts.map((part, i) =>
         /^\[[^\]]+\]$/.test(part) ? (
-          <bdi key={i} className="whitespace-nowrap">
+          // A short token stays on one line; a bracketed sentence must still wrap.
+          <bdi key={i} className={/\s/.test(part) ? undefined : 'whitespace-nowrap'}>
             {part}
           </bdi>
         ) : (

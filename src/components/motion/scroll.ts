@@ -1,4 +1,4 @@
-import { animate, scroll, type DOMKeyframesDefinition } from 'motion'
+import { animate, inView, scroll, type DOMKeyframesDefinition } from 'motion'
 
 /** Motion's scroll offsets, e.g. ['start end', 'end start']. */
 export type ScrollOffset = NonNullable<NonNullable<Parameters<typeof scroll>[1]>['offset']>
@@ -21,6 +21,23 @@ export const linkToScroll = (
   offset: ScrollOffset,
   ease: 'linear' | 'easeOut' = 'easeOut',
 ): (() => void) => scroll(animate(el, keyframes, { ease }), { target, offset })
+
+/**
+ * The reduced-motion stand-in for every scroll-linked reveal: a one-time 0.3s fade when the
+ * element enters, and only for elements still below the fold after hydration (anything
+ * already on screen is left alone). Never tied to the scroll position, never moving.
+ */
+export const fadeInOnce = (el: HTMLElement): (() => void) => {
+  if (el.getBoundingClientRect().top < window.innerHeight * 0.92) return () => {}
+  el.style.opacity = '0'
+  const stop = inView(el, () => void animate(el, { opacity: 1 }, { duration: 0.3 }), {
+    amount: 0.25,
+  })
+  return () => {
+    stop()
+    el.style.removeProperty('opacity')
+  }
+}
 
 /** "start 0.8" style offset point with a rounded number (no 0.7000000001 in the string). */
 export const at = <E extends 'start' | 'center' | 'end'>(edge: E, viewport: number) =>

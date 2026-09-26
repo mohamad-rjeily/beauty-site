@@ -82,6 +82,7 @@ export const en = {
   mainNav: 'Main',
 
   // Services page
+  bookShort: 'Book',
   sendRequest: 'Send a request',
   byRequest: 'By request',
   duration: 'Duration',
