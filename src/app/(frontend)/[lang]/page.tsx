@@ -28,7 +28,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         home={home}
         photo={data.hero}
         brandName={settings.brandName}
-        bookHref={bookingHref({ locale, whatsappNumber })}
+        bookHref={bookingHref({ locale })}
+        hasWhatsApp={Boolean(whatsappNumber)}
         locale={locale}
         t={t}
       />

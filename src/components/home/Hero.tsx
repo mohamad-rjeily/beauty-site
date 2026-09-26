@@ -9,7 +9,6 @@ import { PillLink } from '@/components/ui/Pill'
 import type { Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
 import type { Photo } from '@/lib/cms/home'
-import { externalLinkProps } from '@/lib/links'
 import type { Home } from '@/payload-types'
 
 import { container } from './shared'
@@ -27,6 +26,7 @@ export function Hero({
   photo,
   brandName,
   bookHref,
+  hasWhatsApp,
   locale,
   t,
 }: {
@@ -34,6 +34,8 @@ export function Hero({
   photo: Photo | null
   brandName: string
   bookHref: string | null
+  /** The fixed desktop WhatsApp pill exists (a number is set): the tagline row makes room. */
+  hasWhatsApp: boolean
   locale: Locale
   t: Dictionary
 }) {
@@ -71,12 +73,7 @@ export function Hero({
           <LanguageSwitch locale={locale} t={labels} tone="light" />
           {bookHref && (
             <span className="hidden lg:inline-flex">
-              <PillLink
-                href={bookHref}
-                external
-                variant="outlineLight"
-                className="min-h-11 px-5 text-sm"
-              >
+              <PillLink href={bookHref} variant="outlineLight" className="min-h-11 px-5 text-sm">
                 {t.book}
               </PillLink>
             </span>
@@ -94,9 +91,8 @@ export function Hero({
 
       <div className={`${container} relative flow-root`}>
         {bookHref && (
-          <a
+          <Link
             href={bookHref}
-            {...externalLinkProps}
             aria-label={t.bookBadgeLabel}
             className="absolute end-5 top-[calc(var(--photo-h)-24rem)] flex size-27 items-center justify-center rounded-full bg-clay text-paper shadow-lift transition-transform duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.96] active:duration-[140ms] lg:end-10 lg:size-36"
           >
@@ -128,7 +124,7 @@ export function Hero({
               </text>
             </svg>
             <Icon name="arrowUpEnd" size={28} />
-          </a>
+          </Link>
         )}
 
         <h1
@@ -147,10 +143,9 @@ export function Hero({
         </h1>
 
         {(home.tagline || home.accentLine) && (
-          // Room for the fixed desktop WhatsApp pill only when it exists (it renders from the same
-          // WhatsApp number that produces bookHref).
+          // Room for the fixed desktop WhatsApp pill only when it exists.
           <div
-            className={`mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 ${bookHref ? 'lg:pe-44' : ''}`}
+            className={`mt-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 ${hasWhatsApp ? 'lg:pe-44' : ''}`}
           >
             {home.tagline && (
               <p className="m-0 text-sm text-ink-soft lg:text-base">{home.tagline}</p>

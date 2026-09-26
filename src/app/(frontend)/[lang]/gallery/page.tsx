@@ -21,7 +21,7 @@ export default async function GalleryPage({ params }: { params: Promise<{ lang: 
   const locale = (isLocale(lang) ? lang : 'en') as Locale
   const t = getDictionary(locale)
   const { page, settings, items } = await getGalleryPage(locale)
-  const book = bookingHref({ locale, whatsappNumber: settings.whatsappNumber })
+  const book = bookingHref({ locale })
 
   return (
     <>
@@ -66,7 +66,7 @@ export default async function GalleryPage({ params }: { params: Promise<{ lang: 
 
       {book && page?.ctaHeading && (
         <BookField id="gallery-book" heading={page.ctaHeading} text={page.ctaText}>
-          <PillLink href={book} external variant="ink">
+          <PillLink href={book} variant="ink">
             {t.book} <Icon name="arrow" size={18} />
           </PillLink>
         </BookField>

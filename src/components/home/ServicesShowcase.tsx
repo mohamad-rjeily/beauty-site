@@ -1,10 +1,12 @@
+import Link from 'next/link'
+
 import { Reveal } from '@/components/motion/Reveal'
 import { Icon } from '@/components/ui/Icon'
 import { Picture } from '@/components/ui/Picture'
 import { format, type Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
 import type { ServiceGroup } from '@/lib/cms/home'
-import { bookingHref, externalLinkProps } from '@/lib/links'
+import { bookingHref, externalLinkProps, whatsappHref } from '@/lib/links'
 
 import { container, Emphasis, EmptyNote, SectionHeading } from './shared'
 
@@ -26,7 +28,7 @@ export function ServicesShowcase({
   t: Dictionary
 }) {
   const anyServices = groups.some((g) => g.names.length > 0)
-  const askHref = bookingHref({ locale, whatsappNumber })
+  const askHref = whatsappNumber ? whatsappHref(whatsappNumber, '') : null
 
   return (
     <section
@@ -95,7 +97,7 @@ function ServiceCard({
   t: Dictionary
 }) {
   const label = t.categories[group.category]
-  const href = bookingHref({ locale, whatsappNumber, subject: label })
+  const href = bookingHref({ locale, category: group.category })
 
   // With a destination, the whole card is the Book link: the link's ::after stretches over the
   // card. Hover lifts it 4px while a deeper shadow fades in (opacity on a pseudo-element, so
@@ -127,19 +129,18 @@ function ServiceCard({
         <p className="m-0 text-[0.8125rem] font-semibold">
           {group.fromPrice
             ? format(t.fromPrice, { price: group.fromPrice })
-            : href
+            : whatsappNumber
               ? t.pricesSoon
               : t.pricesSoonNoContact}
         </p>
         {href && (
-          <a
+          <Link
             href={href}
-            {...externalLinkProps}
             className="mt-auto inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-clay no-underline after:absolute after:inset-0 after:rounded-card hover:text-clay-deep"
           >
             {format(t.bookCategory, { category: label.toLowerCase() })}{' '}
             <Icon name="arrow" size={16} />
-          </a>
+          </Link>
         )}
       </div>
     </article>

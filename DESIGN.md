@@ -279,7 +279,7 @@ Soft, tactile and certain: one shape (the `PillLink`) for every action.
 - **Ink:** hover to earth. **Outline:** 1.5px ink border, fills ink on hover (Directions). **Outline light:** 1.5px paper border over photos, fills paper on hover. **Sage:** WhatsApp only.
 - **Press:** scales to 0.97 on `:active` (140ms), releases on a 220ms `cubic-bezier(0.23, 1, 0.32, 1)`; colour transitions 200ms. `scale` is listed explicitly in the transition (Tailwind v4 uses the individual `scale` property).
 - **Focus:** 2px clay outline, 3px offset, 4px radius (global).
-- **Destination:** every Book button gets its href from `bookingHref()` in `src/lib/links.ts`; Order buttons from `orderHref()`. A null href hides the button rather than rendering a dead link. External links open in a new tab with `noopener noreferrer`.
+- **Destination:** every Book button gets its href from `bookingHref()` in `src/lib/links.ts`: the booking page `/[lang]/book`, with `?service=<slug>` when the button belongs to a service. The booking page itself shows no Book button (on phones the bottom bar gives way to a floating WhatsApp button). Order buttons get theirs from `orderHref()`; a null href hides the button rather than rendering a dead link. External links open in a new tab with `noopener noreferrer`; site pages use client-side navigation.
 
 ### Chips (pair toggles)
 - **Style:** 2.75rem pill, 1px stone border, ink 0.8125rem semibold.

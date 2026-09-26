@@ -16,9 +16,6 @@ export const en = {
   whatsapp: 'WhatsApp',
   chatOnWhatsApp: 'Chat on WhatsApp',
 
-  whatsappBooking: "Hello! I'd like to book an appointment.",
-  whatsappBookingService: "Hello! I'd like to book: {service}.",
-  whatsappRequest: "Hello! I'd like to send a request for: {service}. My date: ",
   whatsappOrder: "Hello! I'd like to order: {product}.",
 
   categories: { makeup: 'Makeup', skincare: 'Skincare' },

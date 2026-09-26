@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { ReactNode } from 'react'
 
 import { externalLinkProps } from '@/lib/links'
@@ -14,7 +15,7 @@ const variants: Record<Variant, string> = {
 
 /**
  * Pill-shaped link: the site's one action shape. At least 44px tall; external links
- * (WhatsApp, maps, Instagram) open in a new tab.
+ * (WhatsApp, maps, Instagram) open in a new tab, site pages use client-side navigation.
  */
 export function PillLink({
   href,
@@ -31,12 +32,20 @@ export function PillLink({
   className?: string
   ariaLabel?: string
 }) {
+  const classes = `inline-flex min-h-[3.25rem] items-center justify-center gap-2.5 rounded-full px-6 text-[0.9375rem] font-semibold no-underline [transition:background-color_200ms_ease,color_200ms_ease,scale_220ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] active:[transition-duration:200ms,200ms,140ms] ${variants[variant]} ${className}`
+  if (!external && href.startsWith('/')) {
+    return (
+      <Link href={href} aria-label={ariaLabel} className={classes}>
+        {children}
+      </Link>
+    )
+  }
   return (
     <a
       href={href}
       aria-label={ariaLabel}
       {...(external ? externalLinkProps : {})}
-      className={`inline-flex min-h-[3.25rem] items-center justify-center gap-2.5 rounded-full px-6 text-[0.9375rem] font-semibold no-underline [transition:background-color_200ms_ease,color_200ms_ease,scale_220ms_cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97] active:[transition-duration:200ms,200ms,140ms] ${variants[variant]} ${className}`}
+      className={classes}
     >
       {children}
     </a>

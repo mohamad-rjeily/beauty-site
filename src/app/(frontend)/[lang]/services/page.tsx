@@ -60,7 +60,6 @@ export default async function ServicesPage({ params }: { params: Promise<{ lang:
             photo={photos[group.category]}
             services={group.services}
             page={page}
-            whatsappNumber={settings.whatsappNumber}
             locale={locale}
             t={t}
           />

@@ -15,9 +15,6 @@ export const ar: Dictionary = {
   whatsapp: 'واتساب',
   chatOnWhatsApp: 'تواصلي معنا على واتساب',
 
-  whatsappBooking: 'مرحباً! أودّ حجز موعد.',
-  whatsappBookingService: 'مرحباً! أودّ حجز: {service}.',
-  whatsappRequest: 'مرحباً! أودّ إرسال طلب لـ: {service}. التاريخ: ',
   whatsappOrder: 'مرحباً! أودّ طلب: {product}.',
 
   categories: { makeup: 'مكياج', skincare: 'العناية بالبشرة' },

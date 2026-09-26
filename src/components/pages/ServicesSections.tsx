@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { container, Emphasis, EmptyNote, IsolatePlaceholders } from '@/components/home/shared'
 import { ArchPhoto } from '@/components/motion/ArchPhoto'
 import { Reveal } from '@/components/motion/Reveal'
@@ -9,7 +11,7 @@ import { format, type Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
 import type { Photo } from '@/lib/cms/home'
 import { formatDuration, type ServiceItem } from '@/lib/cms/pages'
-import { bookingHref, externalLinkProps, whatsappHref } from '@/lib/links'
+import { bookingHref, whatsappHref } from '@/lib/links'
 import type { Page } from '@/payload-types'
 
 type Tone = 'clay' | 'limestone'
@@ -41,7 +43,6 @@ export function CategorySection({
   photo,
   services,
   page,
-  whatsappNumber,
   locale,
   t,
 }: {
@@ -51,7 +52,6 @@ export function CategorySection({
   photo: Photo | null
   services: ServiceItem[]
   page: Page['services']
-  whatsappNumber?: string | null
   locale: Locale
   t: Dictionary
 }) {
@@ -127,7 +127,7 @@ export function CategorySection({
                 >
                   <ServiceRow
                     service={service}
-                    href={bookingHref({ locale, whatsappNumber, subject: service.name })}
+                    href={bookingHref({ locale, service: service.slug })}
                     t={t}
                   />
                 </ScrollRise>
@@ -161,12 +161,7 @@ export function CategorySection({
                   >
                     <RequestCard
                       service={service}
-                      href={bookingHref({
-                        locale,
-                        whatsappNumber,
-                        subject: service.name,
-                        request: true,
-                      })}
+                      href={bookingHref({ locale, service: service.slug })}
                       tone={tone}
                       t={t}
                     />
@@ -185,15 +180,7 @@ export function CategorySection({
   )
 }
 
-function ServiceRow({
-  service,
-  href,
-  t,
-}: {
-  service: ServiceItem
-  href: string | null
-  t: Dictionary
-}) {
+function ServiceRow({ service, href, t }: { service: ServiceItem; href: string; t: Dictionary }) {
   return (
     <article className="flex flex-col gap-2 py-5">
       <div className="flex items-baseline justify-between gap-3">
@@ -215,17 +202,14 @@ function ServiceRow({
           <span className="sr-only">{t.duration}: </span>
           {formatDuration(service.duration, t)}
         </span>
-        {href && (
-          <a
-            href={href}
-            {...externalLinkProps}
-            className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-clay no-underline hover:text-clay-deep"
-          >
-            {t.bookShort}
-            <span className="sr-only">: {service.name}</span>
-            <Icon name="arrow" size={16} />
-          </a>
-        )}
+        <Link
+          href={href}
+          className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-clay no-underline hover:text-clay-deep"
+        >
+          {t.bookShort}
+          <span className="sr-only">: {service.name}</span>
+          <Icon name="arrow" size={16} />
+        </Link>
       </div>
     </article>
   )
@@ -242,14 +226,12 @@ function RequestCard({
   t,
 }: {
   service: ServiceItem
-  href: string | null
+  href: string
   tone: Tone
   t: Dictionary
 }) {
   const style = tones[tone]
-  const interactive = href
-    ? `isolate transition-[translate,scale] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] before:absolute before:inset-0 before:-z-10 before:rounded-card before:opacity-0 before:transition-opacity before:duration-300 hover:-translate-y-1 hover:before:opacity-100 active:scale-[0.98] active:duration-[140ms] motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 ${style.lift}`
-    : ''
+  const interactive = `isolate transition-[translate,scale] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] before:absolute before:inset-0 before:-z-10 before:rounded-card before:opacity-0 before:transition-opacity before:duration-300 hover:-translate-y-1 hover:before:opacity-100 active:scale-[0.98] active:duration-[140ms] motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100 ${style.lift}`
 
   return (
     <article
@@ -276,16 +258,13 @@ function RequestCard({
         <p className="m-0 text-[0.8125rem] font-semibold">
           {format(t.fromPrice, { price: service.price })}
         </p>
-        {href && (
-          <a
-            href={href}
-            {...externalLinkProps}
-            className="mt-auto inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-clay px-4 text-sm font-semibold text-paper no-underline transition-colors after:absolute after:inset-0 after:rounded-card hover:bg-clay-deep"
-          >
-            {t.sendRequest}
-            <span className="sr-only">: {service.name}</span>
-          </a>
-        )}
+        <Link
+          href={href}
+          className="mt-auto inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-clay px-4 text-sm font-semibold text-paper no-underline transition-colors after:absolute after:inset-0 after:rounded-card hover:bg-clay-deep"
+        >
+          {t.sendRequest}
+          <span className="sr-only">: {service.name}</span>
+        </Link>
       </div>
     </article>
   )

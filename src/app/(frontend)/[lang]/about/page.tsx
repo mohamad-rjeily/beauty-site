@@ -28,7 +28,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
   const locale = (isLocale(lang) ? lang : 'en') as Locale
   const t = getDictionary(locale)
   const { about, settings, portrait, hands, story } = await getAboutPage(locale)
-  const book = bookingHref({ locale, whatsappNumber: settings.whatsappNumber })
+  const book = bookingHref({ locale })
   const facts = about.facts ?? []
   const certifications = about.certifications ?? []
 
@@ -185,7 +185,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
       {about.ctaHeading && (
         <BookField id="about-book" heading={about.ctaHeading} text={about.ctaText}>
           {book && (
-            <PillLink href={book} external variant="ink">
+            <PillLink href={book} variant="ink">
               {t.book} <Icon name="arrow" size={18} />
             </PillLink>
           )}

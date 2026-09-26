@@ -1,39 +1,28 @@
 import { format, getDictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
 
-/** wa.me link with a pre-filled message. `number` is E.164 (+961...). */
-export const whatsappHref = (number: string, message: string): string => {
-  const base = `https://wa.me/${number.replace(/\D/g, '')}`
-  return message ? `${base}?text=${encodeURIComponent(message)}` : base
-}
+import { whatsappHref } from './whatsapp'
+
+export { whatsappHref }
 
 type BookingTarget = {
   locale: Locale
-  whatsappNumber?: string | null
-  /** Optional context, e.g. a service or category name, added to the message. */
-  subject?: string
-  /** A `request` service (bridal, events): the message asks for a date, not a time slot. */
-  request?: boolean
+  /** A known service: the booking page opens with it selected. */
+  service?: string
+  /** A category (home service cards): the booking page opens at that group. */
+  category?: 'makeup' | 'skincare'
 }
 
 /**
- * THE destination of every "Book" button on the site. Until the booking page exists
- * (phase 4) it opens WhatsApp with a pre-filled request; phase 4 changes only this function.
- * Returns null when there is nowhere to send the visitor (no WhatsApp number yet), so
- * callers hide the button instead of rendering a dead link.
+ * THE destination of every "Book" button on the site: the booking page, with the service
+ * preselected when the button belongs to one (`/en/book?service=bridal-makeup`). WhatsApp
+ * stays a separate chat button (see StickyActions).
  */
-export const bookingHref = ({
-  locale,
-  whatsappNumber,
-  subject,
-  request,
-}: BookingTarget): string | null => {
-  if (!whatsappNumber) return null
-  const t = getDictionary(locale)
-  const message = subject
-    ? format(request ? t.whatsappRequest : t.whatsappBookingService, { service: subject })
-    : t.whatsappBooking
-  return whatsappHref(whatsappNumber, message)
+export const bookingHref = ({ locale, service, category }: BookingTarget): string => {
+  const base = `/${locale}/book`
+  if (service) return `${base}?service=${encodeURIComponent(service)}`
+  if (category) return `${base}#book-${category}`
+  return base
 }
 
 /** Every "Order" button until the shop checkout exists (phase 5): same single-place rule. */
@@ -59,5 +48,5 @@ export type PageKey = 'services' | 'gallery' | 'about' | 'contact' | 'shop'
 export const pageHref = (locale: Locale, page: PageKey | 'home'): string =>
   page === 'home' ? `/${locale}` : page === 'shop' ? `/${locale}#shop` : `/${locale}/${page}`
 
-/** Booking links open WhatsApp, a different site: new tab, no referrer leakage. */
+/** Links to other sites (WhatsApp, maps, Instagram): new tab, no referrer leakage. */
 export const externalLinkProps = { target: '_blank', rel: 'noopener noreferrer' } as const

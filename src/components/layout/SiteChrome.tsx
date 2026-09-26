@@ -12,6 +12,7 @@ import type { Home, SiteSetting } from '@/payload-types'
 
 import { LanguageSwitch, SiteMenu } from './Nav'
 import { navLabels } from './navLabels'
+import { RouteSwitch } from './RouteSwitch'
 
 /** Owner-controlled message bar at the very top; hidden unless switched on with text. */
 export function AnnouncementBar({ settings }: { settings: SiteSetting }) {
@@ -44,7 +45,7 @@ export function PageHeader({
   locale: Locale
   t: Dictionary
 }) {
-  const book = bookingHref({ locale, whatsappNumber: settings.whatsappNumber })
+  const book = bookingHref({ locale })
   const labels = navLabels(t)
   return (
     <header className="mx-auto flex h-16 w-full max-w-[75rem] items-center justify-between gap-3 ps-6 pe-2 text-ink lg:px-10">
@@ -56,13 +57,15 @@ export function PageHeader({
       </Link>
       <div className="flex shrink-0 items-center gap-1 lg:gap-2">
         <LanguageSwitch locale={locale} t={labels} />
-        {book && (
-          <span className="hidden lg:inline-flex">
-            <PillLink href={book} external variant="outline" className="min-h-11 px-5 text-sm">
-              {t.book}
-            </PillLink>
-          </span>
-        )}
+        <RouteSwitch
+          otherPages={
+            <span className="hidden lg:inline-flex">
+              <PillLink href={book} variant="outline" className="min-h-11 px-5 text-sm">
+                {t.book}
+              </PillLink>
+            </span>
+          }
+        />
         <Link
           href={pageHref(locale, 'shop')}
           aria-label={t.shop}
@@ -89,7 +92,7 @@ export function CompactHeader({
   locale: Locale
   t: Dictionary
 }) {
-  const book = bookingHref({ locale, whatsappNumber: settings.whatsappNumber })
+  const book = bookingHref({ locale })
   const labels = navLabels(t)
 
   return (
@@ -105,11 +108,13 @@ export function CompactHeader({
           </Link>
           <div className="flex shrink-0 items-center gap-1">
             <LanguageSwitch locale={locale} t={labels} />
-            {book && (
-              <PillLink href={book} external className="min-h-11 px-4 text-sm">
-                {t.book}
-              </PillLink>
-            )}
+            <RouteSwitch
+              otherPages={
+                <PillLink href={book} className="min-h-11 px-4 text-sm">
+                  {t.book}
+                </PillLink>
+              }
+            />
             <SiteMenu locale={locale} t={labels} />
           </div>
         </div>
@@ -120,8 +125,9 @@ export function CompactHeader({
 
 /**
  * Mobile: a bottom bar with Book and WhatsApp, always within thumb reach; it steps aside on a
- * fast scroll down and returns on scroll up. Desktop: the header carries Book, and WhatsApp
- * floats at the bottom corner. Buttons without a destination (no number yet) are not shown.
+ * fast scroll down and returns on scroll up. On the booking page itself the bar gives way to
+ * a round WhatsApp button in the bottom corner. Desktop: the header carries Book, and WhatsApp
+ * floats at the bottom corner. WhatsApp is not shown until a number is set.
  */
 export function StickyActions({
   settings,
@@ -132,37 +138,47 @@ export function StickyActions({
   locale: Locale
   t: Dictionary
 }) {
-  const book = bookingHref({ locale, whatsappNumber: settings.whatsappNumber })
+  const book = bookingHref({ locale })
   const chat = settings.whatsappNumber ? whatsappHref(settings.whatsappNumber, '') : null
-  if (!book && !chat) return null
+
+  const bar = (
+    <nav aria-label={t.quickActions} className="motion-bar fixed inset-x-0 bottom-0 z-40 lg:hidden">
+      <HideOnScrollDown>
+        <div className="flex items-center gap-2.5 bg-paper px-4 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] shadow-bar">
+          <PillLink href={book} className="flex-1">
+            {t.book} <Icon name="arrow" size={18} />
+          </PillLink>
+          {chat && (
+            <a
+              href={chat}
+              {...externalLinkProps}
+              aria-label={t.chatOnWhatsApp}
+              className="motion-pulse-later relative flex size-[3.25rem] shrink-0 items-center justify-center rounded-full bg-sage text-paper"
+            >
+              <Icon name="whatsapp" size={24} />
+            </a>
+          )}
+        </div>
+      </HideOnScrollDown>
+    </nav>
+  )
+
+  // The booking page: no Book button pointing at itself; WhatsApp floats alone.
+  const floatingChat = chat && (
+    <a
+      href={chat}
+      {...externalLinkProps}
+      aria-label={t.chatOnWhatsApp}
+      className="motion-bar motion-pulse-later fixed end-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 flex size-[3.25rem] items-center justify-center rounded-full bg-sage text-paper shadow-lift lg:hidden"
+    >
+      <Icon name="whatsapp" size={24} />
+    </a>
+  )
 
   return (
     <>
       {chat && <IdleFlag />}
-      <nav
-        aria-label={t.quickActions}
-        className="motion-bar fixed inset-x-0 bottom-0 z-40 lg:hidden"
-      >
-        <HideOnScrollDown>
-          <div className="flex items-center gap-2.5 bg-paper px-4 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] shadow-bar">
-            {book && (
-              <PillLink href={book} external className="flex-1">
-                {t.book} <Icon name="arrow" size={18} />
-              </PillLink>
-            )}
-            {chat && (
-              <a
-                href={chat}
-                {...externalLinkProps}
-                aria-label={t.chatOnWhatsApp}
-                className="motion-pulse-later relative flex size-[3.25rem] shrink-0 items-center justify-center rounded-full bg-sage text-paper"
-              >
-                <Icon name="whatsapp" size={24} />
-              </a>
-            )}
-          </div>
-        </HideOnScrollDown>
-      </nav>
+      <RouteSwitch bookPage={floatingChat} otherPages={bar} />
 
       {chat && (
         <a
