@@ -134,6 +134,7 @@ const main = async () => {
       collection: 'services',
       data: {
         name: 'TEST slot service',
+        slug: `test-slot-${Date.now()}`,
         category: 'makeup',
         price: { amount: 5000, currency: 'USD' },
         duration: 60,
@@ -144,6 +145,7 @@ const main = async () => {
       collection: 'services',
       data: {
         name: 'TEST bridal request',
+        slug: `test-request-${Date.now()}`,
         category: 'makeup',
         price: { amount: 30000, currency: 'USD' },
         duration: 240,

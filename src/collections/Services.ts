@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated, publishedOrAuthenticated } from '@/access'
 import { moneyField } from '@/fields/money'
+import { slugField } from '@/fields/slug'
 import { t } from '@/lib/i18n'
 
 export const SERVICE_CATEGORIES = [
@@ -31,6 +32,8 @@ export const Services: CollectionConfig = {
   },
   fields: [
     { name: 'name', type: 'text', label: t('Name', 'الاسم'), required: true, localized: true },
+    // Used by booking links: /en/book?service=bridal-makeup
+    slugField('name'),
     {
       name: 'category',
       type: 'select',
