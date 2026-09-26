@@ -18,6 +18,7 @@ export const ar: Dictionary = {
   whatsappBooking: 'مرحباً! أودّ حجز موعد.',
   whatsappBookingService: 'مرحباً! أودّ حجز: {service}.',
   whatsappOrder: 'مرحباً! أودّ طلب: {product}.',
+  whatsappRequest: 'مرحباً! أودّ إرسال طلب لـ: {service}. التاريخ: ',
 
   categories: { makeup: 'مكياج', skincare: 'العناية بالبشرة' },
   fromPrice: 'ابتداءً من {price}',
@@ -79,5 +80,54 @@ export const ar: Dictionary = {
   },
 
   footerRights: '© {year} {brand}',
-  footerLinks: { services: 'الخدمات', shop: 'المتجر', visit: 'الزيارة' },
+  nav: {
+    services: 'الخدمات',
+    gallery: 'المعرض',
+    about: 'من أنا',
+    contact: 'التواصل',
+    shop: 'المتجر',
+  },
+  mainNav: 'القائمة الرئيسية',
+
+  sendRequest: 'أرسلي طلباً',
+  byRequest: 'بطلب مسبق',
+  duration: 'المدة',
+  minutes: '{m} دقيقة',
+  hoursOnly: '{h} ساعة',
+  hoursMinutes: '{h} ساعة و{m} دقيقة',
+  jumpTo: 'انتقلي إلى فئة',
+  askOnWhatsApp: 'اسألي على واتساب',
+  categoryEmpty: 'نضيف خدمات هذه الفئة حالياً.',
+
+  all: 'الكل',
+  filterByStyle: 'تصفية حسب النمط',
+  choosePair: 'اختاري مقارنة',
+  styles: { bridal: 'عروس', soiree: 'سهرة', everyday: 'يومي', skin: 'بشرة' },
+  galleryEmpty: 'صور أعمالها قريباً.',
+  photos: 'الصور',
+
+  seeServices: 'الخدمات والأسعار',
+  certifications: 'الشهادات',
+
+  today: 'اليوم',
+  closed: 'مغلق',
+  openMap: 'افتحي الخريطة',
+  anotherQuestion: 'سؤال آخر؟',
+  weekdays: {
+    mon: 'الإثنين',
+    tue: 'الثلاثاء',
+    wed: 'الأربعاء',
+    thu: 'الخميس',
+    fri: 'الجمعة',
+    sat: 'السبت',
+    sun: 'الأحد',
+  },
+
+  pageHints: {
+    portrait: 'صورتها من الخصر إلى الأعلى بضوء نافذة الاستوديو',
+    hands: 'يداها أثناء العمل',
+    story: ['الاستوديو، الكرسي والنافذة', 'أدواتها، أو لحظة من التدريب'],
+    map: 'خريطة شارع الاستوديو مع تحديد المدخل',
+    gallery: 'صورة من أعمالها',
+  },
 }

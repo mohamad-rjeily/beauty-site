@@ -143,6 +143,17 @@
     font-weight: 400;
   }
 
+  /* A heading pinned with position: sticky (top: 0). While the compact header is shown it
+     steps down by the header's height (3.5rem) on the same curve, so the two never overlap.
+     `translate` is its own property: it never fights a Motion transform. */
+  .pin-under-header {
+    transition: translate 500ms var(--ease-out-expo);
+  }
+
+  :root:has(.compact-header[data-shown]) .pin-under-header {
+    translate: 0 3.5rem;
+  }
+
   .no-scrollbar {
     scrollbar-width: none;
   }
@@ -229,6 +240,11 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* In-page links (the category chips) glide instead of jumping. */
+  html {
+    scroll-behavior: smooth;
+  }
+
   .motion-hero-photo {
     animation: hero-settle 1.6s var(--ease-out-expo) both;
   }

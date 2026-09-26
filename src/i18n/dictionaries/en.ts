@@ -19,6 +19,7 @@ export const en = {
   whatsappBooking: "Hello! I'd like to book an appointment.",
   whatsappBookingService: "Hello! I'd like to book: {service}.",
   whatsappOrder: "Hello! I'd like to order: {product}.",
+  whatsappRequest: "Hello! I'd like to send a request for: {service}. My date: ",
 
   categories: { makeup: 'Makeup', skincare: 'Skincare' },
   fromPrice: 'From {price}',
@@ -71,7 +72,60 @@ export const en = {
   },
 
   footerRights: '© {year} {brand}',
-  footerLinks: { services: 'Services', shop: 'Shop', visit: 'Visit' },
+  nav: {
+    services: 'Services',
+    gallery: 'Gallery',
+    about: 'About',
+    contact: 'Contact',
+    shop: 'Shop',
+  },
+  mainNav: 'Main',
+
+  // Services page
+  sendRequest: 'Send a request',
+  byRequest: 'By request',
+  duration: 'Duration',
+  minutes: '{m} min',
+  hoursOnly: '{h} h',
+  hoursMinutes: '{h} h {m} min',
+  jumpTo: 'Jump to a category',
+  askOnWhatsApp: 'Ask on WhatsApp',
+  categoryEmpty: 'Services in this category are being added.',
+
+  // Gallery page
+  all: 'All',
+  filterByStyle: 'Filter by style',
+  choosePair: 'Choose a pair',
+  styles: { bridal: 'Bridal', soiree: 'Soirée', everyday: 'Everyday', skin: 'Skin' },
+  galleryEmpty: 'Photos of her work are coming soon.',
+  photos: 'Photos',
+
+  // About page
+  seeServices: 'See services and prices',
+  certifications: 'Certifications',
+
+  // Contact page
+  today: 'Today',
+  closed: 'Closed',
+  openMap: 'Open the map',
+  anotherQuestion: 'Another question?',
+  weekdays: {
+    mon: 'Monday',
+    tue: 'Tuesday',
+    wed: 'Wednesday',
+    thu: 'Thursday',
+    fri: 'Friday',
+    sat: 'Saturday',
+    sun: 'Sunday',
+  },
+
+  pageHints: {
+    portrait: 'Her, waist up, in the studio window light',
+    hands: 'Her hands at work',
+    story: ['Her studio, the chair and window', 'Her tools, or a training moment'],
+    map: "A map of the studio's street, entrance marked",
+    gallery: 'A photo of her work',
+  },
 }
 
 export type Dictionary = typeof en

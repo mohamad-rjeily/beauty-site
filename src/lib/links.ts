@@ -12,6 +12,8 @@ type BookingTarget = {
   whatsappNumber?: string | null
   /** Optional context, e.g. a service or category name, added to the message. */
   subject?: string
+  /** A `request` service (bridal, events): the message asks for a date, not a time slot. */
+  request?: boolean
 }
 
 /**
@@ -20,11 +22,16 @@ type BookingTarget = {
  * Returns null when there is nowhere to send the visitor (no WhatsApp number yet), so
  * callers hide the button instead of rendering a dead link.
  */
-export const bookingHref = ({ locale, whatsappNumber, subject }: BookingTarget): string | null => {
+export const bookingHref = ({
+  locale,
+  whatsappNumber,
+  subject,
+  request,
+}: BookingTarget): string | null => {
   if (!whatsappNumber) return null
   const t = getDictionary(locale)
   const message = subject
-    ? format(t.whatsappBookingService, { service: subject })
+    ? format(request ? t.whatsappRequest : t.whatsappBookingService, { service: subject })
     : t.whatsappBooking
   return whatsappHref(whatsappNumber, message)
 }
@@ -45,6 +52,12 @@ export const orderHref = ({
     format(getDictionary(locale).whatsappOrder, { product: productName }),
   )
 }
+
+export type PageKey = 'services' | 'gallery' | 'about' | 'contact' | 'shop'
+
+/** The address of a site page. The shop lives on the home page until phase 5. */
+export const pageHref = (locale: Locale, page: PageKey | 'home'): string =>
+  page === 'home' ? `/${locale}` : page === 'shop' ? `/${locale}#shop` : `/${locale}/${page}`
 
 /** Booking links open WhatsApp, a different site: new tab, no referrer leakage. */
 export const externalLinkProps = { target: '_blank', rel: 'noopener noreferrer' } as const

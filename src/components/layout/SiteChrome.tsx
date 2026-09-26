@@ -7,8 +7,11 @@ import { ArchMark, Icon } from '@/components/ui/Icon'
 import { PillLink } from '@/components/ui/Pill'
 import { format, type Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
-import { bookingHref, externalLinkProps, whatsappHref } from '@/lib/links'
+import { bookingHref, externalLinkProps, pageHref, whatsappHref } from '@/lib/links'
 import type { Home, SiteSetting } from '@/payload-types'
+
+import { LanguageSwitch, SiteMenu } from './Nav'
+import { navLabels } from './navLabels'
 
 /** Owner-controlled message bar at the very top; hidden unless switched on with text. */
 export function AnnouncementBar({ settings }: { settings: SiteSetting }) {
@@ -29,6 +32,51 @@ export function AnnouncementBar({ settings }: { settings: SiteSetting }) {
 }
 
 /**
+ * Top of every page except home (whose header sits on the hero photo): brand, language,
+ * Book on desktop, the shop bag and the menu, in ink on the limestone ground.
+ */
+export function PageHeader({
+  settings,
+  locale,
+  t,
+}: {
+  settings: SiteSetting
+  locale: Locale
+  t: Dictionary
+}) {
+  const book = bookingHref({ locale, whatsappNumber: settings.whatsappNumber })
+  const labels = navLabels(t)
+  return (
+    <header className="mx-auto flex h-16 w-full max-w-[75rem] items-center justify-between gap-3 ps-6 pe-2 text-ink lg:px-10">
+      <Link
+        href={pageHref(locale, 'home')}
+        className="truncate font-display text-[1.3125rem] text-ink no-underline"
+      >
+        {settings.brandName}
+      </Link>
+      <div className="flex shrink-0 items-center gap-1 lg:gap-2">
+        <LanguageSwitch locale={locale} t={labels} />
+        {book && (
+          <span className="hidden lg:inline-flex">
+            <PillLink href={book} external variant="outline" className="min-h-11 px-5 text-sm">
+              {t.book}
+            </PillLink>
+          </span>
+        )}
+        <Link
+          href={pageHref(locale, 'shop')}
+          aria-label={t.shop}
+          className="flex size-11 items-center justify-center rounded-full text-ink hover:bg-sand"
+        >
+          <Icon name="bag" size={22} />
+        </Link>
+        <SiteMenu locale={locale} t={labels} />
+      </div>
+    </header>
+  )
+}
+
+/**
  * Slim header that slides in on scroll up once the visitor is past the hero, and hides on
  * scroll down: brand, language switch, Book and the menu, on paper with a soft shadow.
  */
@@ -41,11 +89,12 @@ export function CompactHeader({
   locale: Locale
   t: Dictionary
 }) {
-  const otherLocale = locale === 'en' ? 'ar' : 'en'
   const book = bookingHref({ locale, whatsappNumber: settings.whatsappNumber })
+  const labels = navLabels(t)
 
   return (
-    <ShowOnScrollUp className="fixed inset-x-0 top-0 z-50">
+    // `compact-header` lets pinned headings step down while it is shown (globals.css).
+    <ShowOnScrollUp className="compact-header fixed inset-x-0 top-0 z-50">
       <header className="bg-paper shadow-soft">
         <div className="mx-auto flex h-14 w-full max-w-[75rem] items-center justify-between gap-3 ps-6 pe-3 lg:ps-10 lg:pe-8">
           <Link
@@ -54,42 +103,15 @@ export function CompactHeader({
           >
             {settings.brandName}
           </Link>
-          <nav className="flex shrink-0 items-center gap-1">
-            <Link
-              href={`/${otherLocale}`}
-              hrefLang={otherLocale}
-              lang={otherLocale}
-              aria-label={t.switchLanguageLabel}
-              className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-ink no-underline hover:bg-sand"
-            >
-              {t.switchLanguage}
-            </Link>
+          <div className="flex shrink-0 items-center gap-1">
+            <LanguageSwitch locale={locale} t={labels} />
             {book && (
               <PillLink href={book} external className="min-h-11 px-4 text-sm">
                 {t.book}
               </PillLink>
             )}
-            <details className="relative">
-              <summary
-                aria-label={t.menu}
-                className="flex size-11 cursor-pointer list-none items-center justify-center rounded-full text-ink hover:bg-sand [&::-webkit-details-marker]:hidden"
-              >
-                <Icon name="menu" size={22} />
-              </summary>
-              <ul className="absolute end-0 top-full z-30 m-0 mt-2 flex min-w-44 list-none flex-col rounded-card bg-paper p-2 text-ink shadow-lift">
-                {(['services', 'shop', 'visit'] as const).map((key) => (
-                  <li key={key}>
-                    <Link
-                      href={`/${locale}#${key}`}
-                      className="flex min-h-11 items-center rounded-lg px-3 text-[0.9375rem] font-semibold text-ink no-underline hover:bg-sand"
-                    >
-                      {t.footerLinks[key]}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </details>
-          </nav>
+            <SiteMenu locale={locale} t={labels} />
+          </div>
         </div>
       </header>
     </ShowOnScrollUp>
@@ -179,13 +201,13 @@ export function Footer({
           </p>
         )}
         <ul className="m-0 flex list-none flex-wrap gap-x-6 p-0 text-sm font-semibold">
-          {(['services', 'shop', 'visit'] as const).map((key) => (
+          {(['services', 'gallery', 'about', 'contact', 'shop'] as const).map((key) => (
             <li key={key}>
               <Link
-                href={`/${locale}#${key}`}
+                href={pageHref(locale, key)}
                 className="inline-flex min-h-11 items-center text-limestone no-underline hover:underline"
               >
-                {t.footerLinks[key]}
+                {t.nav[key]}
               </Link>
             </li>
           ))}

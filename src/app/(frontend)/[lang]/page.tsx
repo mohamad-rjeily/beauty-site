@@ -32,7 +32,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         locale={locale}
         t={t}
       />
-      <ServicesMarquee names={data.marquee} label={t.footerLinks.services} />
+      <ServicesMarquee names={data.marquee} label={t.nav.services} />
       <Intro home={home} photo={data.intro} locale={locale} t={t} />
       <ServicesShowcase
         heading={home.servicesHeading ?? ''}

@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import { LanguageSwitch, SiteMenu } from '@/components/layout/Nav'
+import { navLabels } from '@/components/layout/navLabels'
 import { Parallax } from '@/components/motion/Parallax'
 import { Icon } from '@/components/ui/Icon'
 import { Picture } from '@/components/ui/Picture'
@@ -37,6 +39,7 @@ export function Hero({
 }) {
   const otherLocale = locale === 'en' ? 'ar' : 'en'
   const lines = [home.headlineLine1, home.headlineLine2, home.headlineLine3]
+  const labels = navLabels(t)
 
   return (
     <section
@@ -64,16 +67,8 @@ export function Hero({
         <Link href={`/${locale}`} className="font-display text-[1.3125rem] text-paper no-underline">
           {brandName}
         </Link>
-        <nav className="flex items-center gap-2">
-          <Link
-            href={`/${otherLocale}`}
-            hrefLang={otherLocale}
-            lang={otherLocale}
-            aria-label={t.switchLanguageLabel}
-            className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-paper no-underline hover:bg-paper/10"
-          >
-            {t.switchLanguage}
-          </Link>
+        <div className="flex items-center gap-2">
+          <LanguageSwitch locale={locale} t={labels} tone="light" />
           {bookHref && (
             <span className="hidden lg:inline-flex">
               <PillLink
@@ -93,28 +88,8 @@ export function Hero({
           >
             <Icon name="bag" size={22} />
           </a>
-          {/* Native disclosure: works without JavaScript, keyboard and screen-reader friendly. */}
-          <details className="group relative">
-            <summary
-              aria-label={t.menu}
-              className="flex size-11 cursor-pointer list-none items-center justify-center rounded-full text-paper hover:bg-paper/10 [&::-webkit-details-marker]:hidden"
-            >
-              <Icon name="menu" size={22} />
-            </summary>
-            <ul className="absolute end-0 top-full z-30 m-0 mt-2 flex min-w-44 list-none flex-col rounded-card bg-paper p-2 text-ink shadow-lift">
-              {(['services', 'shop', 'visit'] as const).map((key) => (
-                <li key={key}>
-                  <a
-                    href={`#${key}`}
-                    className="flex min-h-11 items-center rounded-lg px-3 text-[0.9375rem] font-semibold text-ink no-underline hover:bg-sand"
-                  >
-                    {t.footerLinks[key]}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </details>
-        </nav>
+          <SiteMenu locale={locale} t={labels} tone="light" />
+        </div>
       </header>
 
       <div className={`${container} relative flow-root`}>

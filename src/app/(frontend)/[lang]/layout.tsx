@@ -60,7 +60,8 @@ export default async function SiteLayout({
   const { settings, home } = await getSiteChrome(lang)
 
   return (
-    <html lang={lang} dir={direction(lang)} className={fontVariables}>
+    // data-scroll-behavior: page changes jump to the top instantly; only in-page links glide.
+    <html lang={lang} dir={direction(lang)} className={fontVariables} data-scroll-behavior="smooth">
       <body className="m-0">
         <a
           href="#main"
