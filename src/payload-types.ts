@@ -59,11 +59,15 @@ export interface Config {
   globals: {
     'site-settings': SiteSetting;
     home: Home;
+    about: About;
+    pages: Page;
     availability: Availability;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     home: HomeSelect<false> | HomeSelect<true>;
+    about: AboutSelect<false> | AboutSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     availability: AvailabilitySelect<false> | AvailabilitySelect<true>;
   };
   locale: 'en' | 'ar';
@@ -178,6 +182,10 @@ export interface Gallery {
   id: number;
   title: string;
   category: 'makeup' | 'skincare';
+  /**
+   * Used by the filter on the Gallery page. Only styles with photos show up as filters.
+   */
+  style?: ('bridal' | 'soiree' | 'everyday' | 'skin') | null;
   beforeImage: number | Media;
   /**
    * Same light and angle as the before photo.
@@ -534,6 +542,7 @@ export interface ServicesSelect<T extends boolean = true> {
 export interface GallerySelect<T extends boolean = true> {
   title?: T;
   category?: T;
+  style?: T;
   beforeImage?: T;
   afterImage?: T;
   service?: T;
@@ -866,6 +875,154 @@ export interface Home {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about".
+ */
+export interface About {
+  id: number;
+  /**
+   * Shown small in sage above the title, in the other language. Leave empty to hide.
+   */
+  accent?: string | null;
+  /**
+   * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+   */
+  greeting?: string | null;
+  /**
+   * Waist up, in the studio window light, vertical. Keep your face in the upper third.
+   */
+  portrait?: (number | null) | Media;
+  /**
+   * Your hands at work, shown in a small circle over the portrait.
+   */
+  handsPhoto?: (number | null) | Media;
+  opening?: string | null;
+  started?: string | null;
+  /**
+   * Your studio, your tools, or a training moment. Shown side by side in two arches.
+   */
+  storyPhotos?: (number | Media)[] | null;
+  working?: string | null;
+  quote?: string | null;
+  closing?: string | null;
+  /**
+   * Only real facts, e.g. "12 years" / "Experience". Leave empty to hide this row.
+   */
+  facts?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Only certificates you really hold. Leave empty to hide.
+   */
+  certifications?:
+    | {
+        name: string;
+        school?: string | null;
+        year?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  signature?: string | null;
+  /**
+   * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+   */
+  ctaHeading?: string | null;
+  ctaText?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  services?: {
+    /**
+     * Shown small in sage above the title, in the other language. Leave empty to hide.
+     */
+    accent?: string | null;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    title?: string | null;
+    intro?: string | null;
+    makeupIntro?: string | null;
+    skincareIntro?: string | null;
+    /**
+     * A makeup detail, vertical.
+     */
+    makeupPhoto?: (number | null) | Media;
+    /**
+     * A facial treatment, vertical.
+     */
+    skincarePhoto?: (number | null) | Media;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    requestHeading?: string | null;
+    /**
+     * Shown above bridal and event services (the ones booked by request).
+     */
+    requestNote?: string | null;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    askLine?: string | null;
+  };
+  gallery?: {
+    /**
+     * Shown small in sage above the title, in the other language. Leave empty to hide.
+     */
+    accent?: string | null;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    title?: string | null;
+    intro?: string | null;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    beforeAfterHeading?: string | null;
+    beforeAfterNote?: string | null;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    ctaHeading?: string | null;
+    ctaText?: string | null;
+  };
+  contact?: {
+    /**
+     * Shown small in sage above the title, in the other language. Leave empty to hide.
+     */
+    accent?: string | null;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    title?: string | null;
+    /**
+     * A screenshot of the studio's street on the map, entrance marked. Tapping it opens the map link from Site settings.
+     */
+    mapPhoto?: (number | null) | Media;
+    areaLabel?: string | null;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    hoursHeading?: string | null;
+    hoursNote?: string | null;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    faqHeading?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "availability".
  */
 export interface Availability {
@@ -965,6 +1122,88 @@ export interface HomeSelect<T extends boolean = true> {
   visitHeading?: T;
   footerSignoff?: T;
   studioPhotos?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about_select".
+ */
+export interface AboutSelect<T extends boolean = true> {
+  accent?: T;
+  greeting?: T;
+  portrait?: T;
+  handsPhoto?: T;
+  opening?: T;
+  started?: T;
+  storyPhotos?: T;
+  working?: T;
+  quote?: T;
+  closing?: T;
+  facts?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  certifications?:
+    | T
+    | {
+        name?: T;
+        school?: T;
+        year?: T;
+        id?: T;
+      };
+  signature?: T;
+  ctaHeading?: T;
+  ctaText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  services?:
+    | T
+    | {
+        accent?: T;
+        title?: T;
+        intro?: T;
+        makeupIntro?: T;
+        skincareIntro?: T;
+        makeupPhoto?: T;
+        skincarePhoto?: T;
+        requestHeading?: T;
+        requestNote?: T;
+        askLine?: T;
+      };
+  gallery?:
+    | T
+    | {
+        accent?: T;
+        title?: T;
+        intro?: T;
+        beforeAfterHeading?: T;
+        beforeAfterNote?: T;
+        ctaHeading?: T;
+        ctaText?: T;
+      };
+  contact?:
+    | T
+    | {
+        accent?: T;
+        title?: T;
+        mapPhoto?: T;
+        areaLabel?: T;
+        hoursHeading?: T;
+        hoursNote?: T;
+        faqHeading?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -1,41 +1,8 @@
-import type { Field, GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload'
 
 import { anyone, authenticated } from '@/access'
+import { localizedText, photo, STARS_HINT } from '@/fields/content'
 import { t } from '@/lib/i18n'
-
-/**
- * Localized text with an English and an Arabic default. Payload's `defaultValue` function
- * receives the locale being edited, so each language starts with its own approved copy.
- */
-const localizedText = (
-  name: string,
-  label: Record<string, string>,
-  defaults: { en: string; ar: string },
-  type: 'text' | 'textarea' = 'text',
-  description?: Record<string, string>,
-): Field => {
-  const base = {
-    name,
-    label,
-    localized: true as const,
-    defaultValue: ({ locale }: { locale?: string }) =>
-      locale === 'ar' ? defaults.ar : defaults.en,
-    admin: description ? { description } : undefined,
-  }
-  return type === 'textarea' ? { ...base, type: 'textarea' } : { ...base, type: 'text' }
-}
-
-const photo = (
-  name: string,
-  label: Record<string, string>,
-  description: Record<string, string>,
-): Field => ({
-  name,
-  type: 'upload',
-  relationTo: 'media',
-  label,
-  admin: { description },
-})
 
 /**
  * Every editable text and photo on the home page. Services, results, products, reviews and
@@ -189,10 +156,7 @@ export const HomePage: GlobalConfig = {
                 ar: 'حِرفتان، ويدٌ *واحدة.*',
               },
               'text',
-              t(
-                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
-                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
-              ),
+              STARS_HINT,
             ),
             localizedText(
               'resultsHeading',
@@ -202,10 +166,7 @@ export const HomePage: GlobalConfig = {
                 ar: 'اسحبي لتري *الفرق*',
               },
               'text',
-              t(
-                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
-                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
-              ),
+              STARS_HINT,
             ),
             {
               name: 'resultsNote',
@@ -230,10 +191,7 @@ export const HomePage: GlobalConfig = {
                 ar: 'من *رفّها*',
               },
               'text',
-              t(
-                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
-                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
-              ),
+              STARS_HINT,
             ),
             localizedText(
               'reviewsHeading',
@@ -243,10 +201,7 @@ export const HomePage: GlobalConfig = {
                 ar: '*بكلماتهنّ*',
               },
               'text',
-              t(
-                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
-                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
-              ),
+              STARS_HINT,
             ),
             localizedText(
               'visitHeading',
@@ -256,10 +211,7 @@ export const HomePage: GlobalConfig = {
                 ar: 'زوري *الاستوديو*',
               },
               'text',
-              t(
-                'Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"',
-                'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
-              ),
+              STARS_HINT,
             ),
             localizedText(
               'footerSignoff',

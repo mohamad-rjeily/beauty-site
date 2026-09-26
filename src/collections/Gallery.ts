@@ -5,13 +5,21 @@ import { t } from '@/lib/i18n'
 
 import { SERVICE_CATEGORIES } from './Services'
 
+/** Finer grouping for the gallery filter chips. Website labels live in the dictionaries. */
+export const GALLERY_STYLES = [
+  { label: t('Bridal', 'عروس'), value: 'bridal' },
+  { label: t('Soirée', 'سهرة'), value: 'soiree' },
+  { label: t('Everyday', 'يومي'), value: 'everyday' },
+  { label: t('Skin', 'بشرة'), value: 'skin' },
+] as const
+
 export const Gallery: CollectionConfig = {
   slug: 'gallery',
   labels: { singular: t('Gallery item', 'عنصر في المعرض'), plural: t('Gallery', 'المعرض') },
   admin: {
     useAsTitle: 'title',
     group: t('Content', 'المحتوى'),
-    defaultColumns: ['title', 'category', 'service', 'featured'],
+    defaultColumns: ['title', 'category', 'style', 'service', 'featured'],
   },
   access: {
     read: anyone,
@@ -27,6 +35,18 @@ export const Gallery: CollectionConfig = {
       label: t('Category', 'الفئة'),
       required: true,
       options: SERVICE_CATEGORIES,
+    },
+    {
+      name: 'style',
+      type: 'select',
+      label: t('Style (optional)', 'النمط (اختياري)'),
+      options: [...GALLERY_STYLES],
+      admin: {
+        description: t(
+          'Used by the filter on the Gallery page. Only styles with photos show up as filters.',
+          'يُستخدم في فلتر صفحة المعرض. تظهر فقط الأنماط التي لها صور.',
+        ),
+      },
     },
     {
       type: 'row',

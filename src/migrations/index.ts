@@ -2,6 +2,7 @@ import * as migration_20260925_190515_initial from './20260925_190515_initial'
 import * as migration_20260925_190555_booking_constraints from './20260925_190555_booking_constraints'
 import * as migration_20260925_195710_home_page_and_featured_products from './20260925_195710_home_page_and_featured_products'
 import * as migration_20260925_205310_home_accent_lines from './20260925_205310_home_accent_lines'
+import * as migration_20260926_142749_pages_about_gallery_style from './20260926_142749_pages_about_gallery_style'
 
 export const migrations = [
   {
@@ -23,5 +24,10 @@ export const migrations = [
     up: migration_20260925_205310_home_accent_lines.up,
     down: migration_20260925_205310_home_accent_lines.down,
     name: '20260925_205310_home_accent_lines',
+  },
+  {
+    up: migration_20260926_142749_pages_about_gallery_style.up,
+    down: migration_20260926_142749_pages_about_gallery_style.down,
+    name: '20260926_142749_pages_about_gallery_style',
   },
 ]
