@@ -7,6 +7,10 @@
  * no faces, no fake results. What was created and the previous state of the globals it
  * touches (site settings, home, about, page texts) are saved in .demo-seed.json
  * (git-ignored); seeding twice is refused.
+ *
+ * Booking demo: realistic working hours (with a lunch break and one closed day) replace the
+ * availability settings, and a few DEMO bookings fill some of the next free times, so the
+ * booking page shows taken slots. demo:clear deletes them and restores the owner's settings.
  */
 import config from '@payload-config'
 import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
@@ -14,13 +18,16 @@ import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { getPayload, type Payload } from 'payload'
 import sharp from 'sharp'
 
-import type { About, Home, Page, SiteSetting } from '../src/payload-types'
+import { loadFreeSlots } from '../src/lib/booking'
+import { businessTime } from '../src/lib/slots'
+import { BUSINESS_TIME_ZONE, businessDateKeyFromToday } from '../src/lib/time'
+import type { About, Availability, Home, Page, SiteSetting } from '../src/payload-types'
 
 const STATE_FILE = '.demo-seed.json'
 
 type GlobalSnapshot<T> = { existed: boolean; en?: T; ar?: T }
 type Collection =
-  'media' | 'services' | 'categories' | 'products' | 'testimonials' | 'gallery' | 'faq'
+  'media' | 'services' | 'categories' | 'products' | 'testimonials' | 'gallery' | 'faq' | 'bookings'
 type GlobalSlug = 'site-settings' | 'home' | 'about' | 'pages'
 type State = {
   created: Record<Collection, number[]>
@@ -29,6 +36,8 @@ type State = {
   // Added with the about / page texts demo; older state files don't have them.
   about?: GlobalSnapshot<About>
   pages?: GlobalSnapshot<Page>
+  // Added with the booking demo (not localized: one copy).
+  availability?: Availability
 }
 
 const mode = process.argv.at(-1)
@@ -224,11 +233,13 @@ const seed = async () => {
       testimonials: [],
       gallery: [],
       faq: [],
+      bookings: [],
     },
     siteSettings: await snapshot<SiteSetting>('site-settings', 'site_settings'),
     home: await snapshot<Home>('home', 'home'),
     about: await snapshot<About>('about', 'about'),
     pages: await snapshot<Page>('pages', 'pages'),
+    availability: await payload.findGlobal({ slug: 'availability', depth: 0 }),
   }
   save(state)
 
@@ -369,6 +380,81 @@ const seed = async () => {
     serviceIds.push(doc.id)
     save(state)
   }
+
+  // Working hours and demo bookings (booking page). Weekdays have a lunch break, Saturday is
+  // shorter, Sunday is closed, and one day about ten days out is a closed day.
+  const weekday = (day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri') => [
+    { day, opens: '10:00', closes: '14:00' },
+    { day, opens: '16:00', closes: '20:00' },
+  ]
+  const closedDay = businessDateKeyFromToday(10)
+  await payload.updateGlobal({
+    slug: 'availability',
+    data: {
+      weeklyHours: [
+        ...(['mon', 'tue', 'wed', 'thu', 'fri'] as const).flatMap(weekday),
+        { day: 'sat', opens: '10:00', closes: '16:00' },
+      ],
+      blockedDates: [
+        {
+          from: businessTime(closedDay, 12 * 60)!.toISOString(),
+          from_tz: BUSINESS_TIME_ZONE,
+          note: 'DEMO closed day',
+        },
+      ],
+      slotIntervalMinutes: 30,
+      bufferMinutes: 15,
+      minNoticeHours: 24,
+      maxDaysAhead: 60,
+    },
+  })
+
+  // A few bookings on the next open days, placed on real free times of the soirée service
+  // (60 min), so every service's time list shows them as taken.
+  const soiree = serviceIds[2]
+  const freeDays = ((await loadFreeSlots(payload, soiree)) ?? []).filter((d) => d.times.length > 4)
+  const picks = [
+    ...(freeDays[0] ? [freeDays[0].times[0], freeDays[0].times[3], freeDays[0].times.at(-2)] : []),
+    ...(freeDays[1] ? [freeDays[1].times[2], freeDays[1].times.at(-4)] : []),
+  ].filter((time): time is string => Boolean(time))
+  for (const [i, startTime] of picks.entries()) {
+    const booking = await payload.create({
+      collection: 'bookings',
+      data: {
+        customerName: `DEMO Client ${String.fromCharCode(65 + i)}`,
+        phone: `+961300000${i}`,
+        service: soiree,
+        startTime,
+        notes: 'DEMO booking',
+      } as never,
+    })
+    state.created.bookings.push(booking.id)
+    save(state)
+    if (i % 2 === 0) {
+      // Status only: the times stay as they are.
+      await payload.update({
+        collection: 'bookings',
+        id: booking.id,
+        data: { status: 'confirmed' },
+      })
+    }
+  }
+  const bridalRequest = await payload.create({
+    collection: 'bookings',
+    data: {
+      customerName: 'DEMO Bride',
+      phone: '+9613000009',
+      service: serviceIds[0],
+      requestedDate: businessTime(businessDateKeyFromToday(45), 12 * 60)!.toISOString(),
+      locationType: 'onLocation',
+      locationAddress: 'DEMO venue, city',
+      peopleCount: 3,
+      wantsTrial: true,
+      notes: 'DEMO request',
+    } as never,
+  })
+  state.created.bookings.push(bridalRequest.id)
+  save(state)
 
   // Product categories + eight products (brand and homemade; three featured on home)
   const categories: Record<'skincare' | 'makeup', number> = { skincare: 0, makeup: 0 }
@@ -800,7 +886,9 @@ const seed = async () => {
   const counts = Object.entries(state.created)
     .map(([k, v]) => `${k}=${v.length}`)
     .join(' ')
-  console.log(`Demo content seeded: ${counts}, plus site settings, home, about and page texts.`)
+  console.log(
+    `Demo content seeded: ${counts}, plus site settings, home, about, page texts and working hours.`,
+  )
 }
 
 // ── Clear ─────────────────────────────────────────────────────────────────
@@ -829,7 +917,15 @@ const clear = async () => {
   await restoreGlobal(payload, 'about', 'about', state.about)
   await restoreGlobal(payload, 'pages', 'pages', state.pages)
   await restoreGlobal(payload, 'site-settings', 'site_settings', state.siteSettings)
+  if (state.availability) {
+    await payload.updateGlobal({
+      slug: 'availability',
+      data: editable(state.availability) as never,
+    })
+  }
+  // Bookings first: they point at the demo services.
   const order = [
+    'bookings',
     'faq',
     'gallery',
     'testimonials',
