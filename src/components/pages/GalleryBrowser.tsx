@@ -116,13 +116,19 @@ export function GalleryBrowser({
                       // CSS property, so it composes with Motion's transform.
                       className={`${i % 2 === 1 ? 'max-lg:translate-y-12' : ''} ${i % 3 === 1 ? 'lg:translate-y-16' : ''}`}
                     >
-                      <ScrollRise order={i % cols} as="figure" className="m-0 flex flex-col gap-2">
+                      <ScrollRise
+                        order={i % cols}
+                        rebind={filter}
+                        as="figure"
+                        className="m-0 flex flex-col gap-2"
+                      >
                         <ArchPhoto
                           photo={item.after ?? item.before}
                           hint={labels.hint}
                           soon={labels.soon}
                           sizes="(min-width: 1024px) 24rem, 46vw"
                           zoom={1.04}
+                          rebind={filter}
                           className="aspect-[164/220] w-full rounded-t-full rounded-b-[0.625rem] shadow-soft"
                         />
                         <figcaption className="flex flex-col gap-0.5 px-1">

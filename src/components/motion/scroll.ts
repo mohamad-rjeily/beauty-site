@@ -20,7 +20,28 @@ export const linkToScroll = (
   target: Element,
   offset: ScrollOffset,
   ease: 'linear' | 'easeOut' = 'easeOut',
-): (() => void) => scroll(animate(el, keyframes, { ease }), { target, offset })
+): (() => void) => {
+  const stop = scroll(animate(el, keyframes, { ease }), { target, offset })
+  sampleSoon()
+  return stop
+}
+
+let sampleQueued = false
+
+/**
+ * Motion's fallback path (used for these element offsets) samples the page on scroll events,
+ * so a link bound after load (a gallery filter, a late hydration) would sit at its start
+ * state until the visitor scrolls. One synthetic scroll event per frame, however many links
+ * were just bound, makes them read the current position straight away.
+ */
+const sampleSoon = () => {
+  if (sampleQueued) return
+  sampleQueued = true
+  requestAnimationFrame(() => {
+    sampleQueued = false
+    window.dispatchEvent(new Event('scroll'))
+  })
+}
 
 /**
  * The reduced-motion stand-in for every scroll-linked reveal: a one-time 0.3s fade when the

@@ -24,6 +24,7 @@ export function ArchPhoto({
   tone,
   priority,
   zoom = 1.08,
+  rebind,
 }: {
   photo: Photo | null
   hint: string
@@ -33,6 +34,8 @@ export function ArchPhoto({
   tone?: 'light' | 'dark'
   priority?: boolean
   zoom?: number
+  /** Changes when the frame moves in the layout, so the scroll link measures its new place. */
+  rebind?: string | number
 }) {
   const frameRef = useRef<HTMLDivElement>(null)
   const driftRef = useRef<HTMLDivElement>(null)
@@ -58,7 +61,7 @@ export function ArchPhoto({
       ]),
     ]
     return () => stops.forEach((stop) => stop())
-  }, [zoom])
+  }, [zoom, rebind])
 
   // The frame is relative unless the caller positions it.
   const position = /(^|\s)(absolute|fixed)(\s|$)/.test(className) ? '' : 'relative'

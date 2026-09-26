@@ -10,12 +10,16 @@ import { at, fadeInOnce, linkToScroll, prefersReducedMotion } from './scroll'
  * in the same row: pass the column index and the start column (right in Arabic) goes first.
  * `from="start"` / `"end"` slides in from that side instead (mirrored in Arabic).
  * Visible without JavaScript; reduced motion: a one-time fade instead.
+ *
+ * Positions are measured when the effect is bound: pass `rebind` a value that changes when
+ * the element moves in the layout (e.g. a filter), so it measures its new place.
  */
 export function ScrollRise({
   children,
   order = 0,
   distance = 32,
   from = 'below',
+  rebind,
   className,
   as: Tag = 'div',
 }: {
@@ -23,6 +27,7 @@ export function ScrollRise({
   order?: number
   distance?: number
   from?: 'below' | 'start' | 'end'
+  rebind?: string | number
   className?: string
   as?: 'div' | 'li' | 'p' | 'figure' | 'article' | 'section'
 }) {
@@ -44,7 +49,7 @@ export function ScrollRise({
       at('start', 1 - lag),
       at('start', 0.72 - lag),
     ])
-  }, [order, distance, from])
+  }, [order, distance, from, rebind])
 
   return (
     // @ts-expect-error: polymorphic tag with a shared HTMLElement ref
