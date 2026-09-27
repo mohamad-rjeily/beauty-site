@@ -11,6 +11,7 @@ import {
 import { getDictionary } from '@/i18n'
 import { direction, isLocale, locales } from '@/i18n/config'
 import { getSiteChrome } from '@/lib/cms/site'
+import { siteUrl } from '@/lib/metadata'
 
 import { fontVariables } from '../fonts'
 import '../globals.css'
@@ -35,6 +36,7 @@ export async function generateMetadata({
   if (!isLocale(lang)) return {}
   const { settings, home } = await getSiteChrome(lang)
   return {
+    metadataBase: siteUrl() ?? undefined,
     title: settings.brandName,
     description: home.tagline ?? undefined,
     alternates: { languages: { en: '/en', ar: '/ar' } },

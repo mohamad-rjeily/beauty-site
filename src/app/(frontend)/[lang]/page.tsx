@@ -52,7 +52,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <ProductRail
         heading={home.shopHeading ?? ''}
         products={data.products}
-        whatsappNumber={whatsappNumber}
         locale={locale}
         t={t}
       />

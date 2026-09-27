@@ -456,10 +456,16 @@ const seed = async () => {
   state.created.bookings.push(bridalRequest.id)
   save(state)
 
-  // Product categories + eight products (brand and homemade; three featured on home)
-  const categories: Record<'skincare' | 'makeup', number> = { skincare: 0, makeup: 0 }
+  // Product categories + nine products: brand and homemade (three featured on home), plus
+  // one fashion item that must never show on the site until variants exist (phase 7).
+  const categories: Record<'skincare' | 'makeup' | 'masks', number> = {
+    skincare: 0,
+    makeup: 0,
+    masks: 0,
+  }
   for (const c of [
     { key: 'skincare', en: 'DEMO Skincare', ar: 'DEMO العناية بالبشرة' },
+    { key: 'masks', en: 'DEMO Homemade masks', ar: 'DEMO ماسكات منزلية' },
     { key: 'makeup', en: 'DEMO Makeup', ar: 'DEMO مكياج' },
   ] as const) {
     const doc = await payload.create({
@@ -485,7 +491,7 @@ const seed = async () => {
       en: 'DEMO Rose clay mask',
       ar: 'DEMO ماسك الطين الوردي',
       type: 'homemade',
-      category: 'skincare',
+      category: 'masks',
       amount: 1800,
       stock: 6,
       featured: true,
@@ -505,7 +511,7 @@ const seed = async () => {
       en: 'DEMO Oat & honey mask',
       ar: 'DEMO ماسك الشوفان والعسل',
       type: 'homemade',
-      category: 'skincare',
+      category: 'masks',
       amount: 1500,
       stock: 3,
       featured: false,
@@ -535,7 +541,7 @@ const seed = async () => {
       en: 'DEMO Green tea mask',
       ar: 'DEMO ماسك الشاي الأخضر',
       type: 'homemade',
-      category: 'skincare',
+      category: 'masks',
       amount: 1600,
       stock: 5,
       featured: false,
@@ -555,11 +561,21 @@ const seed = async () => {
       en: 'DEMO Turmeric glow mask',
       ar: 'DEMO ماسك الكركم للنضارة',
       type: 'homemade',
-      category: 'skincare',
+      category: 'masks',
       amount: 1700,
       stock: 4,
       featured: false,
       palette: 'clay',
+    },
+    {
+      en: 'DEMO Silk scarf',
+      ar: 'DEMO وشاح حرير',
+      type: 'fashion',
+      category: 'makeup',
+      amount: 4000,
+      stock: 3,
+      featured: true,
+      palette: 'sage',
     },
   ] as const
   for (const p of products) {
@@ -571,6 +587,14 @@ const seed = async () => {
       960,
       p.ar.replace('DEMO ', ''),
     )
+    // One product gets a second photo, so the product page shows its photo dots.
+    const images =
+      p.en === 'DEMO Rose clay mask'
+        ? [
+            image,
+            await uploadDemo(state, 'Rose clay mask, jar', 'sand', 800, 960, 'ماسك الطين الوردي، العلبة'),
+          ]
+        : [image]
     const homemade =
       p.type === 'homemade'
         ? {
@@ -583,7 +607,9 @@ const seed = async () => {
               patchTestNote: 'DEMO patch-test note',
             },
           }
-        : { brand: 'DEMO Brand' }
+        : p.type === 'brand'
+          ? { brand: 'DEMO Brand', size: 'DEMO 50 ml', howToUse: 'DEMO how to use' }
+          : { brand: 'DEMO Brand' }
     const doc = await payload.create({
       collection: 'products',
       locale: 'en',
@@ -592,7 +618,10 @@ const seed = async () => {
         type: p.type,
         category: categories[p.category],
         price: money(p.amount),
-        images: [image],
+        images,
+        description: richText(
+          'DEMO description: placeholder text showing where a few lines about the product will go.',
+        ),
         active: true,
         featuredOnHome: p.featured,
         stockAdjustment: p.stock,
@@ -605,6 +634,8 @@ const seed = async () => {
       locale: 'ar',
       data: {
         name: p.ar,
+        description: richText('DEMO وصف: نص مؤقت يوضّح مكان بضعة أسطر عن المنتج.', 'rtl'),
+        ...(p.type === 'brand' ? { howToUse: 'DEMO طريقة الاستعمال' } : {}),
         ...(p.type === 'homemade'
           ? {
               homemade: {

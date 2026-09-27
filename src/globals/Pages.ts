@@ -5,7 +5,7 @@ import { accentLine, localizedText, photo, starredHeading } from '@/fields/conte
 import { t } from '@/lib/i18n'
 
 /**
- * The words and photos of the Services, Gallery and Contact pages. Services, gallery items,
+ * The words and photos of the Services, Gallery, Shop and Contact pages. Services, gallery items,
  * opening hours, contact details and FAQ come from their own collections and settings; this
  * holds only each page's own titles, intro lines and photos.
  */
@@ -125,6 +125,21 @@ export const Pages: GlobalConfig = {
             localizedText('ctaText', t('Book band text', 'نص شريط الحجز'), {
               en: 'Mention the photo when you book, and we start from there.',
               ar: 'اذكري الصورة عند الحجز، ونبدأ من هناك.',
+            }),
+          ],
+        },
+        {
+          name: 'shop',
+          label: t('Shop page', 'صفحة المتجر'),
+          fields: [
+            accentLine('accent', { en: 'المتجر', ar: 'Shop' }),
+            starredHeading('title', t('Page title', 'عنوان الصفحة'), {
+              en: 'The *shop*',
+              ar: 'المتجر',
+            }),
+            localizedText('intro', t('Line under the title', 'السطر تحت العنوان'), {
+              en: 'Prices in USD. Order here, then confirm on WhatsApp. Cash on delivery or pickup.',
+              ar: 'الأسعار بالدولار الأميركي. اطلبي هنا ثم أكّدي على واتساب. الدفع نقداً عند التوصيل أو الاستلام.',
             }),
           ],
         },

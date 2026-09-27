@@ -47,7 +47,9 @@ try {
           window.scrollTo(0, 0)
         })
         await page.waitForTimeout(600)
-        const name = `${path.replace(/^\//, '') || 'home'}-${size.name}${lang === 'ar' ? '-ar' : ''}`
+        // Nested paths and queries become one flat, safe file name (shop/rose -> shop-rose).
+        const slug = path.replace(/^\//, '').replace(/[^a-z0-9-]+/gi, '-') || 'home'
+        const name = `${slug}-${size.name}${lang === 'ar' ? '-ar' : ''}`
         const file = `${out}/${name}.png`
         await page.screenshot({ path: file, fullPage: true })
         const [height, width] = await page.evaluate(() => [

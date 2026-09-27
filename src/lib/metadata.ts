@@ -17,3 +17,15 @@ export const pageMetadata =
       alternates: { languages: { en: `/en/${page}`, ar: `/ar/${page}` } },
     }
   }
+
+/**
+ * The site's public address (NEXT_PUBLIC_SITE_URL, e.g. https://example.com), or null until it
+ * is configured. Link previews (Open Graph images) need absolute addresses.
+ */
+export const siteUrl = (): URL | null => {
+  try {
+    return process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : null
+  } catch {
+    return null
+  }
+}

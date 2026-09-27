@@ -17,12 +17,13 @@ Resume with "continue where you stopped": pick up the first unchecked item.
 - [x] Typecheck, lint, verify:rules; commit
 
 ## Checkpoint 2 · Shop list + product page
-- [ ] `/[lang]/shop` with category chips (`?category=`), no fashion items
-- [ ] `/[lang]/shop/[slug]`: photo strip, homemade / brand details, quantity + add (button inert
+- [x] `/[lang]/shop` with category chips (`?category=`), no fashion items
+- [x] `/[lang]/shop/[slug]`: photo strip, homemade / brand details, quantity + add (button inert
       until the cart exists), metadata + OG + hreflang
-- [ ] Links: menu/footer shop, home rail cards → product page
-- [ ] Demo data for the screenshots (homemade category, brand fields)
-- [ ] Commit, then STOP: mobile EN/AR + desktop screenshots for design approval
+- [x] Links: menu/footer shop, home rail cards → product page
+- [x] Demo data for the screenshots (homemade category, brand fields)
+- [x] Commit, then STOP: mobile EN/AR + desktop screenshots for design approval
+- [ ] Owner approval of the screenshots (then start checkpoint 3)
 
 ## Checkpoint 3 · Cart
 - [ ] `src/lib/cart.ts` store + pure maths
@@ -56,3 +57,8 @@ Resume with "continue where you stopped": pick up the first unchecked item.
 ## Notes
 - Migrations `20260927_214509_shop` + `20260927_214521_shop_drop_address` (split so the schema
   tool never prompts about a rename). Applied to the dev database.
+- Checkpoint 2: Shop page texts tab in `pages` (migration `20260927_222744_shop_page_texts`).
+  Demo seed: "DEMO Homemade masks" category (slug `demo-masks`), brand size/how to use,
+  descriptions, a second photo on the rose clay mask, one hidden DEMO fashion item.
+  Screenshots: `.impeccable/review/shop-*.png` (`node scripts/screenshots.mjs /shop ...`,
+  with MSYS_NO_PATHCONV=1 in Git Bash). The Add to cart button is inert until checkpoint 3.

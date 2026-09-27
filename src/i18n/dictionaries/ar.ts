@@ -15,7 +15,6 @@ export const ar: Dictionary = {
   whatsapp: 'واتساب',
   chatOnWhatsApp: 'تواصلي معنا على واتساب',
 
-  whatsappOrder: 'مرحباً! أودّ طلب: {product}.',
 
   categories: { makeup: 'مكياج', skincare: 'العناية بالبشرة' },
   fromPrice: 'ابتداءً من {price}',
@@ -33,13 +32,37 @@ export const ar: Dictionary = {
   resultsEmptyHeading: 'قبل وبعد',
 
   swipe: 'اسحبي',
-  orderOnWhatsApp: 'اطلبي عبر واتساب',
   outOfStock: 'غير متوفر حالياً',
+  visitShop: 'تصفّحي المتجر كاملاً',
   shopSoon: 'المتجر يفتح قريباً.',
 
   previousProduct: 'المنتج السابق',
   nextProduct: 'المنتج التالي',
   productOf: 'المنتج {n} من {total}',
+
+  shopPage: {
+    all: 'الكل',
+    categoriesLabel: 'فئات المنتجات',
+    empty: 'لا توجد منتجات في هذه الفئة حالياً.',
+    seeAll: 'شاهدي كل المنتجات',
+    allProducts: 'كل المنتجات',
+    photos: 'صور المنتج',
+    photoOf: 'الصورة {n} من {total}',
+    quantity: 'الكمية',
+    fewer: 'قطعة أقل',
+    more: 'قطعة إضافية',
+    addToCart: 'أضيفي إلى السلة',
+    cashNote: 'الدفع نقداً فقط، بالدولار الأميركي. تؤكّدين طلبكِ على واتساب.',
+    brand: 'الماركة',
+    size: 'الحجم',
+    howToUse: 'طريقة الاستعمال',
+    ingredients: 'المكونات',
+    madeOn: 'تاريخ التحضير',
+    bestBefore: 'يُستعمل قبل',
+    storage: 'طريقة الحفظ',
+    patchTest: 'اختبري الحساسية أولاً',
+    homemade: 'صُنع منزلي',
+  },
 
   previousReview: 'الرأي السابق',
   nextReview: 'الرأي التالي',

@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 
 import { defaultLocale, type Locale } from '@/i18n/config'
 import { formatPrice } from '@/lib/format'
+import { publicProductWhere } from '@/lib/shop'
 import { WEEKDAYS, type Weekday } from '@/lib/time'
 import type {
   Availability,
@@ -43,8 +44,10 @@ export type ServiceGroup = {
 
 export type ResultPair = { id: number; title: string; before: Photo | null; after: Photo | null }
 
+/** A product as every card shows it (home rail and shop grid). */
 export type ProductCard = {
   id: number
+  slug: string
   name: string
   category: string | null
   price: string
@@ -134,7 +137,7 @@ export const getHomeData = async (locale: Locale): Promise<HomeData> => {
     }),
     payload.find({
       collection: 'products',
-      where: { and: [{ active: { equals: true } }, { featuredOnHome: { equals: true } }] },
+      where: { and: [publicProductWhere, { featuredOnHome: { equals: true } }] },
       sort: '-updatedAt',
       depth: 1,
       limit: HOME_PRODUCTS,
@@ -161,7 +164,7 @@ export const getHomeData = async (locale: Locale): Promise<HomeData> => {
               collection: 'products',
               where: {
                 and: [
-                  { active: { equals: true } },
+                  publicProductWhere,
                   ...(featured.docs.length
                     ? [{ id: { not_in: featured.docs.map((p) => p.id) } }]
                     : []),
@@ -218,8 +221,9 @@ const toResult = (item: Gallery): ResultPair => ({
   after: toPhoto(item.afterImage),
 })
 
-const toProduct = (product: Product): ProductCard => ({
+export const toProduct = (product: Product): ProductCard => ({
   id: product.id,
+  slug: product.slug,
   name: product.name,
   category: typeof product.category === 'object' && product.category ? product.category.name : null,
   price: formatPrice(product.price.amount, product.price.currency),

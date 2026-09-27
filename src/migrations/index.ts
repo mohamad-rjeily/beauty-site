@@ -7,6 +7,7 @@ import * as migration_20260926_204058_service_slug from './20260926_204058_servi
 import * as migration_20260926_204750_booking_rate_limits from './20260926_204750_booking_rate_limits';
 import * as migration_20260927_214509_shop from './20260927_214509_shop';
 import * as migration_20260927_214521_shop_drop_address from './20260927_214521_shop_drop_address';
+import * as migration_20260927_222744_shop_page_texts from './20260927_222744_shop_page_texts';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20260927_214521_shop_drop_address.up,
     down: migration_20260927_214521_shop_drop_address.down,
-    name: '20260927_214521_shop_drop_address'
+    name: '20260927_214521_shop_drop_address',
+  },
+  {
+    up: migration_20260927_222744_shop_page_texts.up,
+    down: migration_20260927_222744_shop_page_texts.down,
+    name: '20260927_222744_shop_page_texts'
   },
 ];
