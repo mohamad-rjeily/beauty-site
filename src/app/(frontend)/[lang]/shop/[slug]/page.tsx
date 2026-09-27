@@ -183,6 +183,7 @@ export default async function ProductPage({ params }: { params: Params }) {
               <div className="flex flex-col gap-3">
                 <AddToCart
                   productId={product.id}
+                  name={product.name}
                   stock={product.stock}
                   priceCents={product.priceCents}
                   cartHref={cartHref(locale)}

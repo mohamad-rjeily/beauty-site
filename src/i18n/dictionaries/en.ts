@@ -90,6 +90,7 @@ export const en = {
     outOfStock: '“{product}” is out of stock and was removed from your cart.',
     lowered: 'Only {n} of “{product}” left: your quantity was changed to {n}.',
     priceChanged: 'The price of “{product}” is now {price}.',
+    priceChangedFrom: 'The price of “{product}” changed from {old} to {price}.',
   },
 
   previousReview: 'Previous review',

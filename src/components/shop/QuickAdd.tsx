@@ -14,12 +14,14 @@ import { MAX_QUANTITY } from '@/lib/shop'
  */
 export function QuickAdd({
   productId,
+  name,
   stock,
   priceCents,
   cartHref,
   labels,
 }: {
   productId: number
+  name: string
   stock: number
   priceCents: number
   cartHref: string
@@ -37,7 +39,7 @@ export function QuickAdd({
   }, [checked])
 
   const add = () => {
-    const added = cart.add(productId, 1, limit, priceCents)
+    const added = cart.add(productId, 1, limit, { priceCents, name })
     setResult(added > 0 ? 'added' : 'full')
     setChecked(added > 0)
   }

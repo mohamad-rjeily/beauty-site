@@ -12,6 +12,7 @@ import { getPayload, type Payload } from 'payload'
 
 import { createPublicBooking, loadFreeSlots } from '../src/lib/booking'
 import { isBookingOverlapError } from '../src/lib/bookingErrors'
+import { loadCartProducts } from '../src/lib/cartProducts'
 import { getClientIp } from '../src/lib/clientIp'
 import { consumeRateLimit } from '../src/lib/rateLimit'
 import { businessTime, freeSlots, type BookingRules, type DaySlots } from '../src/lib/slots'
@@ -655,6 +656,40 @@ const main = async () => {
       '…still delivered, stock unchanged',
       status === 'delivered' && afterCancel === beforeCancel && beforeCancel === 4,
       `status ${status}, stock ${afterCancel} (5 − 1 confirmed = 4)`,
+    )
+
+    // ── 9. The cart check never names a product that isn't on sale ─────────
+    const hiddenProducts = await Promise.all(
+      [
+        { name: 'TEST hidden draft', type: 'brand', active: false },
+        { name: 'TEST hidden scarf', type: 'fashion', active: true },
+        { name: 'TEST shown balm', type: 'brand', active: true },
+      ].map((p) =>
+        payload.create({
+          collection: 'products',
+          data: {
+            ...p,
+            price: { amount: 1000, currency: 'USD' },
+            stockAdjustment: 3,
+          } as ClientData,
+        }),
+      ),
+    )
+    created.products.push(...hiddenProducts.map((p) => p.id))
+    const [draft, scarf, balm] = hiddenProducts
+    const checks = await loadCartProducts(payload, [draft.id, scarf.id, balm.id], 'en')
+    const hidden = checks.filter((c) => c.id !== balm.id)
+    expectTrue(
+      'Cart check · switched-off and fashion products return only { id, available: false }',
+      hidden.length === 2 &&
+        hidden.every((c) => Object.keys(c).sort().join() === 'available,id' && !c.available) &&
+        !JSON.stringify(checks).includes('TEST hidden'),
+      JSON.stringify(hidden),
+    )
+    expectTrue(
+      'Cart check · a product on sale comes back with its name, price and stock',
+      checks.some((c) => c.id === balm.id && c.available && c.name === 'TEST shown balm'),
+      JSON.stringify(checks.find((c) => c.id === balm.id)),
     )
   } finally {
     // ── Cleanup: delete everything this script created ─────────────────────

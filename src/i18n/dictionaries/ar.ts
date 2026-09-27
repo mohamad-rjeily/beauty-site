@@ -95,6 +95,7 @@ export const ar: Dictionary = {
     outOfStock: '«{product}» نفد من المخزون وأُزيل من سلّتكِ.',
     lowered: 'بقي {n} فقط من «{product}»: عدّلنا الكمية إلى {n}.',
     priceChanged: 'أصبح سعر «{product}» {price}.',
+    priceChangedFrom: 'تغيّر سعر «{product}» من {old} إلى {price}.',
   },
 
   previousReview: 'الرأي السابق',

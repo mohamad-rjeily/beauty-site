@@ -61,6 +61,7 @@ export function ProductRail({
         {product.inStock && (
           <QuickAdd
             productId={product.id}
+            name={product.name}
             stock={product.stock}
             priceCents={product.priceCents}
             cartHref={cartHref(locale)}

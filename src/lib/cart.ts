@@ -7,11 +7,10 @@ import { MAX_QUANTITY } from './shop'
 
 export type CartLine = { productId: number; quantity: number }
 
-/** A product as the server reports it for the cart (see the cart page's server action). */
+/** A product on sale, as the server reports it for the cart (lib/cartProducts.ts). */
 export type CartProduct = {
   id: number
-  /** False when the product was switched off, or is not sold on the site. */
-  available: boolean
+  available: true
   name: string
   slug: string
   priceCents: number
@@ -19,11 +18,20 @@ export type CartProduct = {
   photo: { url: string; width: number; height: number; alt: string; position: string } | null
 }
 
+/**
+ * The server's answer for one cart line: the product, or only "not available" (switched off,
+ * not sold on the site, or deleted). It never names a product that isn't on sale.
+ */
+export type CartCheck = CartProduct | { id: number; available: false }
+
+/** What this browser remembers of a product from when she added it or last saw it. */
+export type SeenProduct = { priceCents: number; name: string }
+
 export type CartNotice =
   | { kind: 'gone'; name: string | null }
   | { kind: 'outOfStock'; name: string }
   | { kind: 'lowered'; name: string; quantity: number }
-  | { kind: 'priceChanged'; name: string; priceCents: number }
+  | { kind: 'priceChanged'; name: string; priceCents: number; oldCents: number }
 
 const isId = (value: unknown): value is number =>
   typeof value === 'number' && Number.isInteger(value) && value > 0
@@ -91,17 +99,18 @@ export type CartRow = { product: CartProduct; quantity: number; lineCents: numbe
 
 /**
  * Brings the cart in line with what the server says now, and explains every change:
- * - a product no longer sold (switched off, deleted) is removed;
+ * - a product no longer sold (switched off, deleted) is removed, named from what this browser
+ *   remembers (`seen`), since the server won't say;
  * - an out-of-stock product is removed;
  * - a quantity above the stock is lowered to it;
- * - a price that differs from the one she last saw (`seenPrices`) is pointed out.
+ * - a price that differs from the one she last saw is pointed out, old and new.
  */
 export const reconcileCart = (
   lines: CartLine[],
-  products: CartProduct[],
-  seenPrices: Record<number, number>,
+  checks: CartCheck[],
+  seen: Record<number, SeenProduct>,
 ): { lines: CartLine[]; rows: CartRow[]; notices: CartNotice[] } => {
-  const byId = new Map(products.map((p) => [p.id, p]))
+  const byId = new Map(checks.map((p) => [p.id, p]))
   const kept: CartLine[] = []
   const rows: CartRow[] = []
   const notices: CartNotice[] = []
@@ -109,7 +118,7 @@ export const reconcileCart = (
   for (const line of lines) {
     const product = byId.get(line.productId)
     if (!product || !product.available) {
-      notices.push({ kind: 'gone', name: product?.name ?? null })
+      notices.push({ kind: 'gone', name: seen[line.productId]?.name || null })
       continue
     }
     const limit = lineLimit(product.stock)
@@ -121,9 +130,14 @@ export const reconcileCart = (
     if (quantity < line.quantity) {
       notices.push({ kind: 'lowered', name: product.name, quantity })
     }
-    const seen = seenPrices[product.id]
-    if (seen !== undefined && seen !== product.priceCents) {
-      notices.push({ kind: 'priceChanged', name: product.name, priceCents: product.priceCents })
+    const before = seen[product.id]?.priceCents
+    if (before !== undefined && before !== product.priceCents) {
+      notices.push({
+        kind: 'priceChanged',
+        name: product.name,
+        priceCents: product.priceCents,
+        oldCents: before,
+      })
     }
     kept.push({ productId: line.productId, quantity })
     rows.push({ product, quantity, lineCents: product.priceCents * quantity })

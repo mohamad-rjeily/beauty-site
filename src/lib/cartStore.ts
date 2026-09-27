@@ -2,19 +2,19 @@
 
 import { useSyncExternalStore } from 'react'
 
-import { addToCart, parseCart, setQuantity, type CartLine } from './cart'
+import { addToCart, parseCart, setQuantity, type CartLine, type SeenProduct } from './cart'
 
 /**
  * The cart in this browser: localStorage, shared by every tab (the `storage` event keeps
  * them in step). It holds product ids and quantities only. A second small map remembers the
- * price she last saw for each product, so the cart can point out a price change; it is never
- * sent anywhere (the server prices every order itself).
+ * name and price she last saw for each product (see readSeen); it is never sent anywhere
+ * (the server prices every order itself).
  *
  * Every storage access is wrapped: private windows and blocked site data make it throw, and
  * the shop must still work (the cart then lasts until the tab closes).
  */
 const CART_KEY = 'cart:v1'
-const SEEN_KEY = 'cart:seen:v1'
+const SEEN_KEY = 'cart:seen:v2'
 /** Fired after something was added, so the header bag can bump. */
 export const CART_ADDED_EVENT = 'cart:added'
 
@@ -67,25 +67,32 @@ const save = (lines: CartLine[]) => {
   notify()
 }
 
-export const readSeenPrices = (): Record<number, number> => {
+/**
+ * What she last saw of each product (name and price), remembered in this browser: the cart
+ * uses it to name a product that was taken off sale and to show a price change as old -> new.
+ */
+export const readSeen = (): Record<number, SeenProduct> => {
   try {
     const value: unknown = JSON.parse(window.localStorage.getItem(SEEN_KEY) ?? '{}')
     if (!value || typeof value !== 'object') return {}
-    return Object.fromEntries(
-      Object.entries(value).filter(
-        ([id, cents]) => /^\d+$/.test(id) && Number.isInteger(cents) && (cents as number) >= 0,
-      ),
-    ) as Record<number, number>
+    const seen: Record<number, SeenProduct> = {}
+    for (const [id, entry] of Object.entries(value)) {
+      const { priceCents, name } = (entry ?? {}) as Partial<SeenProduct>
+      if (/^\d+$/.test(id) && Number.isInteger(priceCents) && typeof name === 'string') {
+        seen[Number(id)] = { priceCents: priceCents as number, name: name.slice(0, 200) }
+      }
+    }
+    return seen
   } catch {
     return {}
   }
 }
 
-export const rememberPrices = (prices: Record<number, number>) => {
+export const rememberSeen = (products: Record<number, SeenProduct>) => {
   try {
-    window.localStorage.setItem(SEEN_KEY, JSON.stringify({ ...readSeenPrices(), ...prices }))
+    window.localStorage.setItem(SEEN_KEY, JSON.stringify({ ...readSeen(), ...products }))
   } catch {
-    // Without storage, price changes simply aren't pointed out.
+    // Without storage, removed products get the generic message and price changes go unmentioned.
   }
 }
 
@@ -93,11 +100,11 @@ export const cart = {
   /** The lines right now (outside React; components use useCart). */
   snapshot,
   /** Adds up to `limit` in total; returns how many were added (0: the cart holds them all). */
-  add(productId: number, quantity: number, limit: number, priceCents: number): number {
+  add(productId: number, quantity: number, limit: number, seen: SeenProduct): number {
     const { lines, added } = addToCart(snapshot(), productId, quantity, limit)
     if (added > 0) {
       save(lines)
-      rememberPrices({ [productId]: priceCents })
+      rememberSeen({ [productId]: seen })
       window.dispatchEvent(new Event(CART_ADDED_EVENT))
     }
     return added

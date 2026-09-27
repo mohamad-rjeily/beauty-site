@@ -29,12 +29,14 @@ const stepButton =
  */
 export function AddToCart({
   productId,
+  name,
   stock,
   priceCents,
   cartHref,
   labels,
 }: {
   productId: number
+  name: string
   stock: number
   priceCents: number
   cartHref: string
@@ -53,7 +55,7 @@ export function AddToCart({
   }
 
   const add = () => {
-    const added = cart.add(productId, quantity, max, priceCents)
+    const added = cart.add(productId, quantity, max, { priceCents, name })
     setResult({ kind: added > 0 ? 'added' : 'full', key: Date.now() })
   }
 

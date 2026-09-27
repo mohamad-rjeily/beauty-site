@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState, type ReactNode } from 'react'
 
 import { getCartProducts } from '@/app/(frontend)/[lang]/cart/actions'
-import { Notice, useHydrated } from '@/components/booking/parts'
+import { useHydrated } from '@/components/booking/parts'
 import { EmptyNote } from '@/components/home/shared'
 import { Icon } from '@/components/ui/Icon'
 import { formatNodes, Ltr } from '@/components/ui/Ltr'
@@ -16,11 +16,12 @@ import {
   cartSubtotal,
   lineLimit,
   reconcileCart,
+  type CartCheck,
   type CartNotice,
   type CartProduct,
   type CartRow,
 } from '@/lib/cart'
-import { cart, readSeenPrices, rememberPrices, useCart } from '@/lib/cartStore'
+import { cart, readSeen, rememberSeen, useCart } from '@/lib/cartStore'
 import { formatPrice } from '@/lib/format'
 import { productHref } from '@/lib/links'
 
@@ -50,7 +51,7 @@ export function CartView({
   const c = t.cart
   const hydrated = useHydrated()
   const lines = useCart()
-  const [products, setProducts] = useState<CartProduct[]>([])
+  const [checks, setChecks] = useState<CartCheck[]>([])
   const [failed, setFailed] = useState(false)
   const [notices, setNotices] = useState<CartNotice[]>([])
   const [attempt, setAttempt] = useState(0)
@@ -58,7 +59,7 @@ export function CartView({
   // Products the page hasn't checked yet: all of them on opening, a newly added one later.
   const unchecked = lines
     .map((l) => l.productId)
-    .filter((id) => !products.some((p) => p.id === id))
+    .filter((id) => !checks.some((p) => p.id === id))
     .sort((a, b) => a - b)
     .join(',')
 
@@ -75,38 +76,32 @@ export function CartView({
           return
         }
         setFailed(false)
-        const fresh = [...products.filter((p) => !ids.includes(p.id)), ...result.products]
-        // Products the server doesn't know any more come back as "gone".
-        const known = new Set(fresh.map((p) => p.id))
-        const missing = ids
-          .filter((id) => !known.has(id))
-          .map((id): CartProduct => ({
-            id,
-            available: false,
-            name: '',
-            slug: '',
-            priceCents: 0,
-            stock: 0,
-            photo: null,
-          }))
+        const fresh = [...checks.filter((p) => !ids.includes(p.id)), ...result.products]
         const current = cart.snapshot()
-        const next = reconcileCart(current, [...fresh, ...missing], readSeenPrices())
-        if (next.lines.length !== current.length || next.lines.some((l, i) => l.quantity !== current[i]?.quantity)) {
-          cart.replace(next.lines)
-        }
-        rememberPrices(Object.fromEntries(next.rows.map((r) => [r.product.id, r.product.priceCents])))
-        setProducts([...fresh, ...missing])
+        const next = reconcileCart(current, fresh, readSeen())
+        const changed =
+          next.lines.length !== current.length ||
+          next.lines.some((l, i) => l.quantity !== current[i]?.quantity)
+        if (changed) cart.replace(next.lines)
+        rememberSeen(
+          Object.fromEntries(
+            next.rows.map((r) => [r.product.id, { priceCents: r.product.priceCents, name: r.product.name }]),
+          ),
+        )
+        setChecks(fresh)
         if (next.notices.length) setNotices((before) => [...before, ...next.notices])
       })
     return () => {
       live = false
     }
-    // `products` is read, not watched: only unchecked ids should trigger a new check.
+    // `checks` is read, not watched: only unchecked ids should trigger a new check.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unchecked, locale, attempt])
 
   const rows: CartRow[] = lines.flatMap((line) => {
-    const product = products.find((p) => p.id === line.productId && p.available)
+    const product = checks.find(
+      (p): p is CartProduct => p.id === line.productId && p.available,
+    )
     return product ? [{ product, quantity: line.quantity, lineCents: product.priceCents * line.quantity }] : []
   })
   const checking = hydrated && lines.length > 0 && rows.length < lines.length && !failed
@@ -120,7 +115,10 @@ export function CartView({
       case 'lowered':
         return c.lowered.replace('{product}', n.name).replaceAll('{n}', String(n.quantity))
       case 'priceChanged':
-        return formatNodes(c.priceChanged.replace('{product}', n.name), { price: price(n.priceCents) })
+        return formatNodes(c.priceChangedFrom.replace('{product}', n.name), {
+          old: price(n.oldCents),
+          price: price(n.priceCents),
+        })
     }
   }
 
@@ -130,11 +128,17 @@ export function CartView({
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Every change in one box, one short line each; read out when it appears. */}
       {notices.length > 0 && (
-        <div className="flex flex-col gap-2">
-          {notices.map((n, i) => (
-            <Notice key={i}>{noticeText(n)}</Notice>
-          ))}
+        <div
+          role="alert"
+          className="motion-fade rounded-2xl bg-clay-mist px-4 py-3 text-sm font-semibold text-clay-deep"
+        >
+          <ul className="m-0 flex list-none flex-col gap-1.5 p-0">
+            {notices.map((n, i) => (
+              <li key={i}>{noticeText(n)}</li>
+            ))}
+          </ul>
         </div>
       )}
 
