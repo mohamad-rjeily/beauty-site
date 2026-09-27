@@ -621,7 +621,7 @@ const main = async () => {
       data: {
         ...customer,
         fulfillment: 'delivery',
-        address: 'TEST street',
+        street: 'TEST street',
         area: 'TEST area',
         items: [{ product: q.id, quantity: 1 }],
       } as ClientData,

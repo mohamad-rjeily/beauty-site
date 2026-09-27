@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
 import { anyone, authenticated } from '@/access'
+import { moneyField } from '@/fields/money'
 import { phoneField } from '@/fields/phone'
 import { t } from '@/lib/i18n'
 
@@ -48,6 +49,31 @@ export const SiteSettings: GlobalConfig = {
       admin: { placeholder: 'https://maps.app.goo.gl/...' },
       validate: (value: string | null | undefined) =>
         !value || /^https:\/\/\S+$/.test(value) || 'Use a full https:// link.',
+    },
+    {
+      name: 'shop',
+      type: 'group',
+      label: t('Shop', 'المتجر'),
+      admin: {
+        description: t(
+          'Pickup orders are collected at the address above.',
+          'تُستلم طلبات الاستلام من العنوان أعلاه.',
+        ),
+      },
+      fields: [
+        moneyField({
+          name: 'deliveryFee',
+          label: t('Delivery fee', 'رسوم التوصيل'),
+          required: false,
+        }),
+        {
+          name: 'deliveryFeeNote',
+          type: 'ui',
+          admin: {
+            components: { Field: '/components/admin/DeliveryFeeNote#DeliveryFeeNote' },
+          },
+        },
+      ],
     },
     {
       name: 'announcementBar',

@@ -9,8 +9,9 @@ import { msg, t } from '@/lib/i18n'
 export const PRODUCT_TYPES = [
   { label: t('Brand product', 'منتج ماركة'), value: 'brand' },
   { label: t('Homemade mask', 'ماسك منزلي الصنع'), value: 'homemade' },
-  // Size/colour variants with per-variant stock arrive in phase 7.
-  { label: t('Fashion item', 'قطعة أزياء'), value: 'fashion' },
+  // Size/colour variants with per-variant stock arrive in phase 7. Until then fashion items
+  // never appear on the public site and the checkout refuses them (see lib/shop.ts).
+  { label: t('Fashion item (not shown yet)', 'قطعة أزياء (غير ظاهرة بعد)'), value: 'fashion' },
 ]
 
 const isHomemade = (data: unknown): boolean =>
@@ -78,6 +79,23 @@ export const Products: CollectionConfig = {
       type: 'text',
       label: t('Brand', 'الماركة'),
       admin: { condition: (data) => data?.type !== 'homemade' },
+    },
+    {
+      name: 'size',
+      type: 'text',
+      label: t('Size / volume', 'الحجم / السعة'),
+      admin: {
+        placeholder: '50 ml',
+        condition: (data) => data?.type === 'brand',
+        description: t('Shown on the product page.', 'يظهر في صفحة المنتج.'),
+      },
+    },
+    {
+      name: 'howToUse',
+      type: 'textarea',
+      label: t('How to use', 'طريقة الاستعمال'),
+      localized: true,
+      admin: { condition: (data) => data?.type === 'brand' },
     },
     { name: 'description', type: 'richText', label: t('Description', 'الوصف'), localized: true },
     moneyField({ name: 'price', label: t('Price', 'السعر') }),

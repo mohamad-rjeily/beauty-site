@@ -4,6 +4,8 @@ import { isAdminRequest } from '@/access/isAdminRequest'
 import { DEFAULT_CURRENCY } from '@/fields/money'
 import { relationId } from '@/lib/db'
 import { msg } from '@/lib/i18n'
+import { generateOrderNumber } from '@/lib/orderNumber'
+import { isPublicProductType } from '@/lib/shop'
 import type { Order } from '@/payload-types'
 
 const fail = (req: PayloadRequest, path: string, en: string, ar: string): never => {
@@ -14,10 +16,29 @@ const fail = (req: PayloadRequest, path: string, en: string, ar: string): never 
   })
 }
 
+/** A random order number nobody has yet (a unique index still guards the rare race). */
+const freeOrderNumber = async (req: PayloadRequest): Promise<string> => {
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const code = generateOrderNumber()
+    const taken = await req.payload.count({
+      collection: 'orders',
+      where: { orderNumber: { equals: code } },
+      overrideAccess: true,
+      req,
+    })
+    if (taken.totalDocs === 0) return code
+  }
+  return generateOrderNumber()
+}
+
 /**
- * On create only: forces status "new" for the public checkout, rebuilds every order line from the products table and recalculates
- * the total on the server. Whatever names or prices the client sent are thrown away.
- * Also refuses inactive products and quantities above the current stock.
+ * On create only: forces status "new" for the public checkout, rebuilds every order line from
+ * the products table and recalculates the total on the server. Whatever names or prices the
+ * client sent are thrown away. Also refuses inactive products, fashion items (public orders,
+ * until variants exist) and quantities above the current stock.
+ *
+ * Also gives the order its number and copies the delivery fee from Site settings (delivery
+ * only, and only when a fee is set); the total includes it.
  *
  * The lines are then frozen (field access `update: never`), so the order keeps the
  * name and price the customer saw, even if the product changes later.
@@ -70,7 +91,8 @@ export const priceOrder: CollectionBeforeChangeHook<Order> = async ({ data, oper
       })
       .catch(() => null)
 
-    if (!product || !product.active) {
+    // Fashion items wait for size/colour variants (phase 7); only the owner may order them.
+    if (!product || !product.active || (!isAdminRequest(req) && !isPublicProductType(product.type))) {
       return fail(
         req,
         `items.${index}.product`,
@@ -120,7 +142,18 @@ export const priceOrder: CollectionBeforeChangeHook<Order> = async ({ data, oper
     })
   }
 
+  const settings = await req.payload.findGlobal({ slug: 'site-settings', depth: 0, req })
+  const fee = settings.shop?.deliveryFee?.amount
+  if (data.fulfillment === 'delivery' && typeof fee === 'number') {
+    data.deliveryFee = { amount: fee, currency: DEFAULT_CURRENCY }
+    total += fee
+  } else {
+    data.deliveryFee = { amount: null, currency: DEFAULT_CURRENCY }
+  }
+
   data.items = priced
   data.total = { amount: total, currency: DEFAULT_CURRENCY }
+  data.locale = locale
+  data.orderNumber = await freeOrderNumber(req)
   return data
 }
