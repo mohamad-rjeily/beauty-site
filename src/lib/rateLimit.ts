@@ -2,6 +2,8 @@ import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
 import { createHmac } from 'node:crypto'
 import type { Payload } from 'payload'
 
+import { getClientIp } from './clientIp'
+
 /**
  * Turns a visitor identifier (an IP address) into an opaque key, so the database never
  * stores the address itself. Keyed with PAYLOAD_SECRET: the key can't be reversed with a
@@ -55,4 +57,33 @@ export const consumeRateLimit = async (
   }
 
   return hits <= limit
+}
+
+export type Limit = {
+  bucket: string
+  /** Hits per window for one visitor (by hashed IP). */
+  perVisitor: number
+  /** Hits per window for the whole site, used while the visitor's IP can't be known safely. */
+  siteWide: number
+  windowSeconds: number
+}
+
+/**
+ * One hit for this visitor. When the visitor's IP can't be known safely (production without
+ * TRUSTED_IP_HEADER, see lib/clientIp.ts), everyone shares one generous site-wide bucket
+ * instead: a safety cap against floods, never a tiny limit that locks out real customers.
+ * `headers` are the request headers (Server Actions: `await headers()` from next/headers).
+ */
+export const withinLimit = async (
+  payload: Payload,
+  limit: Limit,
+  headers: { get: (name: string) => string | null },
+): Promise<boolean> => {
+  const ip = getClientIp(headers, process.env, (m) => payload.logger.warn(m))
+  return consumeRateLimit(payload, {
+    windowSeconds: limit.windowSeconds,
+    ...(ip
+      ? { bucket: limit.bucket, key: hashVisitorKey(ip), limit: limit.perVisitor }
+      : { bucket: `${limit.bucket}-site`, key: 'all', limit: limit.siteWide }),
+  })
 }

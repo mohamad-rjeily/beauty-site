@@ -45,11 +45,10 @@ export function ProductCard({
         {product.category && (
           <p className="m-0 text-xs text-ink-soft">{product.category}</p>
         )}
-        <p className="m-0 mt-auto pt-1 text-sm font-semibold tabular-nums">
-          {product.inStock ? (
-            <Ltr>{product.price}</Ltr>
-          ) : (
-            <span className="font-normal text-ink-soft">{t.outOfStock}</span>
+        <p className="m-0 mt-auto flex flex-wrap items-baseline gap-x-2 pt-1 text-sm font-semibold tabular-nums">
+          <Ltr>{product.price}</Ltr>
+          {!product.inStock && (
+            <span className="text-xs font-normal text-ink-soft">{t.outOfStock}</span>
           )}
         </p>
       </div>

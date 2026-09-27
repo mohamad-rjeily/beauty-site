@@ -24,6 +24,7 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { DollarsCell as DollarsCell_71c77e17f7575799798ed584962d918b } from '../../../components/admin/DollarsCell'
 import { DollarsField as DollarsField_344934367b5809a66f09cc307abd1e1f } from '../../../components/admin/DollarsField'
 import { CashOnlyNote as CashOnlyNote_7f239d134560680617ccee06b7b81816 } from '../../../components/admin/CashOnlyNote'
+import { DeliveryFeeNote as DeliveryFeeNote_d6fffbde4c96a6d60aeae36c77d7bba3 } from '../../../components/admin/DeliveryFeeNote'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -54,5 +55,6 @@ export const importMap = {
   "/components/admin/DollarsCell#DollarsCell": DollarsCell_71c77e17f7575799798ed584962d918b,
   "/components/admin/DollarsField#DollarsField": DollarsField_344934367b5809a66f09cc307abd1e1f,
   "/components/admin/CashOnlyNote#CashOnlyNote": CashOnlyNote_7f239d134560680617ccee06b7b81816,
+  "/components/admin/DeliveryFeeNote#DeliveryFeeNote": DeliveryFeeNote_d6fffbde4c96a6d60aeae36c77d7bba3,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

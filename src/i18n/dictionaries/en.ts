@@ -2,6 +2,8 @@
  * Interface labels only (buttons, states, accessibility text). Editorial copy lives in the
  * admin (the `home` global and the collections), never here.
  */
+import type { PluralForms } from '../index'
+
 export const en = {
   skipToContent: 'Skip to content',
   switchLanguage: 'عربي',
@@ -62,6 +64,32 @@ export const en = {
     storage: 'How to store it',
     patchTest: 'Patch test first',
     homemade: 'Homemade',
+  },
+
+  cart: {
+    title: 'Your *cart*',
+    open: 'Cart',
+    openWithCount: 'Cart, {items}',
+    added: 'Added to your cart',
+    allInCart: 'All {n} in stock are already in your cart',
+    view: 'View cart',
+    viewCount: 'View cart ({n})',
+    addOne: 'Add {product} to the cart',
+    empty: 'Your cart is empty.',
+    browse: 'Browse the shop',
+    checking: 'Checking prices and stock…',
+    checkFailed: 'We couldn’t check the latest prices and stock.',
+    retry: 'Try again',
+    remove: 'Remove',
+    removeProduct: 'Remove {product}',
+    each: '{price} each',
+    subtotal: 'Subtotal',
+    items: { one: '1 item', other: '{n} items' } as PluralForms,
+    gone: '“{product}” is no longer available and was removed from your cart.',
+    goneUnknown: 'A product is no longer available and was removed from your cart.',
+    outOfStock: '“{product}” is out of stock and was removed from your cart.',
+    lowered: 'Only {n} of “{product}” left: your quantity was changed to {n}.',
+    priceChanged: 'The price of “{product}” is now {price}.',
   },
 
   previousReview: 'Previous review',

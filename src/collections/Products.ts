@@ -1,10 +1,11 @@
 import type { CollectionConfig, Field, PayloadRequest } from 'payload'
 
-import { authenticated, never, publishedOrAuthenticated } from '@/access'
+import { authenticated, never } from '@/access'
 import { moneyField } from '@/fields/money'
 import { slugField } from '@/fields/slug'
 import { applyStockAdjustment } from '@/hooks/products/applyStockAdjustment'
 import { msg, t } from '@/lib/i18n'
+import { publicProductWhere } from '@/lib/shop'
 
 export const PRODUCT_TYPES = [
   { label: t('Brand product', 'منتج ماركة'), value: 'brand' },
@@ -51,7 +52,9 @@ export const Products: CollectionConfig = {
     beforeChange: [applyStockAdjustment],
   },
   access: {
-    read: publishedOrAuthenticated('active'),
+    // Public visitors (and the public REST/GraphQL API) see active brand and homemade
+    // products only: fashion items stay hidden until variants exist (phase 7).
+    read: ({ req }) => (req.user ? true : publicProductWhere),
     create: authenticated,
     update: authenticated,
     delete: authenticated,

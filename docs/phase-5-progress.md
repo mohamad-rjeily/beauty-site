@@ -23,17 +23,21 @@ Resume with "continue where you stopped": pick up the first unchecked item.
 - [x] Links: menu/footer shop, home rail cards → product page
 - [x] Demo data for the screenshots (homemade category, brand fields)
 - [x] Commit, then STOP: mobile EN/AR + desktop screenshots for design approval
-- [ ] Owner approval of the screenshots (then start checkpoint 3)
+- [x] Owner approval of the screenshots (approved with 6 fixes, done in checkpoint 3)
 
 ## Checkpoint 3 · Cart
-- [ ] `src/lib/cart.ts` store + pure maths
-- [ ] Bag count in all header states, bump on add
-- [ ] Inline "Added to your cart · View cart" (aria-live) on product page and home rail
-- [ ] `/[lang]/cart` with server refresh and change notices
-- [ ] Commit
+- [x] Design fixes: shorter phone photo (name/price/add on the first screen), active chip
+      scrolled into view, short dates, price shown with "Out of stock", bottom bar "View cart
+      (n)" in the shop, first-screen captures in scripts/screenshots.mjs
+- [x] `src/lib/cart.ts` (pure) + `src/lib/cartStore.ts` (localStorage, useSyncExternalStore)
+- [x] Bag count in all header states, bump on add
+- [x] Inline "Added to your cart · View cart" (aria-live) on product page and home rail
+- [x] `/[lang]/cart` with server re-check (`getCartProducts`) and change notices
+- [x] Shared `withinLimit` moved to `src/lib/rateLimit.ts` (booking uses it)
+- [x] Public product API hides fashion items (collection read access)
+- [x] Commit, then send phone screenshots (product first screen, after add, cart with 2)
 
 ## Checkpoint 4 · Checkout + WhatsApp
-- [ ] Shared `withinLimit` in `src/lib/rateLimit.ts` (booking moved over)
 - [ ] `src/lib/order.ts` placeOrder (zod, honeypot, rate limit, checkoutId, number retry)
 - [ ] Checkout form on the cart page; sessionStorage details
 - [ ] Success screen + `src/lib/orderMessage.ts` WhatsApp message
@@ -62,3 +66,6 @@ Resume with "continue where you stopped": pick up the first unchecked item.
   descriptions, a second photo on the rose clay mask, one hidden DEMO fashion item.
   Screenshots: `.impeccable/review/shop-*.png` (`node scripts/screenshots.mjs /shop ...`,
   with MSYS_NO_PATHCONV=1 in Git Bash). The Add to cart button is inert until checkpoint 3.
+- Checkpoint 3: the cart page behaves like the booking page for the bottom bar (WhatsApp
+  floats alone, no pill pointing at the page itself). Last-seen prices are kept in a second
+  localStorage key (`cart:seen:v1`) only to point out price changes; never sent anywhere.

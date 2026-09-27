@@ -28,6 +28,9 @@ export const bookingHref = ({ locale, service, category }: BookingTarget): strin
 export const shopHref = (locale: Locale, category?: string | null): string =>
   category ? `/${locale}/shop?category=${encodeURIComponent(category)}` : `/${locale}/shop`
 
+/** The cart (and checkout). */
+export const cartHref = (locale: Locale): string => `/${locale}/cart`
+
 /** A product page. The slug is shared by both languages. */
 export const productHref = (locale: Locale, slug: string): string =>
   `/${locale}/shop/${encodeURIComponent(slug)}`

@@ -2,11 +2,10 @@
 
 import config from '@payload-config'
 import { headers } from 'next/headers'
-import { getPayload, type Payload } from 'payload'
+import { getPayload } from 'payload'
 
 import { createPublicBooking, loadFreeSlots, type BookingResult } from '@/lib/booking'
-import { getClientIp } from '@/lib/clientIp'
-import { consumeRateLimit, hashVisitorKey } from '@/lib/rateLimit'
+import { withinLimit, type Limit } from '@/lib/rateLimit'
 import type { DaySlots } from '@/lib/slots'
 
 /**
@@ -14,23 +13,6 @@ import type { DaySlots } from '@/lib/slots'
  * it without the page), so each validates its own input and applies its own rate limit.
  * Nothing here passes a `user` to Payload: the booking hook applies every website rule.
  */
-
-type Limit = { bucket: string; perVisitor: number; siteWide: number; windowSeconds: number }
-
-/**
- * One hit for this visitor. When the visitor's IP can't be known safely (production without
- * TRUSTED_IP_HEADER, see lib/clientIp.ts), everyone shares one generous site-wide bucket
- * instead: a safety cap against floods, never a tiny limit that locks out real customers.
- */
-const withinLimit = async (payload: Payload, limit: Limit): Promise<boolean> => {
-  const ip = getClientIp(await headers(), process.env, (m) => payload.logger.warn(m))
-  return consumeRateLimit(payload, {
-    windowSeconds: limit.windowSeconds,
-    ...(ip
-      ? { bucket: limit.bucket, key: hashVisitorKey(ip), limit: limit.perVisitor }
-      : { bucket: `${limit.bucket}-site`, key: 'all', limit: limit.siteWide }),
-  })
-}
 
 // Slots: browsing days and retrying is normal. It only stops scripted scraping.
 const SLOTS: Limit = { bucket: 'slots', perVisitor: 120, siteWide: 2000, windowSeconds: 600 }
@@ -46,7 +28,7 @@ export async function getFreeSlots(serviceId: unknown): Promise<SlotsResult> {
   }
   const payload = await getPayload({ config })
   try {
-    if (!(await withinLimit(payload, SLOTS))) return { ok: false, reason: 'rateLimited' }
+    if (!(await withinLimit(payload, SLOTS, await headers()))) return { ok: false, reason: 'rateLimited' }
     const days = await loadFreeSlots(payload, serviceId)
     return days ? { ok: true, days } : { ok: false, reason: 'unavailable' }
   } catch (error) {
@@ -65,7 +47,7 @@ export async function submitBooking(input: unknown): Promise<BookingResult> {
 
   const payload = await getPayload({ config })
   try {
-    if (!(await withinLimit(payload, BOOK))) return { ok: false, reason: 'rateLimited' }
+    if (!(await withinLimit(payload, BOOK, await headers()))) return { ok: false, reason: 'rateLimited' }
   } catch (error) {
     payload.logger.error(`Booking rate limit failed: ${(error as Error)?.name ?? 'unknown error'}`)
     return { ok: false, reason: 'error' }

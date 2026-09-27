@@ -64,20 +64,19 @@ export const getShopPage = async (locale: Locale, category: string | null) => {
   }
 }
 
-/** "12 October 2026" (Beirut calendar day) for a stored date. */
+/** "26 Sep 2026" (Beirut calendar day) for a stored date: short, so it fits a phone tile. */
 const formatDate = (value: string | null | undefined, locale: Locale): string | null =>
   value
     ? new Intl.DateTimeFormat(intlLocale(locale), {
         timeZone: BUSINESS_TIME_ZONE,
         day: 'numeric',
-        month: 'long',
+        month: 'short',
         year: 'numeric',
       }).format(new Date(value))
     : null
 
 export type ShopProduct = ProductCard & {
   type: PublicProductType
-  stock: number
   categorySlug: string | null
   photos: Photo[]
   description: string[]
@@ -115,7 +114,7 @@ export const getShopProduct = cache(
     return {
       ...toProduct(product),
       type: product.type,
-      stock: product.stock,
+
       categorySlug: categoryOf(product)?.slug ?? null,
       photos: (product.images ?? []).map(toPhoto).filter((p): p is Photo => p !== null),
       description: richTextParagraphs(product.description),

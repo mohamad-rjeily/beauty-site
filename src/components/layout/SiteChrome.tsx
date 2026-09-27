@@ -7,12 +7,21 @@ import { ArchMark, Icon } from '@/components/ui/Icon'
 import { PillLink } from '@/components/ui/Pill'
 import { format, type Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
-import { bookingHref, externalLinkProps, pageHref, whatsappHref } from '@/lib/links'
+import { CartBag } from '@/components/shop/CartBag'
+import { bookingHref, cartHref, externalLinkProps, pageHref, whatsappHref } from '@/lib/links'
 import type { Home, SiteSetting } from '@/payload-types'
 
+import { BarMainAction } from './BarMainAction'
 import { LanguageSwitch, SiteMenu } from './Nav'
 import { navLabels } from './navLabels'
 import { RouteSwitch } from './RouteSwitch'
+
+/** The header bag's labels (plain strings: they cross into a Client Component). */
+export const cartLabels = (t: Dictionary) => ({
+  open: t.cart.open,
+  openWithCount: t.cart.openWithCount,
+  items: t.cart.items,
+})
 
 /** Owner-controlled message bar at the very top; hidden unless switched on with text. */
 export function AnnouncementBar({ settings }: { settings: SiteSetting }) {
@@ -66,13 +75,7 @@ export function PageHeader({
             </span>
           }
         />
-        <Link
-          href={pageHref(locale, 'shop')}
-          aria-label={t.shop}
-          className="flex size-11 items-center justify-center rounded-full text-ink hover:bg-sand"
-        >
-          <Icon name="bag" size={22} />
-        </Link>
+        <CartBag href={cartHref(locale)} locale={locale} labels={cartLabels(t)} />
         <SiteMenu locale={locale} t={labels} />
       </div>
     </header>
@@ -115,6 +118,7 @@ export function CompactHeader({
                 </PillLink>
               }
             />
+            <CartBag href={cartHref(locale)} locale={locale} labels={cartLabels(t)} />
             <SiteMenu locale={locale} t={labels} />
           </div>
         </div>
@@ -125,8 +129,9 @@ export function CompactHeader({
 
 /**
  * Mobile: a bottom bar with Book and WhatsApp, always within thumb reach; it steps aside on a
- * fast scroll down and returns on scroll up. On the booking page itself the bar gives way to
- * a round WhatsApp button in the bottom corner. Desktop: the header carries Book, and WhatsApp
+ * fast scroll down and returns on scroll up. In the shop, with items in the cart, its main pill
+ * reads "View cart (n)". On the booking page and the cart the bar gives way to a round
+ * WhatsApp button in the bottom corner. Desktop: the header carries Book, and WhatsApp
  * floats at the bottom corner. WhatsApp is not shown until a number is set.
  */
 export function StickyActions({
@@ -145,9 +150,12 @@ export function StickyActions({
     <nav aria-label={t.quickActions} className="motion-bar fixed inset-x-0 bottom-0 z-40 lg:hidden">
       <HideOnScrollDown>
         <div className="flex items-center gap-2.5 bg-paper px-4 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] shadow-bar">
-          <PillLink href={book} className="flex-1">
-            {t.book} <Icon name="arrow" size={18} />
-          </PillLink>
+          <BarMainAction
+            bookHref={book}
+            bookLabel={t.book}
+            cartHref={cartHref(locale)}
+            viewCartLabel={t.cart.viewCount}
+          />
           {chat && (
             <a
               href={chat}
@@ -163,7 +171,7 @@ export function StickyActions({
     </nav>
   )
 
-  // The booking page: no Book button pointing at itself; WhatsApp floats alone.
+  // The booking page and the cart: no bar pointing elsewhere; WhatsApp floats alone.
   const floatingChat = chat && (
     <a
       href={chat}
@@ -178,7 +186,7 @@ export function StickyActions({
   return (
     <>
       {chat && <IdleFlag />}
-      <RouteSwitch bookPage={floatingChat} otherPages={bar} />
+      <RouteSwitch focusedPage={floatingChat} otherPages={bar} />
 
       {chat && (
         <a

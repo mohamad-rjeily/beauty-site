@@ -44,7 +44,9 @@ export function PhotoStrip({
     labels.photoOf.replace('{n}', String(i + 1)).replace('{total}', String(count))
 
   return (
-    <div className="flex flex-col gap-3">
+    // Phones: a shorter arch (at most 40% of the screen height) with the dots on its foot,
+    // so the name, price and Add to cart fit on the first screen. Desktop: a tall 4:5 arch.
+    <div className="relative flex flex-col gap-3">
       <ul
         ref={track}
         onScroll={onScroll}
@@ -63,13 +65,13 @@ export function PhotoStrip({
               soon={labels.soon}
               sizes="(min-width: 1024px) 34rem, 92vw"
               priority={i === 0}
-              className="aspect-[4/5] w-full"
+              className="h-[min(40svh,24rem)] w-full lg:aspect-[4/5] lg:h-auto"
             />
           </li>
         ))}
       </ul>
       {photos.length > 1 && (
-        <div className="flex justify-center gap-1">
+        <div className="absolute inset-x-0 bottom-1.5 mx-auto flex w-fit justify-center rounded-full bg-paper/85 px-1 lg:static lg:bg-transparent lg:px-0">
           {photos.map((photo, i) => (
             <button
               key={photo.url}

@@ -51,6 +51,8 @@ export type ProductCard = {
   name: string
   category: string | null
   price: string
+  priceCents: number
+  stock: number
   inStock: boolean
   photo: Photo | null
 }
@@ -227,6 +229,8 @@ export const toProduct = (product: Product): ProductCard => ({
   name: product.name,
   category: typeof product.category === 'object' && product.category ? product.category.name : null,
   price: formatPrice(product.price.amount, product.price.currency),
+  priceCents: product.price.amount,
+  stock: product.stock,
   inStock: product.stock > 0,
   photo: toPhoto(product.images?.[0]),
 })

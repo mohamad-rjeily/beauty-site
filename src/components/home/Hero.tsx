@@ -2,13 +2,16 @@ import Link from 'next/link'
 
 import { LanguageSwitch, SiteMenu } from '@/components/layout/Nav'
 import { navLabels } from '@/components/layout/navLabels'
+import { cartLabels } from '@/components/layout/SiteChrome'
 import { Parallax } from '@/components/motion/Parallax'
 import { Icon } from '@/components/ui/Icon'
 import { Picture } from '@/components/ui/Picture'
 import { PillLink } from '@/components/ui/Pill'
+import { CartBag } from '@/components/shop/CartBag'
 import type { Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
 import type { Photo } from '@/lib/cms/home'
+import { cartHref } from '@/lib/links'
 import type { Home } from '@/payload-types'
 
 import { container } from './shared'
@@ -78,13 +81,7 @@ export function Hero({
               </PillLink>
             </span>
           )}
-          <a
-            href="#shop"
-            aria-label={t.shop}
-            className="flex size-11 items-center justify-center rounded-full text-paper hover:bg-paper/10"
-          >
-            <Icon name="bag" size={22} />
-          </a>
+          <CartBag href={cartHref(locale)} locale={locale} labels={cartLabels(t)} tone="light" />
           <SiteMenu locale={locale} t={labels} tone="light" />
         </div>
       </header>

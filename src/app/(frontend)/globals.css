@@ -263,6 +263,12 @@
   }
 }
 
+@keyframes bump {
+  40% {
+    transform: scale(1.22);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   /* In-page links (the category chips) glide instead of jumping. */
   html {
@@ -280,6 +286,11 @@
 
   .motion-pop {
     animation: pop-in 0.2s var(--ease-out-quart) 0.7s both;
+  }
+
+  /* The header bag after something is added to the cart (re-keyed to replay). */
+  .motion-bump {
+    animation: bump 0.36s var(--ease-out-quart);
   }
 
   .motion-bar {

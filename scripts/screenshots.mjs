@@ -3,7 +3,8 @@
  *   node scripts/screenshots.mjs [baseUrl] [page ...]
  * Pages are paths without the language, e.g. `/services`; the default is every public page
  * (home, services, gallery, about, contact). Each page is captured at 390 and 1440 wide in
- * English and Arabic, to .impeccable/review/<page>-<mobile|desktop>[-ar].png.
+ * English and Arabic, to .impeccable/review/<page>-<mobile|desktop>[-ar].png, plus the phone's
+ * first screen alone (viewport only) as <page>-mobile-first[-ar].png.
  * Motion is settled first (reduced motion + scrolled through once) so no element is caught
  * mid-reveal.
  */
@@ -38,6 +39,16 @@ try {
         await page.goto(`${base}/${lang}${path}`, { waitUntil: 'load' })
         await page.evaluate(() => document.fonts.ready)
         await page.waitForTimeout(1200)
+        // Nested paths and queries become one flat, safe file name (shop/rose -> shop-rose).
+        const slug = path.replace(/^\//, '').replace(/[^a-z0-9-]+/gi, '-') || 'home'
+        const name = `${slug}-${size.name}${lang === 'ar' ? '-ar' : ''}`
+        // Phones: the first screen exactly as it looks on arrival (viewport only). Full-page
+        // captures draw the fixed bottom bar where the page was scrolled, mid-page.
+        if (size.name === 'mobile') {
+          const first = `${out}/${slug}-mobile-first${lang === 'ar' ? '-ar' : ''}.png`
+          await page.screenshot({ path: first })
+          console.log(`${first}  first screen`)
+        }
         // Scroll through once so every reveal has fired, then return to the top.
         await page.evaluate(async () => {
           for (let y = 0; y < document.body.scrollHeight; y += 400) {
@@ -47,9 +58,6 @@ try {
           window.scrollTo(0, 0)
         })
         await page.waitForTimeout(600)
-        // Nested paths and queries become one flat, safe file name (shop/rose -> shop-rose).
-        const slug = path.replace(/^\//, '').replace(/[^a-z0-9-]+/gi, '-') || 'home'
-        const name = `${slug}-${size.name}${lang === 'ar' ? '-ar' : ''}`
         const file = `${out}/${name}.png`
         await page.screenshot({ path: file, fullPage: true })
         const [height, width] = await page.evaluate(() => [

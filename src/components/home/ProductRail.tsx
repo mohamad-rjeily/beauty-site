@@ -3,11 +3,12 @@ import Link from 'next/link'
 import { Icon } from '@/components/ui/Icon'
 import { Ltr } from '@/components/ui/Ltr'
 import { Picture } from '@/components/ui/Picture'
-import type { Dictionary } from '@/i18n'
+import { format, type Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
 import type { ProductCard } from '@/lib/cms/home'
 import { PillLink } from '@/components/ui/Pill'
-import { productHref, shopHref } from '@/lib/links'
+import { QuickAdd } from '@/components/shop/QuickAdd'
+import { cartHref, productHref, shopHref } from '@/lib/links'
 
 import { ProductCarousel } from './ProductCarousel'
 import { container, Emphasis, EmptyNote, SectionHeading } from './shared'
@@ -15,7 +16,7 @@ import { container, Emphasis, EmptyNote, SectionHeading } from './shared'
 /**
  * Up to eight real products (featured first, then the newest) in a looping carousel.
  * The cards are rendered here on the server; the carousel only places and moves them.
- * Each card opens its product page.
+ * Each card opens its product page; its round "+" adds one to the cart.
  */
 export function ProductRail({
   heading,
@@ -52,9 +53,26 @@ export function ProductRail({
       {product.category && (
         <p className="m-0 -mt-1 px-1.5 text-xs text-ink-soft">{product.category}</p>
       )}
-      <p className="m-0 mt-auto flex min-h-11 items-center px-1.5 text-sm tabular-nums text-ink-soft">
-        {product.inStock ? <Ltr>{product.price}</Ltr> : t.outOfStock}
-      </p>
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 ps-1.5">
+        <p className="m-0 flex min-h-11 items-center text-sm tabular-nums text-ink-soft">
+          <Ltr>{product.price}</Ltr>
+          {!product.inStock && <span className="ms-2 text-xs">{t.outOfStock}</span>}
+        </p>
+        {product.inStock && (
+          <QuickAdd
+            productId={product.id}
+            stock={product.stock}
+            priceCents={product.priceCents}
+            cartHref={cartHref(locale)}
+            labels={{
+              add: format(t.cart.addOne, { product: product.name }),
+              added: t.cart.added,
+              view: t.cart.view,
+              allInCart: t.cart.allInCart,
+            }}
+          />
+        )}
+      </div>
     </article>
   ))
 

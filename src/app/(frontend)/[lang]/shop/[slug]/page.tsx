@@ -13,7 +13,7 @@ import { getDictionary, type Dictionary } from '@/i18n'
 import { isLocale, type Locale } from '@/i18n/config'
 import { getShopProduct, type ShopProduct } from '@/lib/cms/shop'
 import { getSiteChrome } from '@/lib/cms/site'
-import { productHref, shopHref } from '@/lib/links'
+import { cartHref, productHref, shopHref } from '@/lib/links'
 import { siteUrl } from '@/lib/metadata'
 
 /** Re-read from Payload at most once a minute (the cart re-checks price and stock anyway). */
@@ -146,16 +146,16 @@ export default async function ProductPage({ params }: { params: Params }) {
     <>
       <PageHeader settings={settings} locale={locale} t={t} />
       <section className="grain bg-limestone">
-        <div className={`${container} pt-2 pb-24 lg:pt-6 lg:pb-32`}>
+        <div className={`${container} pt-1 pb-24 lg:pt-6 lg:pb-32`}>
           <Link
             href={shopHref(locale, product.categorySlug)}
-            className="-ms-2 mb-3 inline-flex min-h-11 items-center gap-1.5 rounded-full ps-1 pe-3 text-sm font-semibold text-ink-soft no-underline hover:text-ink lg:mb-6"
+            className="-ms-2 mb-1 inline-flex min-h-11 items-center gap-1.5 rounded-full ps-1 pe-3 text-sm font-semibold text-ink-soft no-underline hover:text-ink lg:mb-6"
           >
             <Icon name="chevronStart" size={18} />
             {product.category ?? s.allProducts}
           </Link>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-10">
             <div className="motion-rise lg:col-span-6 lg:self-start lg:sticky lg:top-24">
               <PhotoStrip
                 photos={product.photos}
@@ -169,28 +169,32 @@ export default async function ProductPage({ params }: { params: Params }) {
               />
             </div>
 
-            <div className="flex min-w-0 flex-col gap-6 lg:col-span-5 lg:col-start-8 lg:pt-6">
-              <div className="flex flex-col gap-3">
-                <h1 className="display m-0 text-[2.75rem] text-balance lg:text-[4rem]">
+            <div className="flex min-w-0 flex-col gap-4 lg:col-span-5 lg:col-start-8 lg:gap-6 lg:pt-6">
+              <div className="flex flex-col gap-2 lg:gap-3">
+                <h1 className="display m-0 text-[2.25rem] text-balance lg:text-[4rem]">
                   {product.name}
                 </h1>
                 {meta && <p className="m-0 text-sm text-ink-soft">{meta}</p>}
-                {product.inStock && (
-                  <p className="m-0 pt-1 text-[1.5rem] font-semibold tabular-nums">
-                    <Ltr>{product.price}</Ltr>
-                  </p>
-                )}
+                <p className="m-0 text-[1.5rem] font-semibold tabular-nums">
+                  <Ltr>{product.price}</Ltr>
+                </p>
               </div>
 
               <div className="flex flex-col gap-3">
                 <AddToCart
+                  productId={product.id}
                   stock={product.stock}
+                  priceCents={product.priceCents}
+                  cartHref={cartHref(locale)}
                   labels={{
                     quantity: s.quantity,
                     fewer: s.fewer,
                     more: s.more,
                     addToCart: s.addToCart,
                     outOfStock: t.outOfStock,
+                    added: t.cart.added,
+                    view: t.cart.view,
+                    allInCart: t.cart.allInCart,
                   }}
                 />
                 {product.inStock && (
