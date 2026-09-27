@@ -31,6 +31,10 @@ export default defineConfig([
     'design/',
     '.claude/',
     '.impeccable/',
+    // Playwright output (npm run test:e2e): generated reports, traces and screenshots.
+    'playwright-report/',
+    'test-results/',
+    'blob-report/',
     'src/payload-types.ts',
     'src/payload-generated-schema.ts',
     'src/app/(payload)/admin/importMap.js',

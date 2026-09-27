@@ -16,6 +16,8 @@
     "migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
+    "test:e2e": "playwright test",
+    "test:e2e:clean": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/e2e-db.ts clean",
     "typecheck": "tsc --noEmit",
     "verify:rules": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/verify-rules.ts"
   },
@@ -40,6 +42,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "22.19.9",
     "@types/react": "19.2.14",
