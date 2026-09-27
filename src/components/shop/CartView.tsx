@@ -6,6 +6,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { getCartProducts } from '@/app/(frontend)/[lang]/cart/actions'
 import { useHydrated } from '@/components/booking/parts'
 import { EmptyNote } from '@/components/home/shared'
+import { PageTitle } from '@/components/pages/shared'
 import { Icon } from '@/components/ui/Icon'
 import { formatNodes, Ltr } from '@/components/ui/Ltr'
 import { PillLink } from '@/components/ui/Pill'
@@ -24,6 +25,10 @@ import {
 import { cart, readSeen, rememberSeen, useCart } from '@/lib/cartStore'
 import { formatPrice } from '@/lib/format'
 import { productHref } from '@/lib/links'
+import type { SavedOrder } from '@/lib/orderMessage'
+
+import { Checkout, type ShopSettings } from './Checkout'
+import { OrderDone } from './OrderDone'
 
 const price = (cents: number) => <Ltr>{formatPrice(cents, 'USD')}</Ltr>
 
@@ -40,17 +45,21 @@ export function CartView({
   locale,
   t,
   shopHref,
-  children,
+  shop,
+  ownerName,
+  whatsappNumber,
 }: {
   locale: Locale
   t: Dictionary
   shopHref: string
-  /** What follows the lines once the cart has something in it (the checkout). */
-  children?: (rows: CartRow[]) => ReactNode
+  shop: ShopSettings
+  ownerName: string
+  whatsappNumber: string | null
 }) {
   const c = t.cart
   const hydrated = useHydrated()
   const lines = useCart()
+  const [order, setOrder] = useState<SavedOrder | null>(null)
   const [checks, setChecks] = useState<CartCheck[]>([])
   const [failed, setFailed] = useState(false)
   const [notices, setNotices] = useState<CartNotice[]>([])
@@ -122,12 +131,32 @@ export function CartView({
     }
   }
 
+  if (order) {
+    return (
+      <OrderDone
+        order={order}
+        ownerName={ownerName}
+        whatsappNumber={whatsappNumber}
+        shopHref={shopHref}
+        rtl={locale === 'ar'}
+        t={t}
+      />
+    )
+  }
+
+  const title = <PageTitle text={c.title} sizeClass="text-[3rem] lg:text-[4.5rem]" />
   if (!hydrated) {
-    return <div className="min-h-40" aria-busy="true" />
+    return (
+      <>
+        {title}
+        <div className="min-h-40" aria-busy="true" />
+      </>
+    )
   }
 
   return (
     <div className="flex flex-col gap-6">
+      {title}
       {/* Every change in one box, one short line each; read out when it appears. */}
       {notices.length > 0 && (
         <div
@@ -189,7 +218,21 @@ export function CartView({
             </div>
           )}
 
-          {rows.length > 0 && children?.(rows)}
+          {rows.length > 0 && (
+            <Checkout
+              rows={rows}
+              shop={shop}
+              ownerName={ownerName}
+              // The server says the cart changed: check every product again.
+              onCartChanged={() => setChecks([])}
+              onDone={(saved) => {
+                cart.clear()
+                setOrder(saved)
+              }}
+              locale={locale}
+              t={t}
+            />
+          )}
         </>
       )}
     </div>
