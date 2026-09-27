@@ -4,10 +4,13 @@ import { useEffect, useRef } from 'react'
 
 import { Emphasis } from '@/components/home/shared'
 import { Icon } from '@/components/ui/Icon'
+import { Ltr } from '@/components/ui/Ltr'
 import { PillLink } from '@/components/ui/Pill'
 import { format, type Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
 import { formatDay, formatWhen } from '@/lib/bookingFormat'
+import { formatPhone } from '@/lib/format'
+import { normalizePhone } from '@/lib/phoneFormat'
 import { whatsappHref } from '@/lib/whatsapp'
 
 import type { BookableService, CustomerDetails, RequestDetails } from './parts'
@@ -45,7 +48,8 @@ const summaryRows = (sent: SentBooking, locale: Locale, t: Dictionary): [string,
     rows.push([s.people, String(r.peopleCount)])
     rows.push([s.trial, r.wantsTrial ? t.booking.yes : t.booking.no])
   }
-  rows.push([s.name, sent.details.name.trim()], [s.phone, sent.details.phone.trim()])
+  // The number as it was saved ("03 123 456" -> "+961 3 123 456").
+  rows.push([s.name, sent.details.name.trim()], [s.phone, formatPhone(normalizePhone(sent.details.phone))])
   if (sent.details.notes.trim()) rows.push([s.notes, sent.details.notes.trim()])
   return rows
 }
@@ -137,7 +141,11 @@ export function BookingDone({
           >
             <dt className="text-[0.8125rem] text-ink-soft">{label}</dt>
             <dd className="m-0 text-[0.9375rem] font-semibold break-words">
-              {label === t.booking.summary.phone ? <bdi dir="ltr">{value}</bdi> : value}
+              {label === t.booking.summary.phone || label === t.booking.summary.price ? (
+                <Ltr>{value}</Ltr>
+              ) : (
+                value
+              )}
             </dd>
           </div>
         ))}

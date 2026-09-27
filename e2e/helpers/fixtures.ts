@@ -302,12 +302,18 @@ export const test = base.extend<Fixtures, WorkerFixtures>({
     await provide(await api.rules())
   },
 
+  // The global setup already stops the run without these (scripts/e2e-db.ts); this is a
+  // backstop, so a test never skips quietly for lack of data.
   slotServices: async ({ api }, provide) => {
-    await provide((await api.services('en')).filter((s) => s.bookingMode === 'slot'))
+    const found = (await api.services('en')).filter((s) => s.bookingMode === 'slot')
+    if (found.length === 0) throw new Error('No active time-slot service: run npm run demo:seed first.')
+    await provide(found)
   },
 
   requestServices: async ({ api }, provide) => {
-    await provide((await api.services('en')).filter((s) => s.bookingMode === 'request'))
+    const found = (await api.services('en')).filter((s) => s.bookingMode === 'request')
+    if (found.length === 0) throw new Error('No active request service: run npm run demo:seed first.')
+    await provide(found)
   },
 })
 

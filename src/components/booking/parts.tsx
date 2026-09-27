@@ -41,8 +41,8 @@ export function Field({
 }: {
   id: string
   label: string
-  hint?: string
-  error?: string | false
+  hint?: ReactNode
+  error?: ReactNode
   children: ReactNode
 }) {
   return (
@@ -67,7 +67,7 @@ export function Field({
 }
 
 /** aria props for an input inside <Field>. */
-export const describedBy = (id: string, error: unknown, hint?: string) => ({
+export const describedBy = (id: string, error: unknown, hint?: unknown) => ({
   'aria-invalid': error ? true : undefined,
   'aria-describedby': error ? `${id}-error` : hint ? `${id}-hint` : undefined,
 })

@@ -183,10 +183,10 @@ export const getHomeData = async (locale: Locale): Promise<HomeData> => {
     studio: [0, 1, 2].map((i) => toPhoto(home.studioPhotos?.[i])),
     marquee: services.docs.map((s) => s.name),
     services: (['makeup', 'skincare'] as const).map((category) =>
-      toGroup(category, services.docs, locale),
+      toGroup(category, services.docs),
     ),
     results: gallery.docs.map(toResult),
-    products: productDocs.map((p) => toProduct(p, locale)),
+    products: productDocs.map(toProduct),
     reviews: reviews.docs.map(toReview),
     hours: groupHours(availability),
   }
@@ -195,7 +195,6 @@ export const getHomeData = async (locale: Locale): Promise<HomeData> => {
 const toGroup = (
   category: 'makeup' | 'skincare',
   docs: Service[],
-  locale: Locale,
 ): ServiceGroup => {
   const inGroup = docs.filter((s) => s.category === category)
   const cheapest = inGroup.reduce<Service | null>(
@@ -206,7 +205,7 @@ const toGroup = (
     category,
     names: inGroup.slice(0, 3).map((s) => s.name),
     fromPrice: cheapest
-      ? formatPrice(cheapest.price.amount, cheapest.price.currency, locale)
+      ? formatPrice(cheapest.price.amount, cheapest.price.currency)
       : null,
     photo: inGroup.map((s) => toPhoto(s.images?.[0])).find(Boolean) ?? null,
   }
@@ -219,11 +218,11 @@ const toResult = (item: Gallery): ResultPair => ({
   after: toPhoto(item.afterImage),
 })
 
-const toProduct = (product: Product, locale: Locale): ProductCard => ({
+const toProduct = (product: Product): ProductCard => ({
   id: product.id,
   name: product.name,
   category: typeof product.category === 'object' && product.category ? product.category.name : null,
-  price: formatPrice(product.price.amount, product.price.currency, locale),
+  price: formatPrice(product.price.amount, product.price.currency),
   inStock: product.stock > 0,
   photo: toPhoto(product.images?.[0]),
 })

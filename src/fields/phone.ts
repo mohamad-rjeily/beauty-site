@@ -11,9 +11,9 @@ type PhoneFieldOptions = {
 
 /**
  * Phone number stored in international format (+961...).
- * The beforeValidate hook tidies the input ("00961 3-123 456" -> "+9613123456"),
- * then validate() rejects anything that still isn't a valid international number.
- * Both run on the server for every write, whatever sends the data.
+ * The beforeValidate hook tidies the input with the same rules as the booking form
+ * ("03 123 456" or "00961 3-123 456" -> "+9613123456"), then validate() rejects anything
+ * that still isn't a valid number. Both run on the server for every write.
  */
 export const phoneField = ({
   name = 'phone',
@@ -25,10 +25,10 @@ export const phoneField = ({
   label,
   required,
   admin: {
-    placeholder: '+961 3 123 456',
+    placeholder: '03 123 456',
     description: t(
-      'International format, starting with + and the country code.',
-      'بالصيغة الدولية، يبدأ بـ + ورمز البلد.',
+      'A Lebanese number as usual (03 123 456), or + and the country code for another country.',
+      'رقم لبناني كالمعتاد (03 123 456)، أو + ورمز البلد لرقم من بلد آخر.',
     ),
   },
   hooks: {
@@ -40,8 +40,8 @@ export const phoneField = ({
       isValidPhone(value) ||
       msg(
         req,
-        'Use international format, e.g. +961 3 123 456.',
-        'استخدمي الصيغة الدولية، مثال: +961 3 123 456.',
+        'Enter a valid number, e.g. 03 123 456, or + and the country code.',
+        'أدخلي رقماً صحيحاً، مثال: 03 123 456، أو + ورمز البلد.',
       )
     )
   },

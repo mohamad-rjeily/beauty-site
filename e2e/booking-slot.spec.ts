@@ -57,7 +57,7 @@ for (const locale of ['en', 'ar'] as Locale[]) {
 
     // ── WhatsApp summary ─────────────────────────────────────────────────────
     const settings = await api.settings(locale)
-    test.skip(!settings.whatsappNumber, 'No WhatsApp number in site settings.')
+    expect(settings.whatsappNumber, 'a WhatsApp number in Site settings (npm run demo:seed)').toBeTruthy()
     const link = page.locator('a[href^="https://wa.me/"]').filter({ hasText: dict[locale].booking.sendOnWhatsApp })
     await expect(link).toBeVisible()
     const href = new URL((await link.getAttribute('href'))!)

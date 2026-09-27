@@ -1,4 +1,5 @@
 import { Icon } from '@/components/ui/Icon'
+import { Ltr } from '@/components/ui/Ltr'
 import { Picture } from '@/components/ui/Picture'
 import type { Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
@@ -46,7 +47,7 @@ export function ProductRail({
         )}
         <div className="mt-auto flex items-center justify-between gap-2 ps-1.5">
           <span className="text-sm tabular-nums text-ink-soft">
-            {product.inStock ? product.price : t.outOfStock}
+            {product.inStock ? <Ltr>{product.price}</Ltr> : t.outOfStock}
           </span>
           {href && product.inStock && (
             <a

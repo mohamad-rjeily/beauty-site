@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import { Reveal } from '@/components/motion/Reveal'
 import { Icon } from '@/components/ui/Icon'
+import { formatNodes, Ltr } from '@/components/ui/Ltr'
 import { Picture } from '@/components/ui/Picture'
 import { format, type Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
@@ -128,7 +129,7 @@ function ServiceCard({
         ) : null}
         <p className="m-0 text-[0.8125rem] font-semibold">
           {group.fromPrice
-            ? format(t.fromPrice, { price: group.fromPrice })
+            ? formatNodes(t.fromPrice, { price: <Ltr>{group.fromPrice}</Ltr> })
             : whatsappNumber
               ? t.pricesSoon
               : t.pricesSoonNoContact}

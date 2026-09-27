@@ -12,6 +12,7 @@ import { getPayload, type Payload } from 'payload'
 
 import { createPublicBooking, loadFreeSlots } from '../src/lib/booking'
 import { isBookingOverlapError } from '../src/lib/bookingErrors'
+import { getClientIp } from '../src/lib/clientIp'
 import { consumeRateLimit } from '../src/lib/rateLimit'
 import { businessTime, freeSlots, type BookingRules, type DaySlots } from '../src/lib/slots'
 import { BUSINESS_TIME_ZONE, businessDateKeyFromToday, inBusinessZone } from '../src/lib/time'
@@ -489,6 +490,64 @@ const main = async () => {
       'Rate limit · 5 requests per 10 minutes, the 6th is refused',
       same(hits.map(String), ['true', 'true', 'true', 'true', 'true', 'false']),
       hits.join(' '),
+    )
+
+    // Which address the rate limits count. A visitor can send any x-forwarded-for she likes.
+    const spoofed = new Headers({
+      'x-forwarded-for': '203.0.113.9',
+      'x-host-client-ip': '198.51.100.7',
+    })
+    const quiet = () => {}
+    const prodIp = getClientIp(
+      spoofed,
+      { NODE_ENV: 'production', TRUSTED_IP_HEADER: 'x-host-client-ip' },
+      quiet,
+    )
+    expectTrue(
+      'Client IP · production reads TRUSTED_IP_HEADER and ignores x-forwarded-for',
+      prodIp === '198.51.100.7',
+      String(prodIp),
+    )
+    const unset = getClientIp(spoofed, { NODE_ENV: 'production' }, quiet)
+    const missing = getClientIp(
+      new Headers({ 'x-forwarded-for': '203.0.113.9' }),
+      { NODE_ENV: 'production', TRUSTED_IP_HEADER: 'x-host-client-ip' },
+      quiet,
+    )
+    expectTrue(
+      'Client IP · production without the trusted header → none (site-wide limit), never x-forwarded-for',
+      unset === null && missing === null,
+      `unset: ${unset}, header missing: ${missing}`,
+    )
+    const devIp = getClientIp(spoofed, { NODE_ENV: 'development' })
+    expectTrue(
+      'Client IP · development takes the first x-forwarded-for (the e2e suite relies on it)',
+      devIp === '203.0.113.9',
+      String(devIp),
+    )
+
+    // A local number as customers type it is saved in E.164.
+    const localName = 'TEST public local phone'
+    const local = await createPublicBooking(payload, {
+      serviceId: requestService.id,
+      name: localName,
+      phone: '٠٣ ١٢٣ ٤٥٦',
+      requestedDate: businessDateKeyFromToday(91),
+      locationType: 'studio',
+      peopleCount: 1,
+    })
+    const [savedLocal] = (
+      await payload.find({
+        collection: 'bookings',
+        where: { customerName: { equals: localName } },
+        depth: 0,
+        limit: 1,
+      })
+    ).docs
+    expectTrue(
+      'Page submit · "٠٣ ١٢٣ ٤٥٦" (Arabic digits, no country code) saved as +9613123456',
+      local.ok && savedLocal?.phone === '+9613123456',
+      `${JSON.stringify(local)}; saved ${savedLocal?.phone}`,
     )
 
     // ── 7. Confirming an order with more quantity than stock ───────────────

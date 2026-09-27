@@ -53,14 +53,14 @@ export const formatDuration = (minutes: number, t: Dictionary): string => {
   return m ? format(t.hoursMinutes, { h, m }) : format(t.hoursOnly, { h })
 }
 
-const toServiceItem = (s: Service, locale: Locale): ServiceItem => ({
+const toServiceItem = (s: Service): ServiceItem => ({
   id: s.id,
   slug: s.slug,
   name: s.name,
   category: s.category,
   mode: s.bookingMode,
   description: richTextParagraphs(s.description),
-  price: formatPrice(s.price.amount, s.price.currency, locale),
+  price: formatPrice(s.price.amount, s.price.currency),
   duration: s.duration,
   photo: toPhoto(s.images?.[0]),
 })
@@ -87,7 +87,7 @@ export const getServicesPage = async (locale: Locale) => {
       makeup: toPhoto(pages.services?.makeupPhoto),
       skincare: toPhoto(pages.services?.skincarePhoto),
     },
-    services: services.docs.map((s) => toServiceItem(s, locale)),
+    services: services.docs.map(toServiceItem),
   }
 }
 
@@ -113,7 +113,7 @@ export const getBookingPage = async (locale: Locale) => {
     settings,
     ownerName: home.signature ?? '',
     maxDaysAhead: availability.maxDaysAhead,
-    services: services.docs.map((s) => toServiceItem(s, locale)),
+    services: services.docs.map(toServiceItem),
   }
 }
 

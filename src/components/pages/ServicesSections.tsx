@@ -6,8 +6,9 @@ import { Reveal } from '@/components/motion/Reveal'
 import { ScrollRise } from '@/components/motion/ScrollRise'
 import { ScrollWords } from '@/components/motion/ScrollWords'
 import { Icon } from '@/components/ui/Icon'
+import { formatNodes, Ltr } from '@/components/ui/Ltr'
 import { PillLink } from '@/components/ui/Pill'
-import { format, type Dictionary } from '@/i18n'
+import type { Dictionary } from '@/i18n'
 import type { Locale } from '@/i18n/config'
 import type { Photo } from '@/lib/cms/home'
 import { formatDuration, type ServiceItem } from '@/lib/cms/pages'
@@ -188,7 +189,7 @@ function ServiceRow({ service, href, t }: { service: ServiceItem; href: string; 
           {service.name}
         </h3>
         <span className="shrink-0 text-[0.9375rem] font-semibold tabular-nums">
-          {service.price}
+          <Ltr>{service.price}</Ltr>
         </span>
       </div>
       {service.description.map((line, i) => (
@@ -256,7 +257,7 @@ function RequestCard({
           </p>
         ))}
         <p className="m-0 text-[0.8125rem] font-semibold">
-          {format(t.fromPrice, { price: service.price })}
+          {formatNodes(t.fromPrice, { price: <Ltr>{service.price}</Ltr> })}
         </p>
         <Link
           href={href}

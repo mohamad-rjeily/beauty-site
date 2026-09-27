@@ -9,7 +9,9 @@
  * - rate-limit rows of the fake test IPs (e2e/visitors.ts)
  * DEMO content and real records are never touched.
  *
- * setup reads the account's email and password from E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD
+ * setup first checks the data the suite needs (an active slot service, an active request
+ * service, a WhatsApp number) and stops the run with a clear message when one is missing.
+ * It then reads the account's email and password from E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD
  * (generated per run by the global setup) and never prints them.
  */
 import config from '@payload-config'
@@ -94,6 +96,25 @@ const setup = async () => {
   if (!email?.startsWith(ADMIN_EMAIL_PREFIX) || !email.endsWith(ADMIN_EMAIL_DOMAIN) || !password) {
     throw new Error('E2E setup: E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD are missing or invalid.')
   }
+
+  // The suite needs data to test: stop here with a clear message, rather than skipping tests.
+  const active = await payload.find({
+    collection: 'services',
+    where: { active: { equals: true } },
+    depth: 0,
+    pagination: false,
+    select: { bookingMode: true },
+  })
+  const modes = new Set(active.docs.map((s) => s.bookingMode))
+  const settings = await payload.findGlobal({ slug: 'site-settings', depth: 0 })
+  const missing = [
+    !modes.has('slot') && 'No active time-slot service: run npm run demo:seed first.',
+    !modes.has('request') && 'No active request service: run npm run demo:seed first.',
+    !settings.whatsappNumber &&
+      'No WhatsApp number: set a WhatsApp number in Site settings, or run npm run demo:seed first.',
+  ].filter(Boolean)
+  if (missing.length) throw new Error(`E2E setup stopped.\n${missing.join('\n')}`)
+
   await payload.create({
     collection: 'users',
     overrideAccess: true,

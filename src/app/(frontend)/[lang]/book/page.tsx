@@ -8,6 +8,7 @@ import { Icon } from '@/components/ui/Icon'
 import { PillLink } from '@/components/ui/Pill'
 import { format, getDictionary } from '@/i18n'
 import { isLocale, type Locale } from '@/i18n/config'
+import { parseBookingQuery } from '@/lib/bookingUrl'
 import { formatDuration, getBookingPage, getInitialSlots } from '@/lib/cms/pages'
 import { getSiteChrome } from '@/lib/cms/site'
 import { whatsappHref } from '@/lib/links'
@@ -29,7 +30,8 @@ export async function generateMetadata({
 /**
  * The booking page: choose a service, then a time (or send a request for bridal and events),
  * then name and phone. `?service=<slug>` opens with that service chosen; every Book button on
- * the site links here through bookingHref().
+ * the site links here through bookingHref(). The rest of the address (step, day, time: see
+ * lib/bookingUrl.ts) brings a refresh back to the same step.
  */
 export default async function BookPage({
   params,
@@ -41,7 +43,11 @@ export default async function BookPage({
   const { lang } = await params
   const locale = (isLocale(lang) ? lang : 'en') as Locale
   const t = getDictionary(locale)
-  const { service: slug } = await searchParams
+  const search = await searchParams
+  const query = parseBookingQuery((key) => {
+    const value = search[key]
+    return typeof value === 'string' ? value : null
+  })
   const { settings, ownerName, maxDaysAhead, services } = await getBookingPage(locale)
 
   const bookable = services.map((s) => ({
@@ -53,7 +59,7 @@ export default async function BookPage({
     price: s.price,
     durationLabel: formatDuration(s.duration, t),
   }))
-  const initial = bookable.find((s) => s.slug === slug) ?? null
+  const initial = bookable.find((s) => s.slug === query.service) ?? null
   // A link to a time-slot service arrives with its free times already on the page.
   const initialDays = initial?.mode === 'slot' ? await getInitialSlots(initial.id) : null
 
@@ -73,6 +79,7 @@ export default async function BookPage({
               services={bookable}
               initialServiceId={initial?.id ?? null}
               initialDays={initialDays}
+              initialQuery={query}
               ownerName={ownerName}
               whatsappNumber={settings.whatsappNumber || null}
               maxDaysAhead={maxDaysAhead}

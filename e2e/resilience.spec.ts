@@ -168,3 +168,113 @@ test('time taken while going back and forth: friendly message and fresh times', 
   }
   expect(await api.bookingsNamed(name)).toHaveLength(0)
 })
+
+test('Change twice, then Back: the same number of Back presses leaves /book', async ({ page, slotServices }) => {
+  const service = slotServices[0]
+  const b = new BookingPage(page, 'en')
+  const change = (n: 1 | 2) => b.step(n).getByRole('button', { name: new RegExp(`^${t.change}`) })
+
+  await page.goto('/en')
+  await b.goto()
+  await b.chooseService(service)
+  const first = await b.pickSlot({ day: 1, which: 'first' })
+
+  // Step 3 -> Change to step 2 -> another time, twice.
+  for (const which of ['last', 'middle'] as const) {
+    await change(2).click()
+    await b.expectOpen(2)
+    await b.pickSlot({ day: first.dateKey, which })
+  }
+
+  await page.goBack()
+  await b.expectOpen(2)
+  await page.goBack()
+  await b.expectOpen(1)
+  await page.goBack()
+  await expect(page, 'third Back leaves /book, as without any Change').not.toHaveURL(/\/book/)
+})
+
+test('refresh on step 2 keeps the selected day', async ({ page, slotServices }) => {
+  const b = new BookingPage(page, 'en')
+  await b.goto(slotServices[0].slug)
+  await b.waitForDays()
+  const open = await b.openTileIndexes()
+  const day = open[Math.min(2, open.length - 1)]
+  await b.selectDay(day)
+
+  await page.reload()
+  await b.ready()
+  await b.expectOpen(2)
+  await expect(b.dayTiles.nth(day)).toHaveAttribute('aria-pressed', 'true')
+})
+
+test('refresh on step 3 keeps name, phone and notes; they are gone once sent', async ({
+  page,
+  api,
+  slotServices,
+}) => {
+  const b = new BookingPage(page, 'en')
+  const name = testName('refresh details')
+  await b.goto(slotServices[0].slug)
+  await b.pickSlot({ day: 2, which: 'middle' })
+  await b.fillDetails({ name, phone: '03 123 456', notes: 'E2E kept' })
+
+  await page.reload()
+  await b.ready()
+  await b.expectOpen(3)
+  await expect(b.nameInput).toHaveValue(name)
+  await expect(b.phoneInput).toHaveValue('03 123 456')
+  await expect(b.notesInput).toHaveValue('E2E kept')
+  expect(page.url(), 'no personal details in the address').not.toMatch(/E2E|kept|456/)
+
+  await b.submit()
+  await b.expectDone()
+  expect(await api.bookingsNamed(name)).toHaveLength(1)
+  const stored = await page.evaluate(() => sessionStorage.getItem('book:details'))
+  expect(stored ?? '', 'details removed after sending').not.toContain(name)
+})
+
+for (const locale of ['en', 'ar'] as const) {
+  test(`refresh on step 3 after the time was taken: step 2, same day, a notice (${locale})`, async ({
+    page,
+    api,
+    slotServices,
+  }) => {
+    const service = slotServices[0]
+    const b = new BookingPage(page, locale)
+    await b.goto(service.slug)
+    // A day with other free times, so it stays open once this time is taken.
+    await b.waitForDays()
+    const keys = await b.tileDates()
+    let day: string | undefined
+    for (const i of (await b.openTileIndexes()).slice(3)) {
+      await b.selectDay(i)
+      if ((await b.chipTimes()).length >= 2) {
+        day = keys[i]
+        break
+      }
+    }
+    expect(day, 'an open day with at least two free times').toBeTruthy()
+    const slot = await b.pickSlot({ day, which: 'first' })
+    await b.fillDetails({ name: testName(`gone ${locale}`), phone: '+961 3 123 456' })
+
+    const other = await api.createBooking({
+      customerName: testName('taker'),
+      phone: '+9613123456',
+      service: service.id,
+      startTime: new Date(slot.instant).toISOString(),
+      startTime_tz: TZ,
+    })
+    expect(other.status).toBe(201)
+
+    await page.reload()
+    await b.ready()
+    await b.expectOpen(2)
+    await expect(b.notice.filter({ hasText: dict[locale].booking.timeGoneAfterReload })).toBeVisible()
+    await expect(b.dayTiles.nth(slot.dayIndex), 'the same day is still selected').toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(await b.chipTimes()).not.toContain(slot.time)
+  })
+}

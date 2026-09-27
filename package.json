@@ -18,6 +18,7 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test:e2e": "playwright test",
     "test:e2e:clean": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/e2e-db.ts clean",
+    "test:unit": "node --import tsx --test \"src/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "verify:rules": "cross-env NODE_OPTIONS=--no-deprecation payload run scripts/verify-rules.ts"
   },

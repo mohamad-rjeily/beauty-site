@@ -1,4 +1,5 @@
 import { Icon } from '@/components/ui/Icon'
+import { Ltr } from '@/components/ui/Ltr'
 import type { Dictionary } from '@/i18n'
 
 import type { BookableService } from './parts'
@@ -49,6 +50,9 @@ export function ServicePicker({
                   value={service.id}
                   checked={service.id === selectedId}
                   onChange={() => onSelect(service)}
+                  // Back on step 1 the last choice stays checked; clicking it again (no
+                  // change event for a checked radio) must still move on to step 2.
+                  onClick={() => service.id === selectedId && onSelect(service)}
                   className="peer sr-only"
                 />
                 <span className="flex min-w-0 grow flex-col gap-1.5">
@@ -57,7 +61,7 @@ export function ServicePicker({
                       {service.name}
                     </span>
                     <span className="shrink-0 text-[0.9375rem] font-semibold tabular-nums">
-                      {service.price}
+                      <Ltr>{service.price}</Ltr>
                     </span>
                   </span>
                   <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem] text-ink-soft">

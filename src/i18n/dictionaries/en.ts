@@ -163,7 +163,7 @@ export const en = {
 
     name: 'Your name',
     phone: 'Phone (WhatsApp)',
-    phoneHint: 'With the country code: +961 3 123 456',
+    phoneHint: 'For example {example}. From abroad: +\u00a0and the country code.',
     notes: 'Notes (optional)',
     notesHint: 'Your skin, allergies, the look you have in mind…',
     submitSlot: 'Send my booking',
@@ -173,7 +173,7 @@ export const en = {
 
     errors: {
       name: 'Please enter your name.',
-      phone: 'Use the international format, e.g. +961 3 123 456.',
+      phone: 'Please check the number, e.g. {example} (from abroad: +\u00a0and the country code).',
       notes: 'Please keep notes under 1,000 characters.',
       requestedDate: 'Choose today or a later date.',
       locationType: 'Choose where.',
@@ -182,6 +182,8 @@ export const en = {
     },
     slotTaken: 'Sorry, that time was just taken. Here are the free times now.',
     slotGone: 'That time is no longer available. Please choose another.',
+    timeGoneAfterReload:
+      'The time you had chosen is no longer free. Please choose another time.',
     unavailable: 'This service can’t be booked online right now. Please ask on WhatsApp.',
     rateLimited: 'Too many tries in a short time. Please wait a few minutes, or ask on WhatsApp.',
     failed: 'Something went wrong. Please try again, or ask on WhatsApp.',
