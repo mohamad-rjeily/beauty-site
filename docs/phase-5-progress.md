@@ -1,5 +1,12 @@
 # Phase 5 · Shop — progress
 
+## Where we stopped (2026-09-28)
+- Checkpoint 4 done (`57ac4b5`). Waiting for the owner's review of the checkout screenshots
+  (`.impeccable/review/co-*.png`) and the EN/AR WhatsApp messages.
+- Next step: checkpoint 5 (admin order view + demo orders).
+- Open notes: a few "E2E-TEST" orders are left in the dev database (the checkpoint 7 clean-up
+  removes them); no delivery fee is set in Site settings yet.
+
 Branch `phase-5-shop`. Plan approved on 2026-09-28 with these changes: fashion items hidden
 from the public site and refused by checkout; inline "Added to your cart" confirmation;
 order-number retry on collision; design check (screenshots) after checkpoint 2.
