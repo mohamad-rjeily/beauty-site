@@ -350,10 +350,11 @@
 
 /* ══════════════════════════════════════════════════════════════════════════
  * PALETTE PREVIEW (branch design-pink) — for the owner's colour choice only.
- * src/preview/PalettePreview.tsx sets <html data-palette="…"> from ?palette=blush|rose|petal.
+ * src/preview/PalettePreview.tsx sets <html data-palette="…"> from ?palette=blush|rose|petal
+ * and <html data-photos="off"> from ?photos=off.
  * Without the attribute nothing below applies and the site keeps "C1 · Sunlit Arch".
  * To ship a winner: copy its values into @theme above, then delete this whole block,
- * public/textures/grain-light.webp (if unused) and src/preview/.
+ * public/textures/grain-light.webp (if unused), src/preview/ and the preview bits it lists.
  * Every text/ground pair is checked to WCAG AA (see the design-pink report).
  * ══════════════════════════════════════════════════════════════════════════ */
 
@@ -453,4 +454,14 @@
 /* All three: a lighter, rose-toned grain (about half the strength of grain.webp). */
 :root[data-palette] .grain {
   background-image: url('/textures/grain-light.webp');
+}
+
+/* ?photos=off: Picture's placeholder layer covers each uploaded photo. Unlayered, so it beats
+   the layer's own `flex` utility. */
+.photos-off-only {
+  display: none;
+}
+
+:root[data-photos='off'] .photos-off-only {
+  display: flex;
 }

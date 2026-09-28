@@ -7,6 +7,10 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  // PALETTE PREVIEW (branch design-pink): inlined so client components see the same gate.
+  env: {
+    PALETTE_PREVIEW: process.env.PALETTE_PREVIEW ?? '',
+  },
   images: {
     localPatterns: [
       {

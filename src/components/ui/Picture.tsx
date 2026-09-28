@@ -1,6 +1,7 @@
 import Image from 'next/image'
 
 import type { Photo } from '@/lib/cms/home'
+import { previewEnabled } from '@/preview/enabled'
 
 import { Icon } from './Icon'
 
@@ -52,15 +53,46 @@ export function Picture({
           className="object-cover"
           style={{ objectPosition: photo.position }}
         />
+        {/* PALETTE PREVIEW: covers the photo under ?photos=off (hidden otherwise, by CSS). */}
+        {previewEnabled && (
+          <Placeholder
+            hint={hint}
+            soon={soon}
+            className={`photos-off-only absolute inset-0 ${toneClass[tone]}`}
+          />
+        )}
       </div>
     )
   }
 
   return (
+    <Placeholder
+      hint={hint}
+      soon={soon}
+      className={`${position} ${toneClass[tone]} ${className}`}
+      label
+    />
+  )
+}
+
+function Placeholder({
+  hint,
+  soon,
+  className,
+  label,
+}: {
+  hint: string
+  soon: string
+  className: string
+  /** Announce the placeholder as the image (off for the preview layer: the photo has its alt). */
+  label?: boolean
+}) {
+  return (
     <div
-      role="img"
-      aria-label={`${soon}: ${hint}`}
-      className={`${position} flex flex-col items-center justify-center gap-1.5 overflow-hidden p-3 text-center ${toneClass[tone]} ${className}`}
+      role={label ? 'img' : undefined}
+      aria-label={label ? `${soon}: ${hint}` : undefined}
+      aria-hidden={label ? undefined : true}
+      className={`flex flex-col items-center justify-center gap-1.5 overflow-hidden p-3 text-center ${className}`}
     >
       <Icon name="camera" size={22} className="opacity-70" />
       <span className="text-[0.625rem] font-semibold tracking-[0.16em] uppercase rtl:tracking-normal rtl:text-xs">
