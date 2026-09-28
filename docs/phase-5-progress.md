@@ -1,7 +1,7 @@
 # Phase 5 · Shop — progress
 
 ## Where we stopped (2026-09-28)
-- Checkpoint 5 done. Next step: checkpoint 6 (rule + unit tests).
+- Checkpoint 6 done. Next step: checkpoint 7 (e2e).
 - Open notes: a few "E2E-TEST" orders are left in the dev database (the checkpoint 7 clean-up
   removes them); no delivery fee is set in Site settings yet.
 

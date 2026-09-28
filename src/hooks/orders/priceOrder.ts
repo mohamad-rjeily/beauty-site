@@ -40,11 +40,28 @@ const freeOrderNumber = async (req: PayloadRequest): Promise<string> => {
  * Also gives the order its number and copies the delivery fee from Site settings (delivery
  * only, and only when a fee is set); the total includes it.
  *
- * The lines are then frozen (field access `update: never`), so the order keeps the
+ * The lines are then frozen (field access `update: never`, and restored here on every update), so the order keeps the
  * name and price the customer saw, even if the product changes later.
  */
-export const priceOrder: CollectionBeforeChangeHook<Order> = async ({ data, operation, req }) => {
-  if (operation !== 'create') return data
+export const priceOrder: CollectionBeforeChangeHook<Order> = async ({
+  data,
+  operation,
+  originalDoc,
+  req,
+}) => {
+  if (operation !== 'create') {
+    // Frozen after creation, for every caller: field access already blocks the admin panel
+    // and the API, but server code (the Local API) skips field access by default.
+    if (originalDoc) {
+      data.items = originalDoc.items
+      data.deliveryFee = originalDoc.deliveryFee
+      data.total = originalDoc.total
+      data.orderNumber = originalDoc.orderNumber
+      data.locale = originalDoc.locale
+      data.checkoutId = originalDoc.checkoutId
+    }
+    return data
+  }
 
   // The public checkout always creates "new" orders; only a logged-in admin may pick a status.
   if (!isAdminRequest(req)) data.status = 'new'
@@ -92,7 +109,11 @@ export const priceOrder: CollectionBeforeChangeHook<Order> = async ({ data, oper
       .catch(() => null)
 
     // Fashion items wait for size/colour variants (phase 7); only the owner may order them.
-    if (!product || !product.active || (!isAdminRequest(req) && !isPublicProductType(product.type))) {
+    if (
+      !product ||
+      !product.active ||
+      (!isAdminRequest(req) && !isPublicProductType(product.type))
+    ) {
       return fail(
         req,
         `items.${index}.product`,

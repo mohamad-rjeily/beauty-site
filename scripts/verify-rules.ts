@@ -14,10 +14,12 @@ import { createPublicBooking, loadFreeSlots } from '../src/lib/booking'
 import { isBookingOverlapError } from '../src/lib/bookingErrors'
 import { loadCartProducts } from '../src/lib/cartProducts'
 import { getClientIp } from '../src/lib/clientIp'
-import { consumeRateLimit } from '../src/lib/rateLimit'
+import { placeOrder } from '../src/lib/order'
+import { isOrderNumber } from '../src/lib/orderNumber'
+import { consumeRateLimit, hashVisitorKey } from '../src/lib/rateLimit'
 import { businessTime, freeSlots, type BookingRules, type DaySlots } from '../src/lib/slots'
 import { BUSINESS_TIME_ZONE, businessDateKeyFromToday, inBusinessZone } from '../src/lib/time'
-import type { Availability, User } from '../src/payload-types'
+import type { Availability, Order, SiteSetting, User } from '../src/payload-types'
 
 /**
  * Payload's create types expect every required field, including the ones the server
@@ -227,6 +229,12 @@ const main = async () => {
     slug: 'availability',
     depth: 0,
   })
+  const originalSettings: SiteSetting = await payload.findGlobal({
+    slug: 'site-settings',
+    depth: 0,
+  })
+  // A documentation-only address (TEST-NET-1, RFC 5737) for the checkout's rate limit.
+  const checkoutIp = '192.0.2.77'
 
   try {
     slotCalculationChecks()
@@ -691,6 +699,239 @@ const main = async () => {
       checks.some((c) => c.id === balm.id && c.available && c.name === 'TEST shown balm'),
       JSON.stringify(checks.find((c) => c.id === balm.id)),
     )
+
+    // ── 10. Shop rules (public orders, stock, fee, totals, checkout) ───────
+    const newProduct = async (name: string, amount: number, stock: number, extra = {}) => {
+      const doc = await payload.create({
+        collection: 'products',
+        data: {
+          name,
+          price: { amount, currency: 'USD' },
+          type: 'brand',
+          stockAdjustment: stock,
+          ...extra,
+        } as ClientData,
+      })
+      created.products.push(doc.id)
+      return doc
+    }
+    const keep = (o: Order) => {
+      created.orders.push(o.id)
+      return o
+    }
+    const publicOrder = (items: { product: number; quantity: number }[], extra = {}) =>
+      payload
+        .create({
+          collection: 'orders',
+          data: { ...customer, fulfillment: 'pickup', items, ...extra } as ClientData,
+        })
+        .then(keep)
+    const ownerOrder = (items: { product: number; quantity: number }[]) =>
+      payload
+        .create({
+          collection: 'orders',
+          user: admin,
+          data: { ...customer, fulfillment: 'pickup', items } as ClientData,
+        })
+        .then(keep)
+    const setStatus = (id: number, status: Order['status']) =>
+      payload.update({ collection: 'orders', id, user: admin, data: { status } })
+
+    const shopScarf = await newProduct('TEST shop scarf', 4000, 3, { type: 'fashion' })
+    await expectFail('Public order with a fashion item (not sold on the site yet)', () =>
+      publicOrder([{ product: shopScarf.id, quantity: 1 }]),
+    )
+    await expectOk(
+      'Owner order with a fashion item (allowed in the admin)',
+      () => ownerOrder([{ product: shopScarf.id, quantity: 1 }]),
+      (o) => `status ${o.status}`,
+    )
+    const switchedOff = await newProduct('TEST shop off', 1500, 3, { active: false })
+    await expectFail('Public order with a switched-off product', () =>
+      publicOrder([{ product: switchedOff.id, quantity: 1 }]),
+    )
+    const soldOut = await newProduct('TEST shop sold out', 1500, 0)
+    await expectFail('Public order with an out-of-stock product', () =>
+      publicOrder([{ product: soldOut.id, quantity: 1 }]),
+    )
+    const clay = await newProduct('TEST shop clay', 1800, 3)
+    await expectFail('Public order: the same product on two lines, 2 + 2 with 3 in stock', () =>
+      publicOrder([
+        { product: clay.id, quantity: 2 },
+        { product: clay.id, quantity: 2 },
+      ]),
+    )
+
+    // Delivery fee: copied from Site settings for delivery orders, never for pickup.
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: { shop: { deliveryFee: { amount: 300, currency: 'USD' } } },
+    })
+    const withFee = await expectOk(
+      'Delivery order with a $3 fee set, client sends its own number and fee',
+      () =>
+        publicOrder([{ product: clay.id, quantity: 2 }], {
+          fulfillment: 'delivery',
+          area: 'TEST area',
+          street: 'TEST street',
+          orderNumber: 'AAAAAA', // must be ignored
+          deliveryFee: { amount: 0, currency: 'USD' }, // must be replaced
+        }),
+      (o) => `fee ${o.deliveryFee?.amount}, total ${o.total?.amount}, number ${o.orderNumber}`,
+    )
+    if (withFee) {
+      expectTrue(
+        '…fee 300, total 3900 (2 × 1800 + 300), a fresh 6-character order number',
+        withFee.deliveryFee?.amount === 300 &&
+          withFee.total?.amount === 3900 &&
+          withFee.orderNumber !== 'AAAAAA' &&
+          isOrderNumber(withFee.orderNumber ?? ''),
+        `fee ${withFee.deliveryFee?.amount}, total ${withFee.total?.amount}, number ${withFee.orderNumber}`,
+      )
+    }
+    const pickup = await publicOrder([{ product: clay.id, quantity: 1 }])
+    expectTrue(
+      'Pickup order: no delivery fee, total = lines only',
+      pickup.deliveryFee?.amount == null && pickup.total?.amount === 1800,
+      `fee ${pickup.deliveryFee?.amount}, total ${pickup.total?.amount}`,
+    )
+    await expectFail('Delivery order without an area and street', () =>
+      publicOrder([{ product: clay.id, quantity: 1 }], { fulfillment: 'delivery' }),
+    )
+
+    // The order lines are frozen once saved.
+    await payload.update({
+      collection: 'orders',
+      id: pickup.id,
+      user: admin,
+      data: {
+        items: [
+          {
+            product: clay.id,
+            quantity: 3,
+            productName: 'changed',
+            unitPrice: { amount: 1, currency: 'USD' },
+          },
+        ],
+      } as ClientData,
+    })
+    const frozen = await payload.findByID({ collection: 'orders', id: pickup.id, depth: 0 })
+    expectTrue(
+      'Owner edits an order line: lines and total stay as ordered',
+      frozen.items.length === 1 &&
+        frozen.items[0].quantity === 1 &&
+        frozen.items[0].productName === 'TEST shop clay' &&
+        frozen.total?.amount === 1800,
+      `${frozen.items[0].quantity} × ${frozen.items[0].productName}, total ${frozen.total?.amount}`,
+    )
+
+    // Stock round trip: confirm takes it, cancel puts it back.
+    if (withFee) {
+      await expectOk('Confirm the delivery order (2 of 3 clay)', () =>
+        setStatus(withFee.id, 'confirmed'),
+      )
+      const afterConfirm = await stockOf(payload, clay.id)
+      await expectOk('Cancel the confirmed order', () => setStatus(withFee.id, 'cancelled'))
+      const afterCancel = await stockOf(payload, clay.id)
+      expectTrue(
+        '…stock 3 → 1 on confirm, back to 3 on cancel',
+        afterConfirm === 1 && afterCancel === 3,
+        `after confirm ${afterConfirm}, after cancel ${afterCancel}`,
+      )
+    }
+
+    // The same product on two lines is checked as one total when confirming.
+    const twoLines = await ownerOrder([
+      { product: clay.id, quantity: 1 },
+      { product: clay.id, quantity: 1 },
+    ])
+    await payload.update({
+      collection: 'products',
+      id: clay.id,
+      user: admin,
+      data: { stockAdjustment: -2 },
+    })
+    await expectFail('Confirm 1 + 1 of the same product with 1 in stock', () =>
+      setStatus(twoLines.id, 'confirmed'),
+    )
+    const refusal = results.at(-1)?.detail ?? ''
+    const lastOne = await stockOf(payload, clay.id)
+    expectTrue(
+      '…the error names the product, what the order needs and what is left; stock unchanged',
+      refusal.includes('"TEST shop clay"') &&
+        refusal.includes('needs 2') &&
+        refusal.includes('only 1 is left') &&
+        lastOne === 1,
+      `stock ${lastOne}`,
+    )
+
+    // Two orders race for the last item: exactly one is confirmed, stock never below 0.
+    const racerA = await publicOrder([{ product: clay.id, quantity: 1 }])
+    const racerB = await publicOrder([{ product: clay.id, quantity: 1 }])
+    const race = await Promise.allSettled([
+      setStatus(racerA.id, 'confirmed'),
+      setStatus(racerB.id, 'confirmed'),
+    ])
+    const raceStock = await stockOf(payload, clay.id)
+    expectTrue(
+      'Two orders confirmed at the same moment for the last item: one wins, stock 0',
+      race.filter((r) => r.status === 'fulfilled').length === 1 && raceStock === 0,
+      `${race.map((r) => r.status).join(' / ')}, stock ${raceStock}`,
+    )
+
+    // Customer data stays private: no reading orders without a login.
+    await expectFail('Read orders without a login (public API rules)', () =>
+      payload.find({ collection: 'orders', overrideAccess: false, depth: 0 }),
+    )
+
+    // The real checkout code: prices from the database, a second send finds the first order.
+    const balmForCheckout = await newProduct('TEST shop balm', 2500, 4)
+    const checkoutHeaders = {
+      get: (name: string) => (name.toLowerCase() === 'x-forwarded-for' ? checkoutIp : null),
+    }
+    const checkout = {
+      checkoutId: `verify-${crypto.randomUUID()}`,
+      locale: 'en',
+      name: 'TEST checkout',
+      phone: '03 123 456',
+      fulfillment: 'pickup',
+      items: [{ productId: balmForCheckout.id, quantity: 2, priceCents: 1 }],
+    }
+    const placed = await placeOrder(payload, checkout, checkoutHeaders)
+    const again = await placeOrder(payload, checkout, checkoutHeaders)
+    const saved = await payload.find({
+      collection: 'orders',
+      depth: 0,
+      where: { checkoutId: { equals: checkout.checkoutId } },
+    })
+    created.orders.push(...saved.docs.map((o) => o.id))
+    expectTrue(
+      'Checkout: total from the database (2 × 2500), status new, phone in E.164',
+      placed.ok &&
+        placed.order.totalCents === 5000 &&
+        saved.docs[0]?.status === 'new' &&
+        saved.docs[0]?.phone === '+9613123456',
+      placed.ok ? `total ${placed.order.totalCents}, ${saved.docs[0]?.status}` : placed.reason,
+    )
+    expectTrue(
+      'Checkout sent twice (double tap): one order, the same number',
+      again.ok && placed.ok && again.order.number === placed.order.number && saved.totalDocs === 1,
+      `${saved.totalDocs} order(s)`,
+    )
+    const fashionCheckout = await placeOrder(
+      payload,
+      {
+        ...checkout,
+        checkoutId: `verify-${crypto.randomUUID()}`,
+        items: [{ productId: shopScarf.id, quantity: 1 }],
+      },
+      checkoutHeaders,
+    )
+    expectTrue(
+      'Checkout with a fashion item: refused as "cart changed", nothing saved',
+      !fashionCheckout.ok && fashionCheckout.reason === 'cartChanged',
+      JSON.stringify(fashionCheckout),
+    )
   } finally {
     // ── Cleanup: delete everything this script created ─────────────────────
     // Each step runs even if an earlier one fails, and the owner's settings come back first.
@@ -703,6 +944,12 @@ const main = async () => {
     }
     const { id: _id, createdAt: _c, updatedAt: _u, ...restore } = originalAvailability
     await step('availability', () => payload.updateGlobal({ slug: 'availability', data: restore }))
+    await step('delivery fee', () =>
+      payload.updateGlobal({
+        slug: 'site-settings',
+        data: { shop: { deliveryFee: originalSettings.shop?.deliveryFee } },
+      }),
+    )
     for (const id of created.orders) {
       await step(`order ${id}`, () => payload.delete({ collection: 'orders', id }))
     }
@@ -711,7 +958,9 @@ const main = async () => {
       db.execute(sql`DELETE FROM bookings WHERE customer_name LIKE 'TEST%'`),
     )
     await step('rate limits', () =>
-      db.execute(sql`DELETE FROM rate_limits WHERE key LIKE 'verify:%'`),
+      db.execute(
+        sql`DELETE FROM rate_limits WHERE key LIKE 'verify:%' OR key = ${`order:${hashVisitorKey(checkoutIp)}`}`,
+      ),
     )
     for (const id of created.products) {
       await step(`product ${id}`, () => payload.delete({ collection: 'products', id }))
