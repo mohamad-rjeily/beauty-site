@@ -246,6 +246,11 @@ export interface Product {
   type: 'brand' | 'homemade' | 'fashion';
   category?: (number | null) | Category;
   brand?: string | null;
+  /**
+   * Shown on the product page.
+   */
+  size?: string | null;
+  howToUse?: string | null;
   description?: {
     root: {
       type: string;
@@ -313,14 +318,21 @@ export interface Category {
  */
 export interface Order {
   id: number;
+  orderNumber?: string | null;
+  checkoutId?: string | null;
+  locale?: ('en' | 'ar') | null;
   customerName: string;
   /**
-   * International format, starting with + and the country code.
+   * A Lebanese number as usual (03 123 456), or + and the country code for another country.
    */
   phone: string;
   fulfillment: 'delivery' | 'pickup';
-  address?: string | null;
   area?: string | null;
+  street?: string | null;
+  building?: string | null;
+  floor?: string | null;
+  landmark?: string | null;
+  notes?: string | null;
   /**
    * Names and prices are copied from the products when the order is created, and never change afterwards.
    */
@@ -338,6 +350,10 @@ export interface Order {
     };
     id?: string | null;
   }[];
+  deliveryFee?: {
+    amount?: number | null;
+    currency?: 'USD' | null;
+  };
   total?: {
     amount?: number | null;
     currency?: 'USD' | null;
@@ -357,7 +373,7 @@ export interface Booking {
   id: number;
   customerName: string;
   /**
-   * International format, starting with + and the country code.
+   * A Lebanese number as usual (03 123 456), or + and the country code for another country.
    */
   phone: string;
   service: number | Service;
@@ -624,6 +640,8 @@ export interface ProductsSelect<T extends boolean = true> {
   type?: T;
   category?: T;
   brand?: T;
+  size?: T;
+  howToUse?: T;
   description?: T;
   price?:
     | T
@@ -664,11 +682,18 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
+  orderNumber?: T;
+  checkoutId?: T;
+  locale?: T;
   customerName?: T;
   phone?: T;
   fulfillment?: T;
-  address?: T;
   area?: T;
+  street?: T;
+  building?: T;
+  floor?: T;
+  landmark?: T;
+  notes?: T;
   items?:
     | T
     | {
@@ -688,6 +713,12 @@ export interface OrdersSelect<T extends boolean = true> {
               currency?: T;
             };
         id?: T;
+      };
+  deliveryFee?:
+    | T
+    | {
+        amount?: T;
+        currency?: T;
       };
   total?:
     | T
@@ -796,12 +827,21 @@ export interface SiteSetting {
   id: number;
   brandName: string;
   /**
-   * International format, starting with + and the country code.
+   * A Lebanese number as usual (03 123 456), or + and the country code for another country.
    */
   whatsappNumber: string;
   instagramUrl?: string | null;
   locationText?: string | null;
   mapLink?: string | null;
+  /**
+   * Pickup orders are collected at the address above.
+   */
+  shop: {
+    deliveryFee: {
+      amount?: number | null;
+      currency: 'USD';
+    };
+  };
   announcementBar?: {
     enabled?: boolean | null;
     text?: string | null;
@@ -999,6 +1039,17 @@ export interface Page {
     ctaHeading?: string | null;
     ctaText?: string | null;
   };
+  shop?: {
+    /**
+     * Shown small in sage above the title, in the other language. Leave empty to hide.
+     */
+    accent?: string | null;
+    /**
+     * Put *stars* around the word to set in italics, e.g. "Two crafts, one *hand.*"
+     */
+    title?: string | null;
+    intro?: string | null;
+  };
   contact?: {
     /**
      * Shown small in sage above the title, in the other language. Leave empty to hide.
@@ -1085,6 +1136,16 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   instagramUrl?: T;
   locationText?: T;
   mapLink?: T;
+  shop?:
+    | T
+    | {
+        deliveryFee?:
+          | T
+          | {
+              amount?: T;
+              currency?: T;
+            };
+      };
   announcementBar?:
     | T
     | {
@@ -1197,6 +1258,13 @@ export interface PagesSelect<T extends boolean = true> {
         beforeAfterNote?: T;
         ctaHeading?: T;
         ctaText?: T;
+      };
+  shop?:
+    | T
+    | {
+        accent?: T;
+        title?: T;
+        intro?: T;
       };
   contact?:
     | T
