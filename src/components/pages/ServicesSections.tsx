@@ -21,7 +21,7 @@ const tones: Record<Tone, { section: string; card: string; lift: string; muted: 
   clay: {
     section: 'bg-clay text-paper',
     card: 'shadow-on-clay',
-    lift: 'before:shadow-[0_2px_4px_rgb(60_22_8/0.22),0_16px_32px_rgb(60_22_8/0.26),0_40px_72px_rgb(60_22_8/0.2)]',
+    lift: 'before:shadow-on-clay-hover',
     muted: 'text-paper',
   },
   limestone: {

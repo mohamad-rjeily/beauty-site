@@ -20,8 +20,8 @@ type PictureProps = {
 
 const toneClass: Record<Tone, string> = {
   light:
-    'bg-sand text-ink-soft [background-image:repeating-linear-gradient(135deg,rgb(214_203_187/.55)_0_10px,transparent_10px_20px)]',
-  dark: 'bg-earth text-earth-soft [background-image:repeating-linear-gradient(135deg,rgb(247_242_234/.06)_0_12px,transparent_12px_24px)]',
+    'bg-sand text-ink-soft [background-image:repeating-linear-gradient(135deg,color-mix(in_srgb,var(--color-line)_55%,transparent)_0_10px,transparent_10px_20px)]',
+  dark: 'bg-earth text-earth-soft [background-image:repeating-linear-gradient(135deg,color-mix(in_srgb,var(--color-paper)_6%,transparent)_0_12px,transparent_12px_24px)]',
 }
 
 /**

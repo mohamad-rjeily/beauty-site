@@ -104,7 +104,7 @@ function ServiceCard({
   // card. Hover lifts it 4px while a deeper shadow fades in (opacity on a pseudo-element, so
   // only transform and opacity animate); a press scales it down a touch.
   const interactive = href
-    ? 'isolate cursor-pointer transition-[translate,scale] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] before:absolute before:inset-0 before:-z-10 before:rounded-card before:opacity-0 before:shadow-[0_2px_4px_rgb(60_22_8/0.22),0_16px_32px_rgb(60_22_8/0.26),0_40px_72px_rgb(60_22_8/0.2)] before:transition-opacity before:duration-300 hover:-translate-y-1 hover:before:opacity-100 active:scale-[0.98] active:duration-[140ms] motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100'
+    ? 'isolate cursor-pointer transition-[translate,scale] duration-[220ms] ease-[cubic-bezier(0.23,1,0.32,1)] before:absolute before:inset-0 before:-z-10 before:rounded-card before:opacity-0 before:shadow-on-clay-hover before:transition-opacity before:duration-300 hover:-translate-y-1 hover:before:opacity-100 active:scale-[0.98] active:duration-[140ms] motion-reduce:hover:translate-y-0 motion-reduce:active:scale-100'
     : ''
 
   return (

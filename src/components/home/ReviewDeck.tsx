@@ -76,11 +76,11 @@ export function ReviewDeck({
             <>
               <div
                 aria-hidden="true"
-                className="absolute inset-2.5 rotate-[4deg] rounded-card bg-[#efe7db] shadow-soft"
+                className="absolute inset-2.5 rotate-[4deg] rounded-card bg-deck-back shadow-soft"
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-1.5 -rotate-3 rounded-card bg-[#f3ece1] shadow-soft"
+                className="absolute inset-1.5 -rotate-3 rounded-card bg-deck-mid shadow-soft"
               />
             </>
           )}

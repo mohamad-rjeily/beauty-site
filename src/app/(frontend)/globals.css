@@ -25,6 +25,9 @@
   --color-sage: #5e6b55;
   --color-earth: #3a2a22;
   --color-earth-soft: #c9b9a4;
+  /* The two stacked cards behind the review deck: between limestone and sand / paper. */
+  --color-deck-back: #efe7db;
+  --color-deck-mid: #f3ece1;
 
   --font-display: var(--font-display-face);
   --font-body: var(--font-body-face);
@@ -39,6 +42,9 @@
     0 30px 60px rgb(42 37 33 / 0.14);
   --shadow-on-clay:
     0 1px 2px rgb(60 22 8 / 0.2), 0 10px 24px rgb(60 22 8 / 0.22), 0 30px 60px rgb(60 22 8 / 0.18);
+  /* A card on the terracotta field while hovered (painted on a ::before layer that fades in). */
+  --shadow-on-clay-hover:
+    0 2px 4px rgb(60 22 8 / 0.22), 0 16px 32px rgb(60 22 8 / 0.26), 0 40px 72px rgb(60 22 8 / 0.2);
   --shadow-bar: 0 -1px 0 rgb(42 37 33 / 0.08), 0 -10px 30px rgb(42 37 33 / 0.12);
 
   --radius-card: 1.25rem;
