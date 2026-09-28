@@ -116,6 +116,7 @@ export function BookingDone({
             <PillLink
               href={whatsappHref(whatsappNumber, whatsappMessage(sent, locale, t))}
               external
+              variant="sage"
               className="w-full sm:w-auto"
             >
               <Icon name="whatsapp" size={20} /> {b.sendOnWhatsApp}

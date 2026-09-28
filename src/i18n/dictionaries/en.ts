@@ -112,7 +112,7 @@ export const en = {
     notes: 'Notes (optional)',
     notesHint: 'Anything she should know about your order.',
     deliveryFee: 'Delivery',
-    deliveryFeeOnWhatsApp: 'Delivery fee confirmed on WhatsApp',
+    deliveryFeeOnWhatsApp: 'Confirmed on WhatsApp',
     total: 'Total',
     totalPlusDelivery: '{total} + delivery',
     cash: 'Cash only, in US dollars, paid on delivery or pickup. Nothing is paid online.',

@@ -8,8 +8,8 @@ export const DeliveryFeeNote = () => {
   return (
     <p className="field-description" style={{ marginBottom: 'var(--base)' }}>
       {i18n.language === 'ar'
-        ? 'اتركيها فارغة إذا كانت تختلف حسب المنطقة: تقرأ العميلة "رسوم التوصيل تُؤكَّد على واتساب".'
-        : 'Leave it empty if it depends on the area: customers then read "Delivery fee confirmed on WhatsApp".'}
+        ? 'اتركيها فارغة إذا كانت تختلف حسب المنطقة: تقرأ العميلة بجانب التوصيل "تُؤكَّد على واتساب".'
+        : 'Leave it empty if it depends on the area: customers then read "Delivery: Confirmed on WhatsApp".'}
     </p>
   )
 }

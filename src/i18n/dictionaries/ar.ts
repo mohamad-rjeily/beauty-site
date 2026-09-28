@@ -117,7 +117,7 @@ export const ar: Dictionary = {
     notes: 'ملاحظات (اختياري)',
     notesHint: 'أي شيء تودّين أن تعرفه عن طلبكِ.',
     deliveryFee: 'التوصيل',
-    deliveryFeeOnWhatsApp: 'رسوم التوصيل تُؤكَّد على واتساب',
+    deliveryFeeOnWhatsApp: 'تُؤكَّد على واتساب',
     total: 'المجموع',
     totalPlusDelivery: '{total} + التوصيل',
     cash: 'الدفع نقداً فقط، بالدولار الأميركي، عند التوصيل أو الاستلام. لا دفع عبر الإنترنت.',

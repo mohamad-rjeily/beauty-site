@@ -45,10 +45,18 @@ export function OrderDone({
   // Short rows (a product line, a price) sit on one line; long ones stack label above value.
   type Row = { label: string; value: ReactNode; stacked?: boolean }
   const rows: Row[] = [
-    ...order.lines.map((l): Row => ({ label: `${l.quantity} × ${l.name}`, value: price(l.lineCents) })),
+    ...order.lines.map((l): Row => ({
+      label: `${l.quantity} × ${l.name}`,
+      value: price(l.lineCents),
+    })),
     ...(fee.kind === 'amount' ? [{ label: c.deliveryFee, value: price(fee.cents) }] : []),
     ...(fee.kind === 'onWhatsApp'
-      ? [{ label: c.deliveryFee, value: c.deliveryFeeOnWhatsApp, stacked: true }]
+      ? [
+          {
+            label: c.deliveryFee,
+            value: <span className="font-normal text-ink-soft">{c.deliveryFeeOnWhatsApp}</span>,
+          },
+        ]
       : []),
     {
       label: c.total,
@@ -58,7 +66,11 @@ export function OrderDone({
           : price(order.totalCents),
     },
     order.fulfillment === 'delivery' && order.address
-      ? { label: c.message.deliverTo, value: addressLine(order.address, c.message, rtl), stacked: true }
+      ? {
+          label: c.message.deliverTo,
+          value: addressLine(order.address, c.message, rtl),
+          stacked: true,
+        }
       : { label: c.pickup, value: c.message.pickup, stacked: true },
     { label: c.message.name, value: order.name, stacked: true },
     { label: c.message.phone, value: <Ltr>{formatPhone(order.phone)}</Ltr>, stacked: true },
@@ -95,6 +107,7 @@ export function OrderDone({
             <PillLink
               href={whatsappHref(whatsappNumber, buildOrderMessage(order, c.message, rtl))}
               external
+              variant="sage"
               className="w-full sm:w-auto"
             >
               <Icon name="whatsapp" size={20} /> {c.sendOnWhatsApp}
@@ -113,12 +126,14 @@ export function OrderDone({
           <div
             key={i}
             className={`border-t border-sand py-3.5 first:border-t-0 ${
-              row.stacked
-                ? 'flex flex-col gap-0.5'
-                : 'flex items-baseline justify-between gap-4'
+              row.stacked ? 'flex flex-col gap-0.5' : 'flex items-baseline justify-between gap-4'
             }`}
           >
-            <dt className={row.stacked ? 'text-[0.8125rem] text-ink-soft' : 'min-w-0 text-[0.9375rem]'}>
+            <dt
+              className={
+                row.stacked ? 'text-[0.8125rem] text-ink-soft' : 'min-w-0 text-[0.9375rem]'
+              }
+            >
               {row.label}
             </dt>
             <dd
