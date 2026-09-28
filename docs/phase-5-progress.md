@@ -1,9 +1,7 @@
 # Phase 5 · Shop — progress
 
 ## Where we stopped (2026-09-28)
-- Checkpoint 4 done (`57ac4b5`). Waiting for the owner's review of the checkout screenshots
-  (`.impeccable/review/co-*.png`) and the EN/AR WhatsApp messages.
-- Next step: checkpoint 5 (admin order view + demo orders).
+- Checkpoint 5 done. Next step: checkpoint 6 (rule + unit tests).
 - Open notes: a few "E2E-TEST" orders are left in the dev database (the checkpoint 7 clean-up
   removes them); no delivery fee is set in Site settings yet.
 
@@ -55,9 +53,15 @@ Resume with "continue where you stopped": pick up the first unchecked item.
 - [x] Commit, then send phone screenshots + one EN and one AR WhatsApp message
 
 ## Checkpoint 5 · Admin + demo data
-- [ ] Orders list columns, order summary panel
-- [ ] demo:seed / demo:clear orders
-- [ ] Commit
+- [x] Checkout fixes first (own commit aa9faae): sage WhatsApp buttons on both success
+      screens, delivery value "Confirmed on WhatsApp"
+- [x] Orders list: two columns (stacked order cell + status badge), search by number/phone
+- [x] Order detail: summary panel on top (lines, total, customer, sage WhatsApp chat link,
+      full address, notes), status in the main column, product lines collapsed
+- [x] Stock error names the product (admin language) with needed / left; toast shows it
+- [x] Arabic admin on phones: list table no longer pushed off screen (Payload RTL bug)
+- [x] demo:seed / demo:clear orders (every status, full address, a stock clash)
+- [x] Commit, screenshots (`npm run screenshots:admin`)
 
 ## Checkpoint 6 · Rule + unit tests
 - [ ] verify:rules shop checks (incl. fashion refused)
@@ -70,6 +74,11 @@ Resume with "continue where you stopped": pick up the first unchecked item.
 - [ ] Full finish run; commit
 
 ## Notes
+- Checkpoint 5: `npm run screenshots:admin` logs in as a temporary admin (created and deleted
+  like the e2e runs) and writes `.impeccable/review/admin-*.png`. The e2e clean-up now also
+  deletes E2E-TEST orders and document edit locks of deleted accounts (a lock whose user is
+  gone crashes that document's admin page). Toast messages must not contain ":" (Payload
+  turns "a: b, c" into a list).
 - Migrations `20260927_214509_shop` + `20260927_214521_shop_drop_address` (split so the schema
   tool never prompts about a rename). Applied to the dev database.
 - Checkpoint 2: Shop page texts tab in `pages` (migration `20260927_222744_shop_page_texts`).

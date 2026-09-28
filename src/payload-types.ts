@@ -321,6 +321,10 @@ export interface Order {
   orderNumber?: string | null;
   checkoutId?: string | null;
   locale?: ('en' | 'ar') | null;
+  /**
+   * Confirming takes the products out of stock; cancelling a confirmed order puts them back. Delivered is final.
+   */
+  status: 'new' | 'confirmed' | 'delivered' | 'cancelled';
   customerName: string;
   /**
    * A Lebanese number as usual (03 123 456), or + and the country code for another country.
@@ -358,10 +362,6 @@ export interface Order {
     amount?: number | null;
     currency?: 'USD' | null;
   };
-  /**
-   * Confirming takes the products out of stock; cancelling a confirmed order puts them back. Delivered is final.
-   */
-  status: 'new' | 'confirmed' | 'delivered' | 'cancelled';
   updatedAt: string;
   createdAt: string;
 }
@@ -685,6 +685,7 @@ export interface OrdersSelect<T extends boolean = true> {
   orderNumber?: T;
   checkoutId?: T;
   locale?: T;
+  status?: T;
   customerName?: T;
   phone?: T;
   fulfillment?: T;
@@ -726,7 +727,6 @@ export interface OrdersSelect<T extends boolean = true> {
         amount?: T;
         currency?: T;
       };
-  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }

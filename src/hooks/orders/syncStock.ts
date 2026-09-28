@@ -1,5 +1,5 @@
 import { sql } from '@payloadcms/db-postgres'
-import { ValidationError, type CollectionBeforeChangeHook } from 'payload'
+import { ValidationError, type CollectionBeforeChangeHook, type PayloadRequest } from 'payload'
 
 import { getTransactionDb, relationId } from '@/lib/db'
 import { msg } from '@/lib/i18n'
@@ -9,6 +9,34 @@ import type { Order } from '@/payload-types'
 const HOLDS_STOCK = new Set<Order['status']>(['confirmed', 'delivered'])
 
 type StockLine = { product?: unknown; quantity: number; productName?: string | null }
+
+/**
+ * The error shown when confirming needs more than is in stock, in the admin's language:
+ * which product, how many this order needs, how many are left, and what she can do.
+ */
+const shortStock = (req: PayloadRequest, name: string, needed: number, left: number) =>
+  new ValidationError({
+    collection: 'orders',
+    errors: [
+      {
+        path: 'status',
+        // No ":" in these texts: the admin toast turns "a: b, c" into a bulleted list.
+        message:
+          left > 0
+            ? msg(
+                req,
+                `Can't confirm yet. This order needs ${needed} of "${name}", and only ${left} ${left === 1 ? 'is' : 'are'} left. Add stock on the product, or cancel the order.`,
+                `لا يمكن تأكيد الطلب بعد. يحتاج ${needed} من "${name}"، وبقي ${left} فقط. أضيفي إلى مخزون المنتج، أو ألغي الطلب.`,
+              )
+            : msg(
+                req,
+                `Can't confirm yet. This order needs ${needed} of "${name}", and none are left. Add stock on the product, or cancel the order.`,
+                `لا يمكن تأكيد الطلب بعد. يحتاج ${needed} من "${name}"، ولم يبقَ منه شيء. أضيفي إلى مخزون المنتج، أو ألغي الطلب.`,
+              ),
+      },
+    ],
+    req,
+  })
 
 /**
  * Delivered orders are final: any status change away from "delivered" is refused.
@@ -25,6 +53,7 @@ type StockLine = { product?: unknown; quantity: number; productName?: string | n
  *   order at once can't both take stock: the second waits, then sees "confirmed".
  * - `UPDATE ... WHERE stock >= qty` is a single atomic statement, so two different
  *   orders can never oversell the last items: one of them updates 0 rows and fails.
+ *   A failure throws, which rolls back the stock already taken for the other products.
  */
 export const syncStock: CollectionBeforeChangeHook<Order> = async ({
   data,
@@ -72,37 +101,44 @@ export const syncStock: CollectionBeforeChangeHook<Order> = async ({
   const heldAfter = HOLDS_STOCK.has(to)
   if (heldBefore === heldAfter) return data
 
+  // One stock move per product: an order may list the same product on two lines.
+  const perProduct = new Map<number, { quantity: number; snapshotName: string }>()
   for (const line of lines) {
     const productId = relationId(line.product)
-    const quantity = line.quantity
-    const name = line.productName ?? '?'
-
-    if (heldAfter) {
-      const taken = productId
-        ? await db.execute(
-            sql`UPDATE products SET stock = stock - ${quantity} WHERE id = ${productId} AND stock >= ${quantity} RETURNING id`,
-          )
-        : { rows: [] }
-
-      if (taken.rows.length === 0) {
-        throw new ValidationError({
-          collection: 'orders',
-          errors: [
-            {
-              path: 'status',
-              message: msg(
-                req,
-                `Not enough stock of "${name}" to confirm this order.`,
-                `لا يوجد مخزون كافٍ من "${name}" لتأكيد هذا الطلب.`,
-              ),
-            },
-          ],
-          req,
-        })
-      }
-    } else if (productId) {
-      await db.execute(sql`UPDATE products SET stock = stock + ${quantity} WHERE id = ${productId}`)
+    if (!productId) {
+      if (heldAfter) throw shortStock(req, line.productName ?? '?', line.quantity, 0)
+      continue // the product was deleted: nothing to put back
     }
+    const entry = perProduct.get(productId)
+    perProduct.set(productId, {
+      quantity: (entry?.quantity ?? 0) + line.quantity,
+      snapshotName: entry?.snapshotName ?? line.productName ?? '?',
+    })
+  }
+
+  for (const [productId, { quantity, snapshotName }] of perProduct) {
+    if (!heldAfter) {
+      await db.execute(sql`UPDATE products SET stock = stock + ${quantity} WHERE id = ${productId}`)
+      continue
+    }
+    const taken = await db.execute(
+      sql`UPDATE products SET stock = stock - ${quantity} WHERE id = ${productId} AND stock >= ${quantity} RETURNING id`,
+    )
+    if (taken.rows.length > 0) continue
+
+    // Not enough: name the product in the admin's language, with what is left right now.
+    const product = await req.payload
+      .findByID({
+        collection: 'products',
+        id: productId,
+        depth: 0,
+        locale: req.i18n?.language === 'ar' ? 'ar' : 'en',
+        select: { name: true, stock: true },
+        overrideAccess: true,
+        req,
+      })
+      .catch(() => null)
+    throw shortStock(req, product?.name ?? snapshotName, quantity, product?.stock ?? 0)
   }
 
   return data

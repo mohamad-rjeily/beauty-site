@@ -1,0 +1,252 @@
+// Admin panel additions. Payload's theme variables keep light and dark mode working;
+// logical properties (inline-start/end) keep the Arabic admin right to left.
+
+// ── Orders list ─────────────────────────────────────────────────────────────
+.order-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 11rem;
+  padding-block: 2px;
+  color: var(--theme-text);
+  text-decoration: none;
+
+  &:hover .order-cell__name,
+  &:focus-visible .order-cell__name {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.order-cell__name {
+  font-weight: 600;
+}
+
+.order-cell__meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.625rem;
+  font-size: 0.8125rem;
+  color: var(--theme-elevation-600);
+}
+
+.order-cell__number {
+  letter-spacing: 0.06em;
+}
+
+.order-cell__total {
+  color: var(--theme-text);
+  font-weight: 600;
+}
+
+.order-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+// New needs her attention; the others are calmer.
+.order-status--new {
+  background: var(--theme-warning-100);
+  color: var(--theme-warning-800);
+}
+
+.order-status--confirmed {
+  background: var(--theme-success-100);
+  color: var(--theme-success-800);
+}
+
+.order-status--delivered {
+  background: var(--theme-elevation-100);
+  color: var(--theme-elevation-800);
+}
+
+.order-status--cancelled {
+  background: var(--theme-error-50);
+  color: var(--theme-error-750);
+}
+
+// ── Order summary (top of an order) ────────────────────────────────────────
+.order-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-block-end: calc(var(--base) * 1.5);
+  padding: 1rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 12px;
+  background: var(--theme-elevation-0);
+
+  p,
+  dl,
+  dd {
+    margin: 0;
+  }
+}
+
+.order-summary__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+}
+
+.order-summary__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.order-summary__number {
+  letter-spacing: 0.06em;
+}
+
+.order-summary__when {
+  flex-basis: 100%;
+  font-size: 0.8125rem;
+  color: var(--theme-elevation-600);
+}
+
+.order-summary__lines {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-summary__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.5rem;
+  border-block-start: 1px solid var(--theme-elevation-100);
+
+  &:first-child {
+    border-block-start: 0;
+  }
+
+  dt {
+    min-width: 0;
+  }
+
+  dd {
+    flex-shrink: 0;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.order-summary__row--total {
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-block-start-color: var(--theme-elevation-250);
+}
+
+.order-summary__soft {
+  color: var(--theme-elevation-600);
+}
+
+.order-summary__cash {
+  margin-block-start: -0.5rem !important;
+  font-size: 0.8125rem;
+}
+
+.order-summary__block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--theme-elevation-100);
+}
+
+.order-summary__label {
+  font-size: 0.8125rem;
+  color: var(--theme-elevation-600);
+}
+
+.order-summary__name {
+  font-weight: 600;
+}
+
+.order-summary__phone a {
+  color: var(--theme-text);
+  font-variant-numeric: tabular-nums;
+}
+
+// WhatsApp is always the site's sage (DESIGN.md: sage = WhatsApp only).
+.order-summary__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  margin-block-start: 0.5rem;
+  padding-inline: 1.25rem;
+  border-radius: 999px;
+  background: #5e6b55;
+  color: #fffcf7;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 200ms ease;
+
+  &:hover {
+    background: #4d5946;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #5e6b55;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 600px) {
+    align-self: stretch;
+  }
+}
+
+.order-summary__address {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  width: 100%;
+
+  div {
+    display: contents;
+  }
+
+  dt {
+    color: var(--theme-elevation-600);
+  }
+
+  dd {
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+}
+
+.order-summary__notes {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+// ── Arabic admin on phones ─────────────────────────────────────────────────
+// On narrow screens Payload stretches list tables to the screen edge with physical
+// `left` / `padding-left` only, which in right-to-left layouts pushes the table 32px past
+// the left edge (and lets the page scroll sideways). Mirror it for Arabic.
+@media (max-width: 1024px) {
+  html[dir='rtl'] {
+    .collection-list,
+    .collection-folder-list,
+    .folder-list,
+    .versions {
+      .table {
+        left: auto;
+        right: calc(var(--gutter-h) * -1);
+        padding-left: 0;
+        padding-right: var(--gutter-h);
+      }
+    }
+  }
+}

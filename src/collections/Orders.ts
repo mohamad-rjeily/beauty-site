@@ -5,6 +5,7 @@ import { moneyField } from '@/fields/money'
 import { phoneField } from '@/fields/phone'
 import { priceOrder } from '@/hooks/orders/priceOrder'
 import { syncStock } from '@/hooks/orders/syncStock'
+import { fieldMessageAfterError } from '@/lib/adminErrors'
 import { msg, t } from '@/lib/i18n'
 
 export const ORDER_STATUSES = [
@@ -43,7 +44,9 @@ export const Orders: CollectionConfig = {
   admin: {
     useAsTitle: 'customerName',
     group: t('Shop', 'المتجر'),
-    defaultColumns: ['createdAt', 'customerName', 'fulfillment', 'area', 'status'],
+    // Two columns fit a phone: the first stacks name, number, total, date and area.
+    defaultColumns: ['customerName', 'status'],
+    listSearchableFields: ['customerName', 'orderNumber', 'phone'],
   },
   defaultSort: '-createdAt',
   access: {
@@ -54,6 +57,7 @@ export const Orders: CollectionConfig = {
   },
   hooks: {
     beforeChange: [priceOrder, syncStock],
+    afterError: [fieldMessageAfterError],
   },
   fields: [
     {
@@ -88,6 +92,27 @@ export const Orders: CollectionConfig = {
       admin: { readOnly: true, position: 'sidebar' },
     },
     {
+      name: 'summary',
+      type: 'ui',
+      admin: { components: { Field: '/components/admin/OrderSummary#OrderSummary' } },
+    },
+    {
+      name: 'status',
+      type: 'select',
+      label: t('Status', 'الحالة'),
+      required: true,
+      defaultValue: 'new',
+      options: ORDER_STATUSES,
+      // In the main column, right under the summary: on a phone the sidebar comes last.
+      admin: {
+        components: { Cell: '/components/admin/OrderStatusCell#OrderStatusCell' },
+        description: t(
+          'Confirming takes the products out of stock; cancelling a confirmed order puts them back. Delivered is final.',
+          'التأكيد يخصم المنتجات من المخزون؛ إلغاء طلب مؤكد يعيدها. حالة "تم التسليم" نهائية.',
+        ),
+      },
+    },
+    {
       type: 'row',
       fields: [
         {
@@ -95,6 +120,7 @@ export const Orders: CollectionConfig = {
           type: 'text',
           label: t('Customer name', 'اسم العميلة'),
           required: true,
+          admin: { components: { Cell: '/components/admin/OrderCell#OrderCell' } },
         },
         phoneField(),
       ],
@@ -157,6 +183,8 @@ export const Orders: CollectionConfig = {
       // Frozen after creation: to change what was ordered, cancel and create a new order.
       access: { update: never },
       admin: {
+        // The summary at the top shows every line; the rows are there to check the details.
+        initCollapsed: true,
         description: t(
           'Names and prices are copied from the products when the order is created, and never change afterwards.',
           'تُنسخ الأسماء والأسعار من المنتجات عند إنشاء الطلب، ولا تتغير بعد ذلك.',
@@ -220,21 +248,6 @@ export const Orders: CollectionConfig = {
       admin: {
         position: 'sidebar',
         components: { Field: '/components/admin/CashOnlyNote#CashOnlyNote' },
-      },
-    },
-    {
-      name: 'status',
-      type: 'select',
-      label: t('Status', 'الحالة'),
-      required: true,
-      defaultValue: 'new',
-      options: ORDER_STATUSES,
-      admin: {
-        position: 'sidebar',
-        description: t(
-          'Confirming takes the products out of stock; cancelling a confirmed order puts them back. Delivered is final.',
-          'التأكيد يخصم المنتجات من المخزون؛ إلغاء طلب مؤكد يعيدها. حالة "تم التسليم" نهائية.',
-        ),
       },
     },
   ],

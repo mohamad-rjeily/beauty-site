@@ -23,6 +23,9 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { DollarsCell as DollarsCell_71c77e17f7575799798ed584962d918b } from '../../../components/admin/DollarsCell'
 import { DollarsField as DollarsField_344934367b5809a66f09cc307abd1e1f } from '../../../components/admin/DollarsField'
+import { OrderSummary as OrderSummary_1999d0bc4395900ada89eec19782e4da } from '../../../components/admin/OrderSummary'
+import { OrderStatusCell as OrderStatusCell_6dac7502ced12b79824a8e14afabc344 } from '../../../components/admin/OrderStatusCell'
+import { OrderCell as OrderCell_b5bc06e95a0e4d878a6e7d87820a3897 } from '../../../components/admin/OrderCell'
 import { CashOnlyNote as CashOnlyNote_7f239d134560680617ccee06b7b81816 } from '../../../components/admin/CashOnlyNote'
 import { DeliveryFeeNote as DeliveryFeeNote_d6fffbde4c96a6d60aeae36c77d7bba3 } from '../../../components/admin/DeliveryFeeNote'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -54,6 +57,9 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/DollarsCell#DollarsCell": DollarsCell_71c77e17f7575799798ed584962d918b,
   "/components/admin/DollarsField#DollarsField": DollarsField_344934367b5809a66f09cc307abd1e1f,
+  "/components/admin/OrderSummary#OrderSummary": OrderSummary_1999d0bc4395900ada89eec19782e4da,
+  "/components/admin/OrderStatusCell#OrderStatusCell": OrderStatusCell_6dac7502ced12b79824a8e14afabc344,
+  "/components/admin/OrderCell#OrderCell": OrderCell_b5bc06e95a0e4d878a6e7d87820a3897,
   "/components/admin/CashOnlyNote#CashOnlyNote": CashOnlyNote_7f239d134560680617ccee06b7b81816,
   "/components/admin/DeliveryFeeNote#DeliveryFeeNote": DeliveryFeeNote_d6fffbde4c96a6d60aeae36c77d7bba3,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1

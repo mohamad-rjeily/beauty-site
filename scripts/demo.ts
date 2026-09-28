@@ -11,6 +11,10 @@
  * Booking demo: realistic working hours (with a lunch break and one closed day) replace the
  * availability settings, and a few DEMO bookings fill some of the next free times, so the
  * booking page shows taken slots. demo:clear deletes them and restores the owner's settings.
+ *
+ * Shop demo: orders in every status (one delivery order with a full address), made through
+ * the same rules as the checkout, so stock moves exactly as it would for real. Two new
+ * orders want the last turmeric masks: confirming the second one shows the stock error.
  */
 import config from '@payload-config'
 import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
@@ -27,7 +31,15 @@ const STATE_FILE = '.demo-seed.json'
 
 type GlobalSnapshot<T> = { existed: boolean; en?: T; ar?: T }
 type Collection =
-  'media' | 'services' | 'categories' | 'products' | 'testimonials' | 'gallery' | 'faq' | 'bookings'
+  | 'media'
+  | 'services'
+  | 'categories'
+  | 'products'
+  | 'testimonials'
+  | 'gallery'
+  | 'faq'
+  | 'bookings'
+  | 'orders'
 type GlobalSlug = 'site-settings' | 'home' | 'about' | 'pages'
 type State = {
   created: Record<Collection, number[]>
@@ -234,6 +246,7 @@ const seed = async () => {
       gallery: [],
       faq: [],
       bookings: [],
+      orders: [],
     },
     siteSettings: await snapshot<SiteSetting>('site-settings', 'site_settings'),
     home: await snapshot<Home>('home', 'home'),
@@ -578,6 +591,7 @@ const seed = async () => {
       palette: 'sage',
     },
   ] as const
+  const productIds: Partial<Record<(typeof products)[number]['en'], number>> = {}
   for (const p of products) {
     const image = await uploadDemo(
       state,
@@ -592,7 +606,14 @@ const seed = async () => {
       p.en === 'DEMO Rose clay mask'
         ? [
             image,
-            await uploadDemo(state, 'Rose clay mask, jar', 'sand', 800, 960, 'ماسك الطين الوردي، العلبة'),
+            await uploadDemo(
+              state,
+              'Rose clay mask, jar',
+              'sand',
+              800,
+              960,
+              'ماسك الطين الوردي، العلبة',
+            ),
           ]
         : [image]
     const homemade =
@@ -649,7 +670,109 @@ const seed = async () => {
       } as never,
     })
     state.created.products.push(doc.id)
+    productIds[p.en] = doc.id
     save(state)
+  }
+
+  // Orders, created like the checkout does (status "new", prices from the products), then
+  // moved on by status only, so stock goes down on confirm exactly as for a real order.
+  type DemoOrder = {
+    name: string
+    locale: 'en' | 'ar'
+    phone: string
+    items: [(typeof products)[number]['en'], number][]
+    address?: { area: string; street: string; building?: string; floor?: string; landmark?: string }
+    notes?: string
+    status?: 'confirmed' | 'delivered' | 'cancelled'
+  }
+  const demoOrders: DemoOrder[] = [
+    {
+      name: 'DEMO Layla',
+      locale: 'en',
+      phone: '+96171000001',
+      items: [
+        ['DEMO Rose clay mask', 2],
+        ['DEMO Hydrating serum', 1],
+      ],
+      address: {
+        area: 'DEMO Achrafieh',
+        street: 'DEMO Sursock street',
+        building: 'DEMO Rose building',
+        floor: '3',
+        landmark: 'DEMO across from the pharmacy',
+      },
+      notes: 'DEMO note: please call when you are downstairs.',
+    },
+    {
+      name: 'DEMO نور',
+      locale: 'ar',
+      phone: '+96171000002',
+      items: [['DEMO Oat & honey mask', 1]],
+    },
+    {
+      name: 'DEMO Maya',
+      locale: 'en',
+      phone: '+96171000003',
+      items: [
+        ['DEMO Cleansing balm', 1],
+        ['DEMO Brow gel', 1],
+      ],
+      address: { area: 'DEMO Jounieh', street: 'DEMO Main road', building: 'DEMO Cedar tower' },
+      status: 'confirmed',
+    },
+    {
+      name: 'DEMO رنا',
+      locale: 'ar',
+      phone: '+96171000004',
+      items: [['DEMO Green tea mask', 2]],
+      address: { area: 'DEMO الحمرا', street: 'DEMO شارع الحمرا', floor: '2' },
+      status: 'delivered',
+    },
+    {
+      name: 'DEMO Sara',
+      locale: 'en',
+      phone: '+96171000005',
+      items: [['DEMO Brow gel', 1]],
+      status: 'cancelled',
+    },
+    // The stock clash: 4 turmeric masks in stock, 2 + 3 ordered. Both orders were accepted
+    // (stock only moves on confirm); the second is confirmed, so the first can't be.
+    {
+      name: 'DEMO دانة',
+      locale: 'ar',
+      phone: '+96171000006',
+      items: [['DEMO Turmeric glow mask', 2]],
+    },
+    {
+      name: 'DEMO Hiba',
+      locale: 'en',
+      phone: '+96171000007',
+      items: [['DEMO Turmeric glow mask', 3]],
+      address: { area: 'DEMO Byblos', street: 'DEMO Old souk street' },
+      status: 'confirmed',
+    },
+  ]
+  for (const o of demoOrders) {
+    const order = await payload.create({
+      collection: 'orders',
+      locale: o.locale,
+      data: {
+        customerName: o.name,
+        phone: o.phone,
+        fulfillment: o.address ? 'delivery' : 'pickup',
+        ...o.address,
+        notes: o.notes,
+        items: o.items.map(([product, quantity]) => ({ product: productIds[product], quantity })),
+      } as never,
+    })
+    state.created.orders.push(order.id)
+    save(state)
+    if (o.status === 'delivered') {
+      await payload.update({ collection: 'orders', id: order.id, data: { status: 'confirmed' } })
+    }
+    if (o.status) {
+      await payload.update({ collection: 'orders', id: order.id, data: { status: o.status } })
+    }
   }
 
   // Reviews
@@ -954,8 +1077,9 @@ const clear = async () => {
       data: editable(state.availability) as never,
     })
   }
-  // Bookings first: they point at the demo services.
+  // Bookings and orders first: they point at the demo services and products.
   const order = [
+    'orders',
     'bookings',
     'faq',
     'gallery',

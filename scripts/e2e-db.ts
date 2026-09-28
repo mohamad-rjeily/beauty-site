@@ -4,8 +4,10 @@
  *   (setup)                     used by e2e/global-setup.ts: creates the temporary admin
  *
  * clean deletes ONLY:
- * - bookings whose customer name starts with "E2E-TEST"
- * - admin accounts e2e-admin-*@example.test
+ * - bookings and orders whose customer name starts with "E2E-TEST" (orders never moved stock
+ *   unless a test confirmed them; those tests put the stock back themselves)
+ * - admin accounts e2e-admin-*@example.test, with their document edit locks (and any lock
+ *   left by an account that no longer exists)
  * - rate-limit rows of the fake test IPs (e2e/visitors.ts)
  * DEMO content and real records are never touched.
  *
@@ -35,24 +37,28 @@ const payload = await getPayload({ config })
 const clean = async () => {
   // Payload's `contains` is case-insensitive and matches anywhere: find, keep only names that
   // really START with the prefix, then delete exactly those ids.
-  const found = await payload.find({
-    collection: 'bookings',
-    overrideAccess: true,
-    depth: 0,
-    pagination: false,
-    select: { customerName: true },
-    where: { customerName: { contains: TEST_PREFIX } },
-  })
-  const bookingIds = found.docs
-    .filter((b) => b.customerName?.startsWith(TEST_PREFIX))
-    .map((b) => b.id)
-  const bookings = bookingIds.length
-    ? await payload.delete({
-        collection: 'bookings',
-        overrideAccess: true,
-        where: { id: { in: bookingIds } },
-      })
-    : { docs: [] }
+  const deleteTestRecords = async (collection: 'bookings' | 'orders') => {
+    const found = await payload.find({
+      collection,
+      overrideAccess: true,
+      depth: 0,
+      pagination: false,
+      select: { customerName: true },
+      where: { customerName: { contains: TEST_PREFIX } },
+    })
+    const ids = found.docs
+      .filter((doc) => doc.customerName?.startsWith(TEST_PREFIX))
+      .map((doc) => doc.id)
+    if (!ids.length) return 0
+    const deleted = await payload.delete({
+      collection,
+      overrideAccess: true,
+      where: { id: { in: ids } },
+    })
+    return deleted.docs.length
+  }
+  const bookings = await deleteTestRecords('bookings')
+  const orders = await deleteTestRecords('orders')
 
   const accounts = await payload.find({
     collection: 'users',
@@ -64,6 +70,37 @@ const clean = async () => {
   const userIds = accounts.docs
     .filter((u) => u.email.startsWith(ADMIN_EMAIL_PREFIX) && u.email.endsWith(ADMIN_EMAIL_DOMAIN))
     .map((u) => u.id)
+  // Edit locks (Payload locks a document while someone has it open) go first: a lock whose
+  // user no longer exists makes that document's admin page crash.
+  const locks = await payload.find({
+    collection: 'payload-locked-documents',
+    overrideAccess: true,
+    depth: 0,
+    pagination: false,
+  })
+  const remainingUsers = await payload.find({
+    collection: 'users',
+    overrideAccess: true,
+    depth: 0,
+    pagination: false,
+    select: {},
+    where: { id: { not_in: userIds } },
+  })
+  const keep = new Set(remainingUsers.docs.map((u) => u.id))
+  const lockIds = locks.docs
+    .filter((lock) => {
+      const user = lock.user?.value
+      return !user || !keep.has(typeof user === 'object' ? user.id : user)
+    })
+    .map((lock) => lock.id)
+  if (lockIds.length) {
+    await payload.delete({
+      collection: 'payload-locked-documents',
+      overrideAccess: true,
+      where: { id: { in: lockIds } },
+    })
+  }
+
   const users = userIds.length
     ? await payload.delete({
         collection: 'users',
@@ -85,7 +122,7 @@ const clean = async () => {
   )
 
   console.log(
-    `E2E clean-up: ${bookings.docs.length} booking(s), ${users.docs.length} test admin(s), ` +
+    `E2E clean-up: ${bookings} booking(s), ${orders} order(s), ${users.docs.length} test admin(s), ${lockIds.length} edit lock(s), ` +
       `${limits.rowCount ?? 0} rate-limit row(s) deleted.`,
   )
 }
