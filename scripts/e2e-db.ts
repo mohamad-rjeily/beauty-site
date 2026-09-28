@@ -4,20 +4,24 @@
  *   (setup)                     used by e2e/global-setup.ts: creates the temporary admin
  *
  * clean deletes ONLY:
- * - bookings and orders whose customer name starts with "E2E-TEST" (orders never moved stock
- *   unless a test confirmed them; those tests put the stock back themselves)
+ * - bookings and orders whose customer name starts with "E2E-TEST", and products whose name
+ *   does
  * - admin accounts e2e-admin-*@example.test, with their document edit locks (and any lock
  *   left by an account that no longer exists)
  * - rate-limit rows of the fake test IPs (e2e/visitors.ts)
+ * and puts every product's stock and price back as they were when the run started (the
+ * shop tests confirm orders and change prices; a crashed run is repaired by the next one).
  * DEMO content and real records are never touched.
  *
  * setup first checks the data the suite needs (an active slot service, an active request
- * service, a WhatsApp number) and stops the run with a clear message when one is missing.
- * It then reads the account's email and password from E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD
- * (generated per run by the global setup) and never prints them.
+ * service, a WhatsApp number, two products on sale with stock) and stops the run with a clear
+ * message when one is missing. It saves the products' stock and price, then reads the
+ * account's email and password from E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD (generated per run by
+ * the global setup) and never prints them.
  */
 import config from '@payload-config'
 import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { getPayload } from 'payload'
 
 import { assertTestDatabase } from '../e2e/guard'
@@ -28,11 +32,44 @@ import {
   TEST_VISITOR_IPS,
 } from '../e2e/visitors'
 import { hashVisitorKey } from '../src/lib/rateLimit'
+import { publicProductWhere } from '../src/lib/shop'
 
 assertTestDatabase()
 
 const command = process.argv.at(-1)
 const payload = await getPayload({ config })
+const db = (payload.db as unknown as PostgresAdapter).drizzle
+
+/** Stock and price of every product when the run started (not a secret: no customer data). */
+const PRODUCTS_SNAPSHOT = 'test-results/.e2e-products.json'
+type ProductSnapshot = { id: number; stock: number; price: number }[]
+
+const saveProducts = async () => {
+  const rows = await db.execute(sql`SELECT id, stock, price_amount FROM products`)
+  const snapshot: ProductSnapshot = rows.rows.map((r) => ({
+    id: Number(r.id),
+    stock: Number(r.stock),
+    price: Number(r.price_amount),
+  }))
+  mkdirSync('test-results', { recursive: true })
+  writeFileSync(PRODUCTS_SNAPSHOT, JSON.stringify(snapshot))
+}
+
+/** Direct SQL on purpose: a repair of test changes, not a stock movement (no hooks). */
+const restoreProducts = async (): Promise<number> => {
+  if (!existsSync(PRODUCTS_SNAPSHOT)) return 0
+  const snapshot = JSON.parse(readFileSync(PRODUCTS_SNAPSHOT, 'utf8')) as ProductSnapshot
+  let changed = 0
+  for (const p of snapshot) {
+    const res = await db.execute(
+      sql`UPDATE products SET stock = ${p.stock}, price_amount = ${p.price}
+          WHERE id = ${p.id} AND (stock <> ${p.stock} OR price_amount <> ${p.price})`,
+    )
+    changed += res.rowCount ?? 0
+  }
+  rmSync(PRODUCTS_SNAPSHOT)
+  return changed
+}
 
 const clean = async () => {
   // Payload's `contains` is case-insensitive and matches anywhere: find, keep only names that
@@ -59,6 +96,26 @@ const clean = async () => {
   }
   const bookings = await deleteTestRecords('bookings')
   const orders = await deleteTestRecords('orders')
+
+  // Products a test made (after the orders that may point at them).
+  const testProducts = await payload.find({
+    collection: 'products',
+    overrideAccess: true,
+    depth: 0,
+    pagination: false,
+    select: { name: true },
+    where: { name: { contains: TEST_PREFIX } },
+  })
+  const productIds = testProducts.docs
+    .filter((doc) => doc.name?.startsWith(TEST_PREFIX))
+    .map((doc) => doc.id)
+  if (productIds.length) {
+    await payload.delete({
+      collection: 'products',
+      overrideAccess: true,
+      where: { id: { in: productIds } },
+    })
+  }
 
   const accounts = await payload.find({
     collection: 'users',
@@ -109,10 +166,9 @@ const clean = async () => {
       })
     : { docs: [] }
 
-  const db = (payload.db as unknown as PostgresAdapter).drizzle
   const keys = TEST_VISITOR_IPS.flatMap((ip) => {
     const key = hashVisitorKey(ip)
-    return [`book:${key}`, `slots:${key}`]
+    return [`book:${key}`, `slots:${key}`, `order:${key}`, `cart:${key}`]
   })
   const limits = await db.execute(
     sql`DELETE FROM "rate_limits" WHERE "key" IN (${sql.join(
@@ -121,9 +177,11 @@ const clean = async () => {
     )})`,
   )
 
+  const products = await restoreProducts()
+
   console.log(
-    `E2E clean-up: ${bookings} booking(s), ${orders} order(s), ${users.docs.length} test admin(s), ${lockIds.length} edit lock(s), ` +
-      `${limits.rowCount ?? 0} rate-limit row(s) deleted.`,
+    `E2E clean-up: ${bookings} booking(s), ${orders} order(s), ${productIds.length} product(s), ${users.docs.length} test admin(s), ${lockIds.length} edit lock(s), ` +
+      `${limits.rowCount ?? 0} rate-limit row(s) deleted; ${products} product(s) put back.`,
   )
 }
 
@@ -144,13 +202,21 @@ const setup = async () => {
   })
   const modes = new Set(active.docs.map((s) => s.bookingMode))
   const settings = await payload.findGlobal({ slug: 'site-settings', depth: 0 })
+  const onSale = await payload.count({
+    collection: 'products',
+    where: { and: [...(publicProductWhere.and ?? []), { stock: { greater_than_equal: 3 } }] },
+  })
   const missing = [
     !modes.has('slot') && 'No active time-slot service: run npm run demo:seed first.',
     !modes.has('request') && 'No active request service: run npm run demo:seed first.',
     !settings.whatsappNumber &&
       'No WhatsApp number: set a WhatsApp number in Site settings, or run npm run demo:seed first.',
+    onSale.totalDocs < 2 &&
+      'The shop tests need two products on sale with 3 or more in stock: run npm run demo:seed first.',
   ].filter(Boolean)
   if (missing.length) throw new Error(`E2E setup stopped.\n${missing.join('\n')}`)
+
+  await saveProducts()
 
   await payload.create({
     collection: 'users',

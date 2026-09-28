@@ -1,7 +1,7 @@
 # Phase 5 · Shop — progress
 
 ## Where we stopped (2026-09-28)
-- Checkpoint 6 done. Next step: checkpoint 7 (e2e).
+- Phase 5 done (checkpoints 1-7). Waiting for the owner's phone check (manual checklist).
 - Open notes: a few "E2E-TEST" orders are left in the dev database (the checkpoint 7 clean-up
   removes them); no delivery fee is set in Site settings yet.
 
@@ -69,11 +69,17 @@ Resume with "continue where you stopped": pick up the first unchecked item.
 - [ ] Commit
 
 ## Checkpoint 7 · E2E
-- [ ] e2e-db setup/clean (orders, stock snapshot)
-- [ ] Shop specs
-- [ ] Full finish run; commit
+- [x] e2e-db setup/clean: test orders and products, product stock + price snapshot (restored
+      at teardown, and by the next run after a crash), order/cart rate-limit rows
+- [x] Shop specs: e2e/shop-checkout.spec.ts (EN delivery from product pages, AR pickup,
+      double tap, missing address, price changed, stock lowered, fashion hidden) and
+      e2e/shop-admin.spec.ts (list + order page at phone width EN/AR, WhatsApp chat link,
+      confirm/cancel stock, delivered final, stock error EN/AR + toast, orders private)
+- [x] Full finish run: 72/72 (mobile + desktop); commit
 
 ## Notes
+- Checkpoint 7: the e2e API client keeps a second, never-logged-in request context for public
+  calls (the login cookie otherwise makes "anonymous" calls act as the admin).
 - Checkpoint 5: `npm run screenshots:admin` logs in as a temporary admin (created and deleted
   like the e2e runs) and writes `.impeccable/review/admin-*.png`. The e2e clean-up now also
   deletes E2E-TEST orders and document edit locks of deleted accounts (a lock whose user is
