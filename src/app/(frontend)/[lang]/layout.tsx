@@ -12,6 +12,7 @@ import { getDictionary } from '@/i18n'
 import { direction, isLocale, locales } from '@/i18n/config'
 import { getSiteChrome } from '@/lib/cms/site'
 import { siteUrl } from '@/lib/metadata'
+import { PalettePreview } from '@/preview/PalettePreview'
 
 import { fontVariables } from '../fonts'
 import '../globals.css'
@@ -63,8 +64,16 @@ export default async function SiteLayout({
 
   return (
     // data-scroll-behavior: page changes jump to the top instantly; only in-page links glide.
-    <html lang={lang} dir={direction(lang)} className={fontVariables} data-scroll-behavior="smooth">
+    // suppressHydrationWarning: the palette preview script may add data-palette before hydration.
+    <html
+      lang={lang}
+      dir={direction(lang)}
+      className={fontVariables}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body className="m-0">
+        <PalettePreview />
         <a
           href="#main"
           className="sr-only z-50 rounded-full bg-ink px-5 py-3 text-paper focus:not-sr-only focus:fixed focus:start-4 focus:top-4"
