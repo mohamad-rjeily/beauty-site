@@ -469,13 +469,13 @@ export function BookingFlow({
 
   // ── Moving between steps ──────────────────────────────────────────────────
   const headings = useRef<Partial<Record<StepKey, HTMLHeadingElement | null>>>({})
-  const arrived = useRef(false)
+  // The step on screen, starting with the one the page loads on. Only a change of step
+  // scrolls, never arrival: comparing (rather than a one-time "arrived" flag) also holds
+  // when the effect runs twice for the same step, as React's StrictMode does in development.
+  const shownStep = useRef(step)
   useEffect(() => {
-    // Not on arrival: only when the customer moves on, bring the new step into view.
-    if (!arrived.current) {
-      arrived.current = true
-      return
-    }
+    if (shownStep.current === step) return
+    shownStep.current = step
     const heading = headings.current[step]
     if (!heading) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
