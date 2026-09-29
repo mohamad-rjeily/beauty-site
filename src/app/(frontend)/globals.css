@@ -5,29 +5,32 @@
 @source not '../(payload)';
 
 /*
- * Design tokens: "C1 · Sunlit Arch". Colours are sampled from the approved design.
+ * Design tokens: "C1 · Sunlit Arch" layout in the owner's "Blush" palette: warm white grounds,
+ * blush tints and one deep rose. The token names come from the first (terracotta) palette and
+ * were kept to avoid churn: "clay" is now the rose accent, "earth" the deep plum-brown footer,
+ * "limestone" / "sand" the blush-white grounds. Sage stays for WhatsApp only.
  * Tailwind v4 turns every --color-* / --font-* / --shadow-* here into utilities
  * (bg-limestone, text-ink, font-display, shadow-lift, ...).
  */
 @theme {
-  --color-limestone: #ede6da;
-  --color-paper: #f7f2ea;
-  --color-paper-bright: #fffcf7;
-  --color-sand: #e2d8c9;
-  --color-ink: #2a2521;
-  --color-ink-soft: #574c41;
-  --color-line: #d6cbbb;
-  --color-stone: #a39480;
-  --color-clay: #9c4f32;
-  --color-clay-deep: #733820;
-  --color-clay-tint: #d9a58a;
-  --color-clay-mist: #f2ddd0;
+  --color-limestone: #f8f2f0;
+  --color-paper: #fcf9f7;
+  --color-paper-bright: #fffdfc;
+  --color-sand: #f1e3e1;
+  --color-ink: #2c2326;
+  --color-ink-soft: #5b4a4f;
+  --color-line: #e5d3d1;
+  --color-stone: #9a8387;
+  --color-clay: #a8475e;
+  --color-clay-deep: #7d3043;
+  --color-clay-tint: #e6b3bd;
+  --color-clay-mist: #f8e1e5;
   --color-sage: #5e6b55;
-  --color-earth: #3a2a22;
-  --color-earth-soft: #c9b9a4;
+  --color-earth: #3a2529;
+  --color-earth-soft: #d3bcc0;
   /* The two stacked cards behind the review deck: between limestone and sand / paper. */
-  --color-deck-back: #efe7db;
-  --color-deck-mid: #f3ece1;
+  --color-deck-back: #f3e8e6;
+  --color-deck-mid: #f6efed;
 
   --font-display: var(--font-display-face);
   --font-body: var(--font-body-face);
@@ -35,17 +38,17 @@
 
   /* Layered depth: a tight contact shadow plus soft ambient ones, always offset downward. */
   --shadow-soft:
-    0 1px 2px rgb(42 37 33 / 0.08), 0 8px 18px rgb(42 37 33 / 0.08),
-    0 24px 44px rgb(42 37 33 / 0.08);
+    0 1px 2px rgb(44 35 38 / 0.07), 0 8px 18px rgb(44 35 38 / 0.07),
+    0 24px 44px rgb(44 35 38 / 0.07);
   --shadow-lift:
-    0 1px 2px rgb(42 37 33 / 0.12), 0 10px 24px rgb(42 37 33 / 0.14),
-    0 30px 60px rgb(42 37 33 / 0.14);
+    0 1px 2px rgb(44 35 38 / 0.11), 0 10px 24px rgb(44 35 38 / 0.12),
+    0 30px 60px rgb(44 35 38 / 0.12);
   --shadow-on-clay:
-    0 1px 2px rgb(60 22 8 / 0.2), 0 10px 24px rgb(60 22 8 / 0.22), 0 30px 60px rgb(60 22 8 / 0.18);
-  /* A card on the terracotta field while hovered (painted on a ::before layer that fades in). */
+    0 1px 2px rgb(74 20 36 / 0.2), 0 10px 24px rgb(74 20 36 / 0.22), 0 30px 60px rgb(74 20 36 / 0.18);
+  /* A card on the rose field while hovered (painted on a ::before layer that fades in). */
   --shadow-on-clay-hover:
-    0 2px 4px rgb(60 22 8 / 0.22), 0 16px 32px rgb(60 22 8 / 0.26), 0 40px 72px rgb(60 22 8 / 0.2);
-  --shadow-bar: 0 -1px 0 rgb(42 37 33 / 0.08), 0 -10px 30px rgb(42 37 33 / 0.12);
+    0 2px 4px rgb(74 20 36 / 0.22), 0 16px 32px rgb(74 20 36 / 0.26), 0 40px 72px rgb(74 20 36 / 0.2);
+  --shadow-bar: 0 -1px 0 rgb(44 35 38 / 0.07), 0 -10px 30px rgb(44 35 38 / 0.1);
 
   --radius-card: 1.25rem;
 
@@ -130,8 +133,8 @@
 }
 
 @layer components {
-  /* Pre-rendered paper grain (public/textures/grain.webp, 7 KB). Painted with the section
-     background, so scrolling never re-rasterizes a live filter. */
+  /* Pre-rendered paper grain, light and rose-toned (public/textures/grain.webp). Painted with
+     the section background, so scrolling never re-rasterizes a live filter. */
   .grain {
     background-image: url('/textures/grain.webp');
     background-size: 128px 128px;
@@ -346,122 +349,4 @@
   .motion-fade {
     animation: fade-in 0.3s ease both;
   }
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
- * PALETTE PREVIEW (branch design-pink) — for the owner's colour choice only.
- * src/preview/PalettePreview.tsx sets <html data-palette="…"> from ?palette=blush|rose|petal
- * and <html data-photos="off"> from ?photos=off.
- * Without the attribute nothing below applies and the site keeps "C1 · Sunlit Arch".
- * To ship a winner: copy its values into @theme above, then delete this whole block,
- * public/textures/grain-light.webp (if unused), src/preview/ and the preview bits it lists.
- * Every text/ground pair is checked to WCAG AA (see the design-pink report).
- * ══════════════════════════════════════════════════════════════════════════ */
-
-/* Blush: warm white grounds, blush tints, a deep rose for actions and the one field. */
-:root[data-palette='blush'] {
-  --color-limestone: #f8f2f0;
-  --color-paper: #fcf9f7;
-  --color-paper-bright: #fffdfc;
-  --color-sand: #f1e3e1;
-  --color-ink: #2c2326;
-  --color-ink-soft: #5b4a4f;
-  --color-line: #e5d3d1;
-  --color-stone: #9a8387;
-  --color-clay: #a8475e;
-  --color-clay-deep: #7d3043;
-  --color-clay-tint: #e6b3bd;
-  --color-clay-mist: #f8e1e5;
-  --color-earth: #3a2529;
-  --color-earth-soft: #d3bcc0;
-  --color-deck-back: #f3e8e6;
-  --color-deck-mid: #f6efed;
-  --shadow-soft:
-    0 1px 2px rgb(44 35 38 / 0.07), 0 8px 18px rgb(44 35 38 / 0.07),
-    0 24px 44px rgb(44 35 38 / 0.07);
-  --shadow-lift:
-    0 1px 2px rgb(44 35 38 / 0.11), 0 10px 24px rgb(44 35 38 / 0.12),
-    0 30px 60px rgb(44 35 38 / 0.12);
-  --shadow-on-clay:
-    0 1px 2px rgb(74 20 36 / 0.2), 0 10px 24px rgb(74 20 36 / 0.22), 0 30px 60px rgb(74 20 36 / 0.18);
-  --shadow-on-clay-hover:
-    0 2px 4px rgb(74 20 36 / 0.22), 0 16px 32px rgb(74 20 36 / 0.26), 0 40px 72px rgb(74 20 36 / 0.2);
-  --shadow-bar: 0 -1px 0 rgb(44 35 38 / 0.07), 0 -10px 30px rgb(44 35 38 / 0.1);
-}
-
-/* Rose: dusty rose and mauve on soft grey-rose grounds; the most grown-up of the three. */
-:root[data-palette='rose'] {
-  --color-limestone: #f5f0ef;
-  --color-paper: #fbf8f7;
-  --color-paper-bright: #fffdfd;
-  --color-sand: #eadfdf;
-  --color-ink: #2a2228;
-  --color-ink-soft: #574850;
-  --color-line: #dccecf;
-  --color-stone: #95838a;
-  --color-clay: #8f4f67;
-  --color-clay-deep: #68364a;
-  --color-clay-tint: #d3a8b7;
-  --color-clay-mist: #efdee4;
-  --color-earth: #32242b;
-  --color-earth-soft: #c8b5be;
-  --color-deck-back: #efe6e6;
-  --color-deck-mid: #f3ecec;
-  --shadow-soft:
-    0 1px 2px rgb(42 34 40 / 0.07), 0 8px 18px rgb(42 34 40 / 0.07),
-    0 24px 44px rgb(42 34 40 / 0.07);
-  --shadow-lift:
-    0 1px 2px rgb(42 34 40 / 0.11), 0 10px 24px rgb(42 34 40 / 0.12),
-    0 30px 60px rgb(42 34 40 / 0.12);
-  --shadow-on-clay:
-    0 1px 2px rgb(56 22 38 / 0.2), 0 10px 24px rgb(56 22 38 / 0.22), 0 30px 60px rgb(56 22 38 / 0.18);
-  --shadow-on-clay-hover:
-    0 2px 4px rgb(56 22 38 / 0.22), 0 16px 32px rgb(56 22 38 / 0.26), 0 40px 72px rgb(56 22 38 / 0.2);
-  --shadow-bar: 0 -1px 0 rgb(42 34 40 / 0.07), 0 -10px 30px rgb(42 34 40 / 0.1);
-}
-
-/* Petal: the brightest: near-white grounds and a clear, fresh raspberry-rose. */
-:root[data-palette='petal'] {
-  --color-limestone: #fdf8f8;
-  --color-paper: #fffcfc;
-  --color-paper-bright: #fffefe;
-  --color-sand: #f9eaed;
-  --color-ink: #2b2127;
-  --color-ink-soft: #5d4953;
-  --color-line: #f0dadf;
-  --color-stone: #a0868f;
-  --color-clay: #b8375e;
-  --color-clay-deep: #8f2447;
-  --color-clay-tint: #f2b3c6;
-  --color-clay-mist: #fde5ec;
-  --color-earth: #3c2430;
-  --color-earth-soft: #dcc1cb;
-  --color-deck-back: #f8edef;
-  --color-deck-mid: #fbf3f4;
-  --shadow-soft:
-    0 1px 2px rgb(43 33 39 / 0.06), 0 8px 18px rgb(43 33 39 / 0.06),
-    0 24px 44px rgb(43 33 39 / 0.06);
-  --shadow-lift:
-    0 1px 2px rgb(43 33 39 / 0.1), 0 10px 24px rgb(43 33 39 / 0.11),
-    0 30px 60px rgb(43 33 39 / 0.11);
-  --shadow-on-clay:
-    0 1px 2px rgb(84 14 40 / 0.2), 0 10px 24px rgb(84 14 40 / 0.22), 0 30px 60px rgb(84 14 40 / 0.18);
-  --shadow-on-clay-hover:
-    0 2px 4px rgb(84 14 40 / 0.22), 0 16px 32px rgb(84 14 40 / 0.26), 0 40px 72px rgb(84 14 40 / 0.2);
-  --shadow-bar: 0 -1px 0 rgb(43 33 39 / 0.06), 0 -10px 30px rgb(43 33 39 / 0.09);
-}
-
-/* All three: a lighter, rose-toned grain (about half the strength of grain.webp). */
-:root[data-palette] .grain {
-  background-image: url('/textures/grain-light.webp');
-}
-
-/* ?photos=off: Picture's placeholder layer covers each uploaded photo. Unlayered, so it beats
-   the layer's own `flex` utility. */
-.photos-off-only {
-  display: none;
-}
-
-:root[data-photos='off'] .photos-off-only {
-  display: flex;
 }

@@ -24,7 +24,7 @@ export const generateMetadata = pageMetadata('contact')
 
 /**
  * Where, when and how to reach her: the map arch and contact rows, the week's hours on the
- * page's terracotta field (today marked), and the FAQ. Each row appears only when the owner
+ * page's rose field (today marked), and the FAQ. Each row appears only when the owner
  * has filled it in.
  */
 export default async function ContactPage({ params }: { params: Promise<{ lang: string }> }) {
@@ -77,7 +77,7 @@ export default async function ContactPage({ params }: { params: Promise<{ lang: 
             )}
             {page?.areaLabel && (
               <span className="motion-pop absolute start-4 bottom-4 inline-flex items-center gap-1.5 rounded-full bg-paper px-3.5 py-2 text-[0.8125rem] font-semibold text-ink shadow-soft">
-                <Icon name="pin" size={16} className="text-sage" />
+                <Icon name="pin" size={16} className="text-clay" />
                 <bdi>{page.areaLabel}</bdi>
               </span>
             )}
@@ -154,7 +154,7 @@ export default async function ContactPage({ params }: { params: Promise<{ lang: 
   )
 }
 
-/** The page's one terracotta field: every weekday on a paper card, today marked. */
+/** The page's one rose field: every weekday on a paper card, today marked. */
 function HoursField({
   heading,
   note,
@@ -241,7 +241,7 @@ function Row({
 }) {
   const content = (
     <>
-      <Icon name={icon} size={20} className="mt-0.5 shrink-0 text-sage" />
+      <Icon name={icon} size={20} className="mt-0.5 shrink-0 text-clay" />
       <span className="flex flex-col">
         <span className="text-xs text-ink-soft">{label}</span>
         <span className="text-[0.9375rem]">{children}</span>

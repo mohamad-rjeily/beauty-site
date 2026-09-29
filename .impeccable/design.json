@@ -1,71 +1,71 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-25T21:48:55.996Z",
+  "generatedAt": "2026-09-29T12:00:00.000Z",
   "title": "Design System: [BRAND_NAME] Beauty Studio",
   "extensions": {
     "colorMeta": {
       "clay": {
         "role": "primary",
-        "displayName": "Terracotta Clay",
-        "canonical": "#9c4f32",
-        "oklch": "oklch(51.6% 0.111 40.8)",
+        "displayName": "Deep Rose",
+        "canonical": "#a8475e",
+        "oklch": "oklch(53.1% 0.129 7.8)",
         "tonalRamp": [
-          "oklch(15% 0.111 40.8)",
-          "oklch(25% 0.111 40.8)",
-          "oklch(36% 0.111 40.8)",
-          "oklch(47% 0.111 40.8)",
-          "oklch(58% 0.111 40.8)",
-          "oklch(70% 0.111 40.8)",
-          "oklch(82% 0.111 40.8)",
-          "oklch(95% 0.111 40.8)"
+          "oklch(15% 0.129 7.8)",
+          "oklch(25% 0.129 7.8)",
+          "oklch(36% 0.129 7.8)",
+          "oklch(47% 0.129 7.8)",
+          "oklch(58% 0.129 7.8)",
+          "oklch(70% 0.129 7.8)",
+          "oklch(82% 0.129 7.8)",
+          "oklch(95% 0.129 7.8)"
         ]
       },
       "clay-deep": {
         "role": "primary",
-        "displayName": "Fired Clay",
-        "canonical": "#733820",
-        "oklch": "oklch(41.3% 0.091 42.0)",
+        "displayName": "Garnet",
+        "canonical": "#7d3043",
+        "oklch": "oklch(42.4% 0.108 7.7)",
         "tonalRamp": [
-          "oklch(15% 0.091 42.0)",
-          "oklch(25% 0.091 42.0)",
-          "oklch(36% 0.091 42.0)",
-          "oklch(47% 0.091 42.0)",
-          "oklch(58% 0.091 42.0)",
-          "oklch(70% 0.091 42.0)",
-          "oklch(82% 0.091 42.0)",
-          "oklch(95% 0.091 42.0)"
+          "oklch(15% 0.108 7.7)",
+          "oklch(25% 0.108 7.7)",
+          "oklch(36% 0.108 7.7)",
+          "oklch(47% 0.108 7.7)",
+          "oklch(58% 0.108 7.7)",
+          "oklch(70% 0.108 7.7)",
+          "oklch(82% 0.108 7.7)",
+          "oklch(95% 0.108 7.7)"
         ]
       },
       "clay-tint": {
         "role": "primary",
-        "displayName": "Clay Blush",
-        "canonical": "#d9a58a",
-        "oklch": "oklch(76.4% 0.072 48.7)",
+        "displayName": "Blush",
+        "canonical": "#e6b3bd",
+        "oklch": "oklch(81.6% 0.061 5.4)",
         "tonalRamp": [
-          "oklch(15% 0.072 48.7)",
-          "oklch(25% 0.072 48.7)",
-          "oklch(36% 0.072 48.7)",
-          "oklch(47% 0.072 48.7)",
-          "oklch(58% 0.072 48.7)",
-          "oklch(70% 0.072 48.7)",
-          "oklch(82% 0.072 48.7)",
-          "oklch(95% 0.072 48.7)"
+          "oklch(15% 0.061 5.4)",
+          "oklch(25% 0.061 5.4)",
+          "oklch(36% 0.061 5.4)",
+          "oklch(47% 0.061 5.4)",
+          "oklch(58% 0.061 5.4)",
+          "oklch(70% 0.061 5.4)",
+          "oklch(82% 0.061 5.4)",
+          "oklch(95% 0.061 5.4)"
         ]
       },
       "clay-mist": {
         "role": "primary",
-        "displayName": "Clay Mist",
-        "canonical": "#f2ddd0",
-        "oklch": "oklch(91.1% 0.029 54.0)",
+        "displayName": "Rose Mist",
+        "canonical": "#f8e1e5",
+        "oklch": "oklch(92.9% 0.026 5.7)",
         "tonalRamp": [
-          "oklch(15% 0.029 54.0)",
-          "oklch(25% 0.029 54.0)",
-          "oklch(36% 0.029 54.0)",
-          "oklch(47% 0.029 54.0)",
-          "oklch(58% 0.029 54.0)",
-          "oklch(70% 0.029 54.0)",
-          "oklch(82% 0.029 54.0)",
-          "oklch(95% 0.029 54.0)"
+          "oklch(15% 0.026 5.7)",
+          "oklch(25% 0.026 5.7)",
+          "oklch(36% 0.026 5.7)",
+          "oklch(47% 0.026 5.7)",
+          "oklch(58% 0.026 5.7)",
+          "oklch(70% 0.026 5.7)",
+          "oklch(82% 0.026 5.7)",
+          "oklch(95% 0.026 5.7)"
         ]
       },
       "sage": {
@@ -86,162 +86,162 @@
       },
       "earth": {
         "role": "tertiary",
-        "displayName": "Umber Earth",
-        "canonical": "#3a2a22",
-        "oklch": "oklch(30.1% 0.028 47.8)",
+        "displayName": "Plum Earth",
+        "canonical": "#3a2529",
+        "oklch": "oklch(29.2% 0.032 6.7)",
         "tonalRamp": [
-          "oklch(15% 0.028 47.8)",
-          "oklch(25% 0.028 47.8)",
-          "oklch(36% 0.028 47.8)",
-          "oklch(47% 0.028 47.8)",
-          "oklch(58% 0.028 47.8)",
-          "oklch(70% 0.028 47.8)",
-          "oklch(82% 0.028 47.8)",
-          "oklch(95% 0.028 47.8)"
+          "oklch(15% 0.032 6.7)",
+          "oklch(25% 0.032 6.7)",
+          "oklch(36% 0.032 6.7)",
+          "oklch(47% 0.032 6.7)",
+          "oklch(58% 0.032 6.7)",
+          "oklch(70% 0.032 6.7)",
+          "oklch(82% 0.032 6.7)",
+          "oklch(95% 0.032 6.7)"
         ]
       },
       "earth-soft": {
         "role": "tertiary",
-        "displayName": "Dry Grass",
-        "canonical": "#c9b9a4",
-        "oklch": "oklch(79.4% 0.034 74.7)",
+        "displayName": "Dusk Rose",
+        "canonical": "#d3bcc0",
+        "oklch": "oklch(81.6% 0.027 5.8)",
         "tonalRamp": [
-          "oklch(15% 0.034 74.7)",
-          "oklch(25% 0.034 74.7)",
-          "oklch(36% 0.034 74.7)",
-          "oklch(47% 0.034 74.7)",
-          "oklch(58% 0.034 74.7)",
-          "oklch(70% 0.034 74.7)",
-          "oklch(82% 0.034 74.7)",
-          "oklch(95% 0.034 74.7)"
+          "oklch(15% 0.027 5.8)",
+          "oklch(25% 0.027 5.8)",
+          "oklch(36% 0.027 5.8)",
+          "oklch(47% 0.027 5.8)",
+          "oklch(58% 0.027 5.8)",
+          "oklch(70% 0.027 5.8)",
+          "oklch(82% 0.027 5.8)",
+          "oklch(95% 0.027 5.8)"
         ]
       },
       "limestone": {
         "role": "neutral",
-        "displayName": "Limestone",
-        "canonical": "#ede6da",
-        "oklch": "oklch(92.7% 0.018 81.3)",
+        "displayName": "Blush White",
+        "canonical": "#f8f2f0",
+        "oklch": "oklch(96.5% 0.007 39.5)",
         "tonalRamp": [
-          "oklch(15% 0.018 81.3)",
-          "oklch(25% 0.018 81.3)",
-          "oklch(36% 0.018 81.3)",
-          "oklch(47% 0.018 81.3)",
-          "oklch(58% 0.018 81.3)",
-          "oklch(70% 0.018 81.3)",
-          "oklch(82% 0.018 81.3)",
-          "oklch(95% 0.018 81.3)"
+          "oklch(15% 0.007 39.5)",
+          "oklch(25% 0.007 39.5)",
+          "oklch(36% 0.007 39.5)",
+          "oklch(47% 0.007 39.5)",
+          "oklch(58% 0.007 39.5)",
+          "oklch(70% 0.007 39.5)",
+          "oklch(82% 0.007 39.5)",
+          "oklch(95% 0.007 39.5)"
         ]
       },
       "paper": {
         "role": "neutral",
         "displayName": "Paper",
-        "canonical": "#f7f2ea",
-        "oklch": "oklch(96.3% 0.012 79.8)",
+        "canonical": "#fcf9f7",
+        "oklch": "oklch(98.4% 0.004 56.4)",
         "tonalRamp": [
-          "oklch(15% 0.012 79.8)",
-          "oklch(25% 0.012 79.8)",
-          "oklch(36% 0.012 79.8)",
-          "oklch(47% 0.012 79.8)",
-          "oklch(58% 0.012 79.8)",
-          "oklch(70% 0.012 79.8)",
-          "oklch(82% 0.012 79.8)",
-          "oklch(95% 0.012 79.8)"
+          "oklch(15% 0.004 56.4)",
+          "oklch(25% 0.004 56.4)",
+          "oklch(36% 0.004 56.4)",
+          "oklch(47% 0.004 56.4)",
+          "oklch(58% 0.004 56.4)",
+          "oklch(70% 0.004 56.4)",
+          "oklch(82% 0.004 56.4)",
+          "oklch(95% 0.004 56.4)"
         ]
       },
       "paper-bright": {
         "role": "neutral",
         "displayName": "Bright Paper",
-        "canonical": "#fffcf7",
-        "oklch": "oklch(99.2% 0.007 80.7)",
+        "canonical": "#fffdfc",
+        "oklch": "oklch(99.5% 0.003 48.7)",
         "tonalRamp": [
-          "oklch(15% 0.007 80.7)",
-          "oklch(25% 0.007 80.7)",
-          "oklch(36% 0.007 80.7)",
-          "oklch(47% 0.007 80.7)",
-          "oklch(58% 0.007 80.7)",
-          "oklch(70% 0.007 80.7)",
-          "oklch(82% 0.007 80.7)",
-          "oklch(95% 0.007 80.7)"
+          "oklch(15% 0.003 48.7)",
+          "oklch(25% 0.003 48.7)",
+          "oklch(36% 0.003 48.7)",
+          "oklch(47% 0.003 48.7)",
+          "oklch(58% 0.003 48.7)",
+          "oklch(70% 0.003 48.7)",
+          "oklch(82% 0.003 48.7)",
+          "oklch(95% 0.003 48.7)"
         ]
       },
       "sand": {
         "role": "neutral",
-        "displayName": "Sand",
-        "canonical": "#e2d8c9",
-        "oklch": "oklch(88.6% 0.023 78.2)",
+        "displayName": "Petal Sand",
+        "canonical": "#f1e3e1",
+        "oklch": "oklch(92.6% 0.016 27.3)",
         "tonalRamp": [
-          "oklch(15% 0.023 78.2)",
-          "oklch(25% 0.023 78.2)",
-          "oklch(36% 0.023 78.2)",
-          "oklch(47% 0.023 78.2)",
-          "oklch(58% 0.023 78.2)",
-          "oklch(70% 0.023 78.2)",
-          "oklch(82% 0.023 78.2)",
-          "oklch(95% 0.023 78.2)"
+          "oklch(15% 0.016 27.3)",
+          "oklch(25% 0.016 27.3)",
+          "oklch(36% 0.016 27.3)",
+          "oklch(47% 0.016 27.3)",
+          "oklch(58% 0.016 27.3)",
+          "oklch(70% 0.016 27.3)",
+          "oklch(82% 0.016 27.3)",
+          "oklch(95% 0.016 27.3)"
         ]
       },
       "line": {
         "role": "neutral",
         "displayName": "Hairline",
-        "canonical": "#d6cbbb",
-        "oklch": "oklch(84.7% 0.025 77.4)",
+        "canonical": "#e5d3d1",
+        "oklch": "oklch(88.1% 0.020 25.2)",
         "tonalRamp": [
-          "oklch(15% 0.025 77.4)",
-          "oklch(25% 0.025 77.4)",
-          "oklch(36% 0.025 77.4)",
-          "oklch(47% 0.025 77.4)",
-          "oklch(58% 0.025 77.4)",
-          "oklch(70% 0.025 77.4)",
-          "oklch(82% 0.025 77.4)",
-          "oklch(95% 0.025 77.4)"
+          "oklch(15% 0.020 25.2)",
+          "oklch(25% 0.020 25.2)",
+          "oklch(36% 0.020 25.2)",
+          "oklch(47% 0.020 25.2)",
+          "oklch(58% 0.020 25.2)",
+          "oklch(70% 0.020 25.2)",
+          "oklch(82% 0.020 25.2)",
+          "oklch(95% 0.020 25.2)"
         ]
       },
       "stone": {
         "role": "neutral",
-        "displayName": "Weathered Stone",
-        "canonical": "#a39480",
-        "oklch": "oklch(67.4% 0.034 75.1)",
+        "displayName": "Mauve Stone",
+        "canonical": "#9a8387",
+        "oklch": "oklch(63.2% 0.029 6.1)",
         "tonalRamp": [
-          "oklch(15% 0.034 75.1)",
-          "oklch(25% 0.034 75.1)",
-          "oklch(36% 0.034 75.1)",
-          "oklch(47% 0.034 75.1)",
-          "oklch(58% 0.034 75.1)",
-          "oklch(70% 0.034 75.1)",
-          "oklch(82% 0.034 75.1)",
-          "oklch(95% 0.034 75.1)"
+          "oklch(15% 0.029 6.1)",
+          "oklch(25% 0.029 6.1)",
+          "oklch(36% 0.029 6.1)",
+          "oklch(47% 0.029 6.1)",
+          "oklch(58% 0.029 6.1)",
+          "oklch(70% 0.029 6.1)",
+          "oklch(82% 0.029 6.1)",
+          "oklch(95% 0.029 6.1)"
         ]
       },
       "ink": {
         "role": "neutral",
-        "displayName": "Warm Ink",
-        "canonical": "#2a2521",
-        "oklch": "oklch(26.9% 0.010 61.0)",
+        "displayName": "Plum Ink",
+        "canonical": "#2c2326",
+        "oklch": "oklch(26.8% 0.015 356.1)",
         "tonalRamp": [
-          "oklch(15% 0.010 61.0)",
-          "oklch(25% 0.010 61.0)",
-          "oklch(36% 0.010 61.0)",
-          "oklch(47% 0.010 61.0)",
-          "oklch(58% 0.010 61.0)",
-          "oklch(70% 0.010 61.0)",
-          "oklch(82% 0.010 61.0)",
-          "oklch(95% 0.010 61.0)"
+          "oklch(15% 0.015 356.1)",
+          "oklch(25% 0.015 356.1)",
+          "oklch(36% 0.015 356.1)",
+          "oklch(47% 0.015 356.1)",
+          "oklch(58% 0.015 356.1)",
+          "oklch(70% 0.015 356.1)",
+          "oklch(82% 0.015 356.1)",
+          "oklch(95% 0.015 356.1)"
         ]
       },
       "ink-soft": {
         "role": "neutral",
         "displayName": "Soft Ink",
-        "canonical": "#574c41",
-        "oklch": "oklch(42.4% 0.023 67.1)",
+        "canonical": "#5b4a4f",
+        "oklch": "oklch(42.8% 0.024 358.6)",
         "tonalRamp": [
-          "oklch(15% 0.023 67.1)",
-          "oklch(25% 0.023 67.1)",
-          "oklch(36% 0.023 67.1)",
-          "oklch(47% 0.023 67.1)",
-          "oklch(58% 0.023 67.1)",
-          "oklch(70% 0.023 67.1)",
-          "oklch(82% 0.023 67.1)",
-          "oklch(95% 0.023 67.1)"
+          "oklch(15% 0.024 358.6)",
+          "oklch(25% 0.024 358.6)",
+          "oklch(36% 0.024 358.6)",
+          "oklch(47% 0.024 358.6)",
+          "oklch(58% 0.024 358.6)",
+          "oklch(70% 0.024 358.6)",
+          "oklch(82% 0.024 358.6)",
+          "oklch(95% 0.024 358.6)"
         ]
       }
     },
@@ -290,27 +290,27 @@
     "shadows": [
       {
         "name": "soft",
-        "value": "0 1px 2px rgb(42 37 33 / 0.08), 0 8px 18px rgb(42 37 33 / 0.08), 0 24px 44px rgb(42 37 33 / 0.08)",
+        "value": "0 1px 2px rgb(44 35 38 / 0.07), 0 8px 18px rgb(44 35 38 / 0.07), 0 24px 44px rgb(44 35 38 / 0.07)",
         "purpose": "Resting cards: product cards, visit card, side arches, stacked review backs."
       },
       {
         "name": "lift",
-        "value": "0 1px 2px rgb(42 37 33 / 0.12), 0 10px 24px rgb(42 37 33 / 0.14), 0 30px 60px rgb(42 37 33 / 0.14)",
+        "value": "0 1px 2px rgb(44 35 38 / 0.11), 0 10px 24px rgb(44 35 38 / 0.12), 0 30px 60px rgb(44 35 38 / 0.12)",
         "purpose": "The one focal object in a group: badge, intro arch, centre visit arch, active review, slider, menu, desktop WhatsApp."
       },
       {
         "name": "on-clay",
-        "value": "0 1px 2px rgb(60 22 8 / 0.2), 0 10px 24px rgb(60 22 8 / 0.22), 0 30px 60px rgb(60 22 8 / 0.18)",
-        "purpose": "Paper cards on the terracotta field."
+        "value": "0 1px 2px rgb(74 20 36 / 0.2), 0 10px 24px rgb(74 20 36 / 0.22), 0 30px 60px rgb(74 20 36 / 0.18)",
+        "purpose": "Paper cards on the rose field."
       },
       {
         "name": "bar",
-        "value": "0 -1px 0 rgb(42 37 33 / 0.08), 0 -10px 30px rgb(42 37 33 / 0.12)",
+        "value": "0 -1px 0 rgb(44 35 38 / 0.07), 0 -10px 30px rgb(44 35 38 / 0.1)",
         "purpose": "The sticky bottom bar, casting upward."
       },
       {
         "name": "photo-type",
-        "value": "text-shadow: 0 2px 24px rgb(42 37 33 / 0.35)",
+        "value": "text-shadow: 0 2px 24px rgb(44 35 38 / 0.35)",
         "purpose": "Paper type over a photo, legibility only."
       }
     ],
@@ -404,7 +404,7 @@
       "refersTo": "button-primary",
       "description": "The default action: every Book button, destination from bookingHref().",
       "html": "<a class=\"ds-pill ds-pill-clay\" href=\"#\">Book <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16M14 6l6 6-6 6\"/></svg></a>",
-      "css": ".ds-pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:3.25rem;padding:0 1.5rem;border-radius:9999px;font-family:Manrope,'Segoe UI',system-ui,sans-serif;font-size:0.9375rem;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:background-color 200ms ease,color 200ms ease,scale 220ms cubic-bezier(0.23,1,0.32,1);}.ds-pill:active{scale:0.97;transition-duration:200ms,200ms,140ms}.ds-pill:focus-visible{outline:2px solid var(--color-clay,#9c4f32);outline-offset:3px;}.ds-pill-clay{background:var(--color-clay,#9c4f32);color:var(--color-paper,#f7f2ea)}.ds-pill-clay:hover{background:var(--color-clay-deep,#733820)}"
+      "css": ".ds-pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:3.25rem;padding:0 1.5rem;border-radius:9999px;font-family:Manrope,'Segoe UI',system-ui,sans-serif;font-size:0.9375rem;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:background-color 200ms ease,color 200ms ease,scale 220ms cubic-bezier(0.23,1,0.32,1);}.ds-pill:active{scale:0.97;transition-duration:200ms,200ms,140ms}.ds-pill:focus-visible{outline:2px solid var(--color-clay,#a8475e);outline-offset:3px;}.ds-pill-clay{background:var(--color-clay,#a8475e);color:var(--color-paper,#fcf9f7)}.ds-pill-clay:hover{background:var(--color-clay-deep,#7d3043)}"
     },
     {
       "name": "Ink Pill",
@@ -412,7 +412,7 @@
       "refersTo": "button-ink",
       "description": "Solid secondary action on light grounds; hover to earth.",
       "html": "<a class=\"ds-pill ds-pill-ink\" href=\"#\">Order</a>",
-      "css": ".ds-pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:3.25rem;padding:0 1.5rem;border-radius:9999px;font-family:Manrope,'Segoe UI',system-ui,sans-serif;font-size:0.9375rem;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:background-color 200ms ease,color 200ms ease,scale 220ms cubic-bezier(0.23,1,0.32,1);}.ds-pill:active{scale:0.97;transition-duration:200ms,200ms,140ms}.ds-pill:focus-visible{outline:2px solid var(--color-clay,#9c4f32);outline-offset:3px;}.ds-pill-ink{background:var(--color-ink,#2a2521);color:var(--color-paper,#f7f2ea)}.ds-pill-ink:hover{background:var(--color-earth,#3a2a22)}"
+      "css": ".ds-pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:3.25rem;padding:0 1.5rem;border-radius:9999px;font-family:Manrope,'Segoe UI',system-ui,sans-serif;font-size:0.9375rem;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:background-color 200ms ease,color 200ms ease,scale 220ms cubic-bezier(0.23,1,0.32,1);}.ds-pill:active{scale:0.97;transition-duration:200ms,200ms,140ms}.ds-pill:focus-visible{outline:2px solid var(--color-clay,#a8475e);outline-offset:3px;}.ds-pill-ink{background:var(--color-ink,#2c2326);color:var(--color-paper,#fcf9f7)}.ds-pill-ink:hover{background:var(--color-earth,#3a2529)}"
     },
     {
       "name": "Outline Pill",
@@ -420,7 +420,7 @@
       "refersTo": "button-outline",
       "description": "Quiet action such as Directions; fills ink on hover.",
       "html": "<a class=\"ds-pill ds-pill-outline\" href=\"#\">Directions</a>",
-      "css": ".ds-pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:3.25rem;padding:0 1.5rem;border-radius:9999px;font-family:Manrope,'Segoe UI',system-ui,sans-serif;font-size:0.9375rem;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:background-color 200ms ease,color 200ms ease,scale 220ms cubic-bezier(0.23,1,0.32,1);}.ds-pill:active{scale:0.97;transition-duration:200ms,200ms,140ms}.ds-pill:focus-visible{outline:2px solid var(--color-clay,#9c4f32);outline-offset:3px;}.ds-pill-outline{background:transparent;color:var(--color-ink,#2a2521);border:1.5px solid var(--color-ink,#2a2521)}.ds-pill-outline:hover{background:var(--color-ink,#2a2521);color:var(--color-paper,#f7f2ea)}"
+      "css": ".ds-pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:3.25rem;padding:0 1.5rem;border-radius:9999px;font-family:Manrope,'Segoe UI',system-ui,sans-serif;font-size:0.9375rem;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:background-color 200ms ease,color 200ms ease,scale 220ms cubic-bezier(0.23,1,0.32,1);}.ds-pill:active{scale:0.97;transition-duration:200ms,200ms,140ms}.ds-pill:focus-visible{outline:2px solid var(--color-clay,#a8475e);outline-offset:3px;}.ds-pill-outline{background:transparent;color:var(--color-ink,#2c2326);border:1.5px solid var(--color-ink,#2c2326)}.ds-pill-outline:hover{background:var(--color-ink,#2c2326);color:var(--color-paper,#fcf9f7)}"
     },
     {
       "name": "Sticky Action Bar",
@@ -428,15 +428,15 @@
       "refersTo": "sticky-bar",
       "description": "Phone bottom bar: Book pill plus round sage WhatsApp button, casting upward.",
       "html": "<nav class=\"ds-bar\" aria-label=\"Quick actions\"><a class=\"ds-pill ds-pill-clay ds-grow\" href=\"#\">Book <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16M14 6l6 6-6 6\"/></svg></a><a class=\"ds-wa\" href=\"#\" aria-label=\"Chat on WhatsApp\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3.5 20.5l1.3-4A8.5 8.5 0 1 1 8 19.3z\"/><path d=\"M9 8.5c.3 3.3 3.2 6.2 6.5 6.5l1-1.6-2-1-1 .9c-1.1-.5-2.2-1.6-2.8-2.8l.9-1-1-2z\"/></svg></a></nav>",
-      "css": ".ds-bar{display:flex;align-items:center;gap:10px;background:var(--color-paper,#f7f2ea);padding:10px 16px;box-shadow:0 -1px 0 rgb(42 37 33 / 0.08), 0 -10px 30px rgb(42 37 33 / 0.12)}.ds-pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:3.25rem;padding:0 1.5rem;border-radius:9999px;font-family:Manrope,'Segoe UI',system-ui,sans-serif;font-size:0.9375rem;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:background-color 200ms ease,color 200ms ease,scale 220ms cubic-bezier(0.23,1,0.32,1);}.ds-pill:active{scale:0.97;transition-duration:200ms,200ms,140ms}.ds-pill:focus-visible{outline:2px solid var(--color-clay,#9c4f32);outline-offset:3px;}.ds-pill-clay{background:var(--color-clay,#9c4f32);color:var(--color-paper,#f7f2ea)}.ds-pill-clay:hover{background:var(--color-clay-deep,#733820)}.ds-grow{flex:1}.ds-wa{display:flex;flex-shrink:0;align-items:center;justify-content:center;width:3.25rem;height:3.25rem;border-radius:9999px;background:var(--color-sage,#5e6b55);color:var(--color-paper,#f7f2ea)}.ds-wa:focus-visible{outline:2px solid var(--color-clay,#9c4f32);outline-offset:3px;}"
+      "css": ".ds-bar{display:flex;align-items:center;gap:10px;background:var(--color-paper,#fcf9f7);padding:10px 16px;box-shadow:0 -1px 0 rgb(44 35 38 / 0.08), 0 -10px 30px rgb(44 35 38 / 0.12)}.ds-pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:3.25rem;padding:0 1.5rem;border-radius:9999px;font-family:Manrope,'Segoe UI',system-ui,sans-serif;font-size:0.9375rem;font-weight:600;text-decoration:none;border:0;cursor:pointer;transition:background-color 200ms ease,color 200ms ease,scale 220ms cubic-bezier(0.23,1,0.32,1);}.ds-pill:active{scale:0.97;transition-duration:200ms,200ms,140ms}.ds-pill:focus-visible{outline:2px solid var(--color-clay,#a8475e);outline-offset:3px;}.ds-pill-clay{background:var(--color-clay,#a8475e);color:var(--color-paper,#fcf9f7)}.ds-pill-clay:hover{background:var(--color-clay-deep,#7d3043)}.ds-grow{flex:1}.ds-wa{display:flex;flex-shrink:0;align-items:center;justify-content:center;width:3.25rem;height:3.25rem;border-radius:9999px;background:var(--color-sage,#5e6b55);color:var(--color-paper,#fcf9f7)}.ds-wa:focus-visible{outline:2px solid var(--color-clay,#a8475e);outline-offset:3px;}"
     },
     {
       "name": "Service Card on Clay",
       "kind": "card",
       "refersTo": "card-paper",
-      "description": "Paper card on the terracotta field: arch photo inset, display title, services, from-price, Book link.",
+      "description": "Paper card on the rose field: arch photo inset, display title, services, from-price, Book link.",
       "html": "<div class=\"ds-field\"><article class=\"ds-svc\"><div class=\"ds-ph ds-svc-ph\" role=\"img\" aria-label=\"Photo coming soon\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 8h3l2-3h6l2 3h3v11H4z\"/><circle cx=\"12\" cy=\"13\" r=\"3.5\"/></svg><span class=\"ds-ph-soon\">Photo coming soon</span><span class=\"ds-ph-hint\">Her work, close up</span></div><div class=\"ds-svc-body\"><h3 class=\"ds-svc-title\">Makeup</h3><ul class=\"ds-svc-list\"><li>Bridal makeup</li><li>Evening makeup</li></ul><p class=\"ds-svc-price\">From $40</p><a class=\"ds-svc-link\" href=\"#\">Book makeup <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h16M14 6l6 6-6 6\"/></svg></a></div></article></div>",
-      "css": ".ds-field{background:var(--color-clay,#9c4f32);padding:24px}.ds-svc{display:flex;gap:14px;width:18.75rem;max-width:100%;padding:0.625rem;border-radius:1.25rem;background:var(--color-paper,#f7f2ea);color:var(--color-ink,#2a2521);box-shadow:0 1px 2px rgb(60 22 8 / 0.2), 0 10px 24px rgb(60 22 8 / 0.22), 0 30px 60px rgb(60 22 8 / 0.18);font-family:Manrope,system-ui,sans-serif}.ds-svc-ph{width:6.875rem;aspect-ratio:110/190;flex-shrink:0}.ds-svc-body{display:flex;flex-direction:column;gap:6px;padding-top:6px;min-width:0}.ds-svc-title{margin:0;font-family:Fraunces,Georgia,serif;font-weight:400;font-size:1.5rem;line-height:0.92;letter-spacing:-0.03em}.ds-svc-list{margin:0;padding:0;list-style:none;font-size:0.8125rem;line-height:1.625;color:var(--color-ink-soft,#574c41)}.ds-svc-price{margin:0;font-size:0.8125rem;font-weight:600}.ds-svc-link{margin-top:auto;display:inline-flex;align-items:center;gap:8px;min-height:2.75rem;font-size:0.875rem;font-weight:600;color:var(--color-clay,#9c4f32);text-decoration:none}.ds-svc-link:hover{color:var(--color-clay-deep,#733820)}.ds-svc-link:focus-visible{outline:2px solid var(--color-clay,#9c4f32);outline-offset:3px;}.ds-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;background-color:var(--color-sand,#e2d8c9);color:var(--color-ink-soft,#574c41);background-image:repeating-linear-gradient(135deg,rgb(214 203 187 / .55) 0 10px,transparent 10px 20px);border-radius:9999px 9999px 0.5rem 0.5rem;font-family:Manrope,system-ui,sans-serif}.ds-ph svg{opacity:.7}.ds-ph-soon{font-size:0.625rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase}.ds-ph-hint{font-size:0.75rem;line-height:1.35;opacity:.8;max-width:14rem}"
+      "css": ".ds-field{background:var(--color-clay,#a8475e);padding:24px}.ds-svc{display:flex;gap:14px;width:18.75rem;max-width:100%;padding:0.625rem;border-radius:1.25rem;background:var(--color-paper,#fcf9f7);color:var(--color-ink,#2c2326);box-shadow:0 1px 2px rgb(74 20 36 / 0.2), 0 10px 24px rgb(74 20 36 / 0.22), 0 30px 60px rgb(74 20 36 / 0.18);font-family:Manrope,system-ui,sans-serif}.ds-svc-ph{width:6.875rem;aspect-ratio:110/190;flex-shrink:0}.ds-svc-body{display:flex;flex-direction:column;gap:6px;padding-top:6px;min-width:0}.ds-svc-title{margin:0;font-family:Fraunces,Georgia,serif;font-weight:400;font-size:1.5rem;line-height:0.92;letter-spacing:-0.03em}.ds-svc-list{margin:0;padding:0;list-style:none;font-size:0.8125rem;line-height:1.625;color:var(--color-ink-soft,#5b4a4f)}.ds-svc-price{margin:0;font-size:0.8125rem;font-weight:600}.ds-svc-link{margin-top:auto;display:inline-flex;align-items:center;gap:8px;min-height:2.75rem;font-size:0.875rem;font-weight:600;color:var(--color-clay,#a8475e);text-decoration:none}.ds-svc-link:hover{color:var(--color-clay-deep,#7d3043)}.ds-svc-link:focus-visible{outline:2px solid var(--color-clay,#a8475e);outline-offset:3px;}.ds-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;background-color:var(--color-sand,#f1e3e1);color:var(--color-ink-soft,#5b4a4f);background-image:repeating-linear-gradient(135deg,rgb(229 211 209 / .55) 0 10px,transparent 10px 20px);border-radius:9999px 9999px 0.5rem 0.5rem;font-family:Manrope,system-ui,sans-serif}.ds-ph svg{opacity:.7}.ds-ph-soon{font-size:0.625rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase}.ds-ph-hint{font-size:0.75rem;line-height:1.35;opacity:.8;max-width:14rem}"
     },
     {
       "name": "Product Card",
@@ -444,7 +444,7 @@
       "refersTo": "card-product",
       "description": "Bright-paper rail card with arch photo, name, price and round ink order button.",
       "html": "<div class=\"ds-prod\"><div class=\"ds-ph ds-prod-ph\" role=\"img\" aria-label=\"Photo coming soon\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 8h3l2-3h6l2 3h3v11H4z\"/><circle cx=\"12\" cy=\"13\" r=\"3.5\"/></svg><span class=\"ds-ph-soon\">Photo coming soon</span><span class=\"ds-ph-hint\">Her work, close up</span></div><h3 class=\"ds-prod-name\">Rose facial oil</h3><p class=\"ds-prod-cat\">Skincare</p><div class=\"ds-prod-row\"><span class=\"ds-prod-price\">$28</span><a class=\"ds-prod-order\" href=\"#\" aria-label=\"Order on WhatsApp\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 8h14l-1 12H6z\"/><path d=\"M9 8a3 3 0 0 1 6 0\"/></svg></a></div></div>",
-      "css": ".ds-prod{display:flex;flex-direction:column;gap:8px;width:13.75rem;padding:0.625rem;border-radius:1.25rem;background:var(--color-paper-bright,#fffcf7);color:var(--color-ink,#2a2521);box-shadow:0 1px 2px rgb(42 37 33 / 0.08), 0 8px 18px rgb(42 37 33 / 0.08), 0 24px 44px rgb(42 37 33 / 0.08);font-family:Manrope,system-ui,sans-serif}.ds-prod .ds-prod-ph{width:100%;aspect-ratio:200/240;border-radius:6.25rem 6.25rem 0.625rem 0.625rem}.ds-prod-name{margin:0;padding:0 6px;font-family:Fraunces,Georgia,serif;font-weight:400;font-size:1.25rem;line-height:0.92;letter-spacing:-0.03em}.ds-prod-cat{margin:-4px 0 0;padding:0 6px;font-size:0.75rem;color:var(--color-ink-soft,#574c41)}.ds-prod-row{display:flex;align-items:center;justify-content:space-between;padding-inline-start:6px}.ds-prod-price{font-size:0.875rem;font-variant-numeric:tabular-nums;color:var(--color-ink-soft,#574c41)}.ds-prod-order{display:flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border-radius:9999px;background:var(--color-ink,#2a2521);color:var(--color-paper,#f7f2ea);transition:background-color 150ms}.ds-prod-order:hover{background:var(--color-earth,#3a2a22)}.ds-prod-order:focus-visible{outline:2px solid var(--color-clay,#9c4f32);outline-offset:3px;}.ds-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;background-color:var(--color-sand,#e2d8c9);color:var(--color-ink-soft,#574c41);background-image:repeating-linear-gradient(135deg,rgb(214 203 187 / .55) 0 10px,transparent 10px 20px);border-radius:9999px 9999px 0.5rem 0.5rem;font-family:Manrope,system-ui,sans-serif}.ds-ph svg{opacity:.7}.ds-ph-soon{font-size:0.625rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase}.ds-ph-hint{font-size:0.75rem;line-height:1.35;opacity:.8;max-width:14rem}"
+      "css": ".ds-prod{display:flex;flex-direction:column;gap:8px;width:13.75rem;padding:0.625rem;border-radius:1.25rem;background:var(--color-paper-bright,#fffdfc);color:var(--color-ink,#2c2326);box-shadow:0 1px 2px rgb(44 35 38 / 0.08), 0 8px 18px rgb(44 35 38 / 0.08), 0 24px 44px rgb(44 35 38 / 0.08);font-family:Manrope,system-ui,sans-serif}.ds-prod .ds-prod-ph{width:100%;aspect-ratio:200/240;border-radius:6.25rem 6.25rem 0.625rem 0.625rem}.ds-prod-name{margin:0;padding:0 6px;font-family:Fraunces,Georgia,serif;font-weight:400;font-size:1.25rem;line-height:0.92;letter-spacing:-0.03em}.ds-prod-cat{margin:-4px 0 0;padding:0 6px;font-size:0.75rem;color:var(--color-ink-soft,#5b4a4f)}.ds-prod-row{display:flex;align-items:center;justify-content:space-between;padding-inline-start:6px}.ds-prod-price{font-size:0.875rem;font-variant-numeric:tabular-nums;color:var(--color-ink-soft,#5b4a4f)}.ds-prod-order{display:flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border-radius:9999px;background:var(--color-ink,#2c2326);color:var(--color-paper,#fcf9f7);transition:background-color 150ms}.ds-prod-order:hover{background:var(--color-earth,#3a2529)}.ds-prod-order:focus-visible{outline:2px solid var(--color-clay,#a8475e);outline-offset:3px;}.ds-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;background-color:var(--color-sand,#f1e3e1);color:var(--color-ink-soft,#5b4a4f);background-image:repeating-linear-gradient(135deg,rgb(229 211 209 / .55) 0 10px,transparent 10px 20px);border-radius:9999px 9999px 0.5rem 0.5rem;font-family:Manrope,system-ui,sans-serif}.ds-ph svg{opacity:.7}.ds-ph-soon{font-size:0.625rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase}.ds-ph-hint{font-size:0.75rem;line-height:1.35;opacity:.8;max-width:14rem}"
     },
     {
       "name": "Pair Toggle Chip",
@@ -452,7 +452,7 @@
       "refersTo": "chip-toggle",
       "description": "Before/after pair selector; selected fills ink.",
       "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" aria-pressed=\"true\">Bridal</button><button class=\"ds-chip\" aria-pressed=\"false\">Skin glow</button></div>",
-      "css": ".ds-chips{display:flex;gap:8px}.ds-chip{min-height:2.75rem;padding:0 1rem;border-radius:9999px;border:1px solid var(--color-stone,#a39480);background:transparent;color:var(--color-ink,#2a2521);font-family:Manrope,system-ui,sans-serif;font-size:0.8125rem;font-weight:600;cursor:pointer;transition:background-color 150ms,color 150ms,border-color 150ms}.ds-chip:hover{border-color:var(--color-ink,#2a2521)}.ds-chip[aria-pressed=\"true\"]{background:var(--color-ink,#2a2521);border-color:var(--color-ink,#2a2521);color:var(--color-paper,#f7f2ea)}.ds-chip:focus-visible{outline:2px solid var(--color-clay,#9c4f32);outline-offset:3px;}"
+      "css": ".ds-chips{display:flex;gap:8px}.ds-chip{min-height:2.75rem;padding:0 1rem;border-radius:9999px;border:1px solid var(--color-stone,#9a8387);background:transparent;color:var(--color-ink,#2c2326);font-family:Manrope,system-ui,sans-serif;font-size:0.8125rem;font-weight:600;cursor:pointer;transition:background-color 150ms,color 150ms,border-color 150ms}.ds-chip:hover{border-color:var(--color-ink,#2c2326)}.ds-chip[aria-pressed=\"true\"]{background:var(--color-ink,#2c2326);border-color:var(--color-ink,#2c2326);color:var(--color-paper,#fcf9f7)}.ds-chip:focus-visible{outline:2px solid var(--color-clay,#a8475e);outline-offset:3px;}"
     },
     {
       "name": "Rotating Book Badge",
@@ -460,7 +460,7 @@
       "refersTo": "book-badge",
       "description": "Clay disc with circular Book text rotating every 24s and a centred arrow; the hero signature.",
       "html": "<a class=\"ds-badge\" href=\"#\" aria-label=\"Book an appointment\"><svg class=\"ds-badge-ring\" viewBox=\"0 0 108 108\" aria-hidden=\"true\"><defs><path id=\"ds-ring\" d=\"M54,54 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0\"/></defs><text fill=\"currentColor\" font-size=\"10.5\" letter-spacing=\"2\" font-weight=\"600\" font-family=\"Manrope, system-ui, sans-serif\"><textPath href=\"#ds-ring\" textLength=\"250\" lengthAdjust=\"spacing\">BOOK A VISIT · BOOK A VISIT · </textPath></text></svg><svg width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 17L17 7M9 7h8v8\"/></svg></a>",
-      "css": ".ds-badge{position:relative;display:flex;align-items:center;justify-content:center;width:6.75rem;height:6.75rem;border-radius:9999px;background:var(--color-clay,#9c4f32);color:var(--color-paper,#f7f2ea);box-shadow:0 1px 2px rgb(42 37 33 / 0.12), 0 10px 24px rgb(42 37 33 / 0.14), 0 30px 60px rgb(42 37 33 / 0.14);transition:scale 220ms cubic-bezier(0.23,1,0.32,1)}.ds-badge:active{scale:0.96;transition-duration:140ms}.ds-badge:focus-visible{outline:2px solid var(--color-clay,#9c4f32);outline-offset:3px;}.ds-badge-ring{position:absolute;inset:0;width:100%;height:100%}@media (prefers-reduced-motion:no-preference){.ds-badge-ring{animation:ds-spin 24s linear infinite}}@keyframes ds-spin{to{transform:rotate(360deg)}}"
+      "css": ".ds-badge{position:relative;display:flex;align-items:center;justify-content:center;width:6.75rem;height:6.75rem;border-radius:9999px;background:var(--color-clay,#a8475e);color:var(--color-paper,#fcf9f7);box-shadow:0 1px 2px rgb(44 35 38 / 0.12), 0 10px 24px rgb(44 35 38 / 0.14), 0 30px 60px rgb(44 35 38 / 0.14);transition:scale 220ms cubic-bezier(0.23,1,0.32,1)}.ds-badge:active{scale:0.96;transition-duration:140ms}.ds-badge:focus-visible{outline:2px solid var(--color-clay,#a8475e);outline-offset:3px;}.ds-badge-ring{position:absolute;inset:0;width:100%;height:100%}@media (prefers-reduced-motion:no-preference){.ds-badge-ring{animation:ds-spin 24s linear infinite}}@keyframes ds-spin{to{transform:rotate(360deg)}}"
     },
     {
       "name": "Arch Photo Frame",
@@ -468,34 +468,34 @@
       "refersTo": "rounded.arch",
       "description": "The recurring silhouette: fully rounded top, small foot radius, paper border and Lift where it breaks a section edge. Shown with the honest placeholder.",
       "html": "<div class=\"ds-arch\"><div class=\"ds-ph ds-arch-ph\" role=\"img\" aria-label=\"Photo coming soon\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 8h3l2-3h6l2 3h3v11H4z\"/><circle cx=\"12\" cy=\"13\" r=\"3.5\"/></svg><span class=\"ds-ph-soon\">Photo coming soon</span><span class=\"ds-ph-hint\">Her work, close up</span></div></div>",
-      "css": ".ds-arch{width:9.375rem;overflow:hidden;border-radius:9999px 9999px 0.5rem 0.5rem;border:4px solid var(--color-paper,#f7f2ea);box-shadow:0 1px 2px rgb(42 37 33 / 0.12), 0 10px 24px rgb(42 37 33 / 0.14), 0 30px 60px rgb(42 37 33 / 0.14)}.ds-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;background-color:var(--color-sand,#e2d8c9);color:var(--color-ink-soft,#574c41);background-image:repeating-linear-gradient(135deg,rgb(214 203 187 / .55) 0 10px,transparent 10px 20px);border-radius:9999px 9999px 0.5rem 0.5rem;font-family:Manrope,system-ui,sans-serif}.ds-ph svg{opacity:.7}.ds-ph-soon{font-size:0.625rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase}.ds-ph-hint{font-size:0.75rem;line-height:1.35;opacity:.8;max-width:14rem}.ds-arch .ds-arch-ph{aspect-ratio:150/220;width:100%;border-radius:0}"
+      "css": ".ds-arch{width:9.375rem;overflow:hidden;border-radius:9999px 9999px 0.5rem 0.5rem;border:4px solid var(--color-paper,#fcf9f7);box-shadow:0 1px 2px rgb(44 35 38 / 0.12), 0 10px 24px rgb(44 35 38 / 0.14), 0 30px 60px rgb(44 35 38 / 0.14)}.ds-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;background-color:var(--color-sand,#f1e3e1);color:var(--color-ink-soft,#5b4a4f);background-image:repeating-linear-gradient(135deg,rgb(229 211 209 / .55) 0 10px,transparent 10px 20px);border-radius:9999px 9999px 0.5rem 0.5rem;font-family:Manrope,system-ui,sans-serif}.ds-ph svg{opacity:.7}.ds-ph-soon{font-size:0.625rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase}.ds-ph-hint{font-size:0.75rem;line-height:1.35;opacity:.8;max-width:14rem}.ds-arch .ds-arch-ph{aspect-ratio:150/220;width:100%;border-radius:0}"
     }
   ],
   "narrative": {
     "northStar": "The Sunlit Arch",
-    "overview": "A limestone studio in Lebanese afternoon light, seen through arched windows. Warm, unhurried and hand-made: pale stone and paper grounds carry a single terracotta field, photographs of her work sit inside arch-topped frames, and every action is a soft pill. Surfaces are tactile rather than glossy: a pre-rendered paper grain lies under every section, and cards sit on layered, downward shadows as if on a sunlit table.\n\nThe system is bilingual by construction. English and Arabic are two equal pairings, not a translation layer: Fraunces light over Manrope, Amiri over Readex Pro, each with its own leading, tracking and size, and a handwritten signature in each script (Mrs Saint Delafield, Aref Ruqaa). Every layout is written in logical properties so Arabic mirrors without a second stylesheet. Density is low on phones (one idea per viewport) and composes onto a 12-column grid on desktop where photos break the grid, overlapping section edges.\n\nMotion is warm and brief: things settle and rise into place with an expo ease, the terracotta field floods in, a signature writes itself in the reading direction. Content is always present in the HTML without JavaScript; motion only decorates arrival.",
+    "overview": "A light-filled studio in Lebanese afternoon light, seen through arched windows. Soft, unhurried and hand-made: blush-white grounds carry a single deep rose field, photographs of her work sit inside arch-topped frames, and every action is a soft pill. Surfaces are tactile rather than glossy: a pre-rendered paper grain lies under every section, and cards sit on layered, downward shadows as if on a sunlit table.\n\nThe system is bilingual by construction. English and Arabic are two equal pairings, not a translation layer: Fraunces light over Manrope, Amiri over Readex Pro, each with its own leading, tracking and size, and a handwritten signature in each script (Mrs Saint Delafield, Aref Ruqaa). Every layout is written in logical properties so Arabic mirrors without a second stylesheet. Density is low on phones (one idea per viewport) and composes onto a 12-column grid on desktop where photos break the grid, overlapping section edges.\n\nMotion is warm and brief: things settle and rise into place with an expo ease, the rose field floods in, a signature writes itself in the reading direction. Content is always present in the HTML without JavaScript; motion only decorates arrival.",
     "keyCharacteristics": [
-      "Limestone and paper grounds with pre-rendered grain; one terracotta field per page.",
+      "Blush-white grounds with a light, rose-toned pre-rendered grain; one deep rose field per page.",
       "Arch-topped photo frames (fully rounded top, small-radius foot) as the recurring silhouette.",
       "Pill actions only; one Book destination.",
       "Fraunces light display with italic emphasis marked by the CMS; Amiri in Arabic, never slanted.",
-      "Layered, warm-tinted, downward shadows; no hard or offset shadows.",
+      "Layered, rose-tinted, downward shadows; no hard or offset shadows.",
       "Logical CSS everywhere; directional icons and motion mirror in RTL."
     ],
     "rules": [
       {
         "name": "The One Field Rule",
-        "body": "Terracotta floods exactly one section per page (services). Elsewhere clay is a point accent: a pill, a badge, a line of type.",
+        "body": "Deep rose floods exactly one section per page (services). Elsewhere clay is a point accent: a pill, a badge, a line of type.",
         "section": "colors"
       },
       {
         "name": "The Sage Is WhatsApp Rule",
-        "body": "Sage marks the WhatsApp channel and the other-script accent line. It never becomes a general secondary button colour.",
+        "body": "Sage marks the WhatsApp channel and nothing else: not accent lines, not icons, never a general secondary button colour.",
         "section": "colors"
       },
       {
-        "name": "The Warm Neutral Rule",
-        "body": "Every neutral, shadow and placeholder stripe is tinted from ink (rgb 42 37 33) or clay; no pure black, white or cool grey appears anywhere.",
+        "name": "The Blush Neutral Rule",
+        "body": "Every neutral, shadow and placeholder stripe is tinted from ink (rgb 44 35 38) or rose; no pure black, white or cool grey appears anywhere.",
         "section": "colors"
       },
       {
@@ -550,7 +550,7 @@
       "Do keep touch targets at least 2.75rem."
     ],
     "donts": [
-      "Don't flood more than one section with clay, or use sage for anything but WhatsApp and the cross-script accent line.",
+      "Don't flood more than one section with clay, or use sage for anything but WhatsApp.",
       "Don't add eyebrows or kickers above headings; headings stand alone.",
       "Don't use hard offset shadows, glows or pure black shadows.",
       "Don't italicize, skew or letter-space Arabic.",

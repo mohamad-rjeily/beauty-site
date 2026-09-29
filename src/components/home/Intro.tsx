@@ -51,7 +51,7 @@ export function Intro({
             <p
               lang={locale === 'ar' ? 'en' : 'ar'}
               dir={locale === 'ar' ? 'ltr' : 'rtl'}
-              className={`-mb-3 text-sage ${
+              className={`-mb-3 text-clay-deep ${
                 locale === 'ar'
                   ? 'm-0 text-end font-[family-name:var(--font-fraunces)] text-xl italic'
                   : 'm-0 text-end font-[family-name:var(--font-amiri)] text-[1.625rem]'

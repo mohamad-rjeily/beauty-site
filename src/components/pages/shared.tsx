@@ -8,7 +8,7 @@ import type { Locale } from '@/i18n/config'
 import { hasPlaceholder, splitEmphasis } from '@/lib/emphasis'
 
 /**
- * A short line in the other script (Arabic on English pages, and the reverse), in sage. It
+ * A short line in the other script (Arabic on English pages, and the reverse), in garnet. It
  * carries its own language and direction; `text-end` in its own direction puts it on the
  * page's reading-start side.
  */
@@ -27,7 +27,7 @@ export function AccentLine({
     <p
       lang={other}
       dir={other === 'ar' ? 'rtl' : 'ltr'}
-      className={`m-0 text-end text-sage ${
+      className={`m-0 text-end text-clay-deep ${
         other === 'ar'
           ? 'font-[family-name:var(--font-amiri)] text-2xl leading-snug'
           : 'font-[family-name:var(--font-fraunces)] text-xl italic'
@@ -112,7 +112,7 @@ export function PageHead({
 }
 
 /**
- * The page's one terracotta field, closing the page with a Book action: clay floods in (a
+ * The page's one rose field, closing the page with a Book action: clay floods in (a
  * limestone layer fades away), the heading reveals word by word, the actions follow.
  */
 export function BookField({

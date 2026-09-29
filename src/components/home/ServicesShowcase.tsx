@@ -12,7 +12,7 @@ import { bookingHref, externalLinkProps, whatsappHref } from '@/lib/links'
 import { container, Emphasis, EmptyNote, SectionHeading } from './shared'
 
 /**
- * The one terracotta field on the page: her two crafts as two staggered paper cards.
+ * The one rose field on the page: her two crafts as two staggered paper cards.
  * Each card lists the first real services of that category and the lowest real price.
  */
 export function ServicesShowcase({

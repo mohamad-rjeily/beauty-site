@@ -36,7 +36,7 @@ export const STARS_HINT = t(
   'ضعي *نجمتين* حول الكلمة المميّزة، مثال: "حِرفتان، ويدٌ *واحدة.*"',
 )
 
-/** Optional line in the other language, shown small in sage (hidden when empty). */
+/** Optional line in the other language, shown small in rose (hidden when empty). */
 export const accentLine = (name: string, defaults: { en: string; ar: string }): Field =>
   localizedText(
     name,
@@ -44,7 +44,7 @@ export const accentLine = (name: string, defaults: { en: string; ar: string }): 
     defaults,
     'text',
     t(
-      'Shown small in sage above the title, in the other language. Leave empty to hide.',
+      'Shown small in rose above the title, in the other language. Leave empty to hide.',
       'يظهر صغيراً بلون المريمية فوق العنوان، باللغة الأخرى. اتركيه فارغاً لإخفائه.',
     ),
   )

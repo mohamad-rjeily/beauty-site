@@ -1,12 +1,10 @@
 /**
  * Generates the paper-grain texture used over the public site: a small tiling image of
- * warm-brown specks with low alpha, pre-rendered once so phones never compute a live filter.
+ * faint rose-plum specks with low alpha, pre-rendered once so phones never compute a live filter.
  *
  *   node scripts/generate-grain.mjs
  *
- * Deterministic (seeded), so re-running produces the same files.
- * Also writes grain-light.webp for the pink palette preview (branch design-pink): the same
- * specks at about half the strength, tinted rose-plum instead of earth brown.
+ * Deterministic (seeded), so re-running produces the same file.
  */
 import sharp from 'sharp'
 
@@ -14,10 +12,8 @@ const SIZE = 128
 const SEED = 20260925
 
 const variants = [
-  // warm earth brown, from the palette's --earth
-  { out: 'public/textures/grain.webp', rgb: [58, 42, 34], strength: 1 },
-  // palette preview only: lighter and rose-toned
-  { out: 'public/textures/grain-light.webp', rgb: [74, 40, 52], strength: 0.5 },
+  // light and rose-toned (half strength), to sit quietly on the blush grounds
+  { out: 'public/textures/grain.webp', rgb: [74, 40, 52], strength: 0.5 },
 ]
 
 for (const { out, rgb, strength } of variants) {

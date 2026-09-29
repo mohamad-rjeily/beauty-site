@@ -865,7 +865,7 @@ export interface Home {
   headlineLine3?: string | null;
   tagline?: string | null;
   /**
-   * Shown small in sage next to the line above, in the other language. Leave empty to hide.
+   * Shown small in rose next to the line above, in the other language. Leave empty to hide.
    */
   accentLine?: string | null;
   /**
@@ -925,7 +925,7 @@ export interface Home {
 export interface About {
   id: number;
   /**
-   * Shown small in sage above the title, in the other language. Leave empty to hide.
+   * Shown small in rose above the title, in the other language. Leave empty to hide.
    */
   accent?: string | null;
   /**
@@ -987,7 +987,7 @@ export interface Page {
   id: number;
   services?: {
     /**
-     * Shown small in sage above the title, in the other language. Leave empty to hide.
+     * Shown small in rose above the title, in the other language. Leave empty to hide.
      */
     accent?: string | null;
     /**
@@ -1020,7 +1020,7 @@ export interface Page {
   };
   gallery?: {
     /**
-     * Shown small in sage above the title, in the other language. Leave empty to hide.
+     * Shown small in rose above the title, in the other language. Leave empty to hide.
      */
     accent?: string | null;
     /**
@@ -1041,7 +1041,7 @@ export interface Page {
   };
   shop?: {
     /**
-     * Shown small in sage above the title, in the other language. Leave empty to hide.
+     * Shown small in rose above the title, in the other language. Leave empty to hide.
      */
     accent?: string | null;
     /**
@@ -1052,7 +1052,7 @@ export interface Page {
   };
   contact?: {
     /**
-     * Shown small in sage above the title, in the other language. Leave empty to hide.
+     * Shown small in rose above the title, in the other language. Leave empty to hide.
      */
     accent?: string | null;
     /**

@@ -17,7 +17,7 @@ const CATEGORIES = ['makeup', 'skincare'] as const
 
 /**
  * Every active service with its price, duration and Book button, in two groups. Makeup takes
- * the page's one terracotta field; skincare sits on limestone.
+ * the page's one rose field; skincare sits on limestone.
  */
 export default async function ServicesPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params

@@ -125,7 +125,7 @@ function Row({
 }) {
   const content = (
     <>
-      <Icon name={icon} size={20} className="mt-0.5 text-sage" />
+      <Icon name={icon} size={20} className="mt-0.5 text-clay" />
       <span className="sr-only">{label}: </span>
       <span className="text-[0.9375rem]">{children}</span>
     </>

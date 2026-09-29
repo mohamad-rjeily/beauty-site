@@ -3,7 +3,7 @@
  *   npm run demo:seed    add clearly labelled DEMO content
  *   npm run demo:clear   delete all of it and put the database back exactly as before
  *
- * Every record has "DEMO" in its name. Photos are flat palette gradients labelled DEMO:
+ * Every record has "DEMO" in its name. Photos are flat rose-toned gradients labelled DEMO:
  * no faces, no fake results. What was created and the previous state of the globals it
  * touches (site settings, home, about, page texts) are saved in .demo-seed.json
  * (git-ignored); seeding twice is refused.
@@ -57,26 +57,26 @@ const payload = await getPayload({ config })
 const db = (payload.db as unknown as PostgresAdapter).drizzle
 
 // ── Placeholder images ────────────────────────────────────────────────────
-const PALETTES = {
-  clay: ['#9c4f32', '#d9a58a'],
-  sage: ['#5e6b55', '#b9c2ae'],
-  sand: ['#a39480', '#ede6da'],
+const TONES = {
+  rose: ['#a8475e', '#e6b3bd'],
+  plum: ['#7d3043', '#d3bcc0'],
+  blush: ['#9a8387', '#f8f2f0'],
 } as const
-type Palette = keyof typeof PALETTES
+type Tone = keyof typeof TONES
 
 /** Escapes text for use inside SVG markup ("Oat & honey" would otherwise break the file). */
 const xml = (text: string) =>
   text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
-const demoImage = async (label: string, palette: Palette, width: number, height: number) => {
-  const [from, to] = PALETTES[palette]
+const demoImage = async (label: string, tone: Tone, width: number, height: number) => {
+  const [from, to] = TONES[tone]
   const size = Math.round(width / 11)
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
     <defs><linearGradient id="g" x1="0" y1="0" x2="0.4" y2="1">
       <stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/></linearGradient></defs>
     <rect width="100%" height="100%" fill="url(#g)"/>
-    <text x="50%" y="46%" text-anchor="middle" font-family="Georgia, serif" font-size="${size}" fill="#fffcf7" fill-opacity="0.9" letter-spacing="${size / 5}">DEMO</text>
-    <text x="50%" y="54%" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="${Math.round(size / 3)}" fill="#fffcf7" fill-opacity="0.85">${xml(label)}</text>
+    <text x="50%" y="46%" text-anchor="middle" font-family="Georgia, serif" font-size="${size}" fill="#fffdfc" fill-opacity="0.9" letter-spacing="${size / 5}">DEMO</text>
+    <text x="50%" y="54%" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="${Math.round(size / 3)}" fill="#fffdfc" fill-opacity="0.85">${xml(label)}</text>
   </svg>`
   return sharp(Buffer.from(svg)).png().toBuffer()
 }
@@ -84,12 +84,12 @@ const demoImage = async (label: string, palette: Palette, width: number, height:
 const uploadDemo = async (
   state: State,
   label: string,
-  palette: Palette,
+  tone: Tone,
   width: number,
   height: number,
   arAlt: string,
 ) => {
-  const data = await demoImage(label, palette, width, height)
+  const data = await demoImage(label, tone, width, height)
   const doc = await payload.create({
     collection: 'media',
     locale: 'en',
@@ -274,12 +274,12 @@ const seed = async () => {
   })
 
   // Home photos. Both languages are written in full, so the Arabic text keeps its own defaults.
-  const hero = await uploadDemo(state, 'Hero portrait', 'clay', 1200, 1600, 'الصورة الرئيسية')
-  const intro = await uploadDemo(state, 'At work', 'sand', 800, 1170, 'أثناء العمل')
+  const hero = await uploadDemo(state, 'Hero portrait', 'rose', 1200, 1600, 'الصورة الرئيسية')
+  const intro = await uploadDemo(state, 'At work', 'blush', 800, 1170, 'أثناء العمل')
   const studio = [
-    await uploadDemo(state, 'Studio entrance', 'sand', 600, 1000, 'مدخل الاستوديو'),
-    await uploadDemo(state, 'Treatment room', 'sage', 600, 1400, 'غرفة العلاج'),
-    await uploadDemo(state, 'Studio detail', 'clay', 600, 1000, 'تفصيل من الاستوديو'),
+    await uploadDemo(state, 'Studio entrance', 'blush', 600, 1000, 'مدخل الاستوديو'),
+    await uploadDemo(state, 'Treatment room', 'plum', 600, 1400, 'غرفة العلاج'),
+    await uploadDemo(state, 'Studio detail', 'rose', 600, 1000, 'تفصيل من الاستوديو'),
   ]
   await updateBoth(
     'home',
@@ -296,7 +296,7 @@ const seed = async () => {
       amount: 30000,
       duration: 180,
       mode: 'request',
-      palette: 'clay',
+      tone: 'rose',
     },
     {
       en: 'DEMO Event makeup',
@@ -305,7 +305,7 @@ const seed = async () => {
       amount: 15000,
       duration: 120,
       mode: 'request',
-      palette: 'sand',
+      tone: 'blush',
     },
     {
       en: 'DEMO Soirée makeup',
@@ -314,7 +314,7 @@ const seed = async () => {
       amount: 8000,
       duration: 60,
       mode: 'slot',
-      palette: 'clay',
+      tone: 'rose',
     },
     {
       en: 'DEMO Makeup lesson',
@@ -323,7 +323,7 @@ const seed = async () => {
       amount: 12000,
       duration: 90,
       mode: 'slot',
-      palette: 'sand',
+      tone: 'blush',
     },
     {
       en: 'DEMO Signature facial',
@@ -332,7 +332,7 @@ const seed = async () => {
       amount: 6000,
       duration: 75,
       mode: 'slot',
-      palette: 'sage',
+      tone: 'plum',
     },
     {
       en: 'DEMO Skin consultation',
@@ -341,7 +341,7 @@ const seed = async () => {
       amount: 3000,
       duration: 30,
       mode: 'slot',
-      palette: 'sand',
+      tone: 'blush',
     },
     {
       en: 'DEMO Glow course',
@@ -350,7 +350,7 @@ const seed = async () => {
       amount: 20000,
       duration: 60,
       mode: 'slot',
-      palette: 'sage',
+      tone: 'plum',
     },
   ] as const
   const serviceIds: number[] = []
@@ -358,7 +358,7 @@ const seed = async () => {
     const image = await uploadDemo(
       state,
       s.en.replace('DEMO ', ''),
-      s.palette,
+      s.tone,
       800,
       1380,
       s.ar.replace('DEMO ', ''),
@@ -429,7 +429,15 @@ const seed = async () => {
   const picks = [
     ...(freeDays[0] ? [freeDays[0].times[0], freeDays[0].times[3], freeDays[0].times.at(-2)] : []),
     ...(freeDays[1] ? [freeDays[1].times[2], freeDays[1].times.at(-4)] : []),
-  ].filter((time): time is string => Boolean(time))
+  ]
+    .filter((time): time is string => Boolean(time))
+    // On a short day (seeded in the afternoon) two picks can fall within one booking plus its
+    // break (60 + 15 min): keep only picks that leave that much room, or the overlap rule refuses.
+    .filter((time, i, all) =>
+      all
+        .slice(0, i)
+        .every((earlier) => Math.abs(Date.parse(time) - Date.parse(earlier)) >= 75 * 60_000),
+    )
   for (const [i, startTime] of picks.entries()) {
     const booking = await payload.create({
       collection: 'bookings',
@@ -508,7 +516,7 @@ const seed = async () => {
       amount: 1800,
       stock: 6,
       featured: true,
-      palette: 'clay',
+      tone: 'rose',
     },
     {
       en: 'DEMO Hydrating serum',
@@ -518,7 +526,7 @@ const seed = async () => {
       amount: 3500,
       stock: 4,
       featured: true,
-      palette: 'sage',
+      tone: 'plum',
     },
     {
       en: 'DEMO Oat & honey mask',
@@ -528,7 +536,7 @@ const seed = async () => {
       amount: 1500,
       stock: 3,
       featured: false,
-      palette: 'sand',
+      tone: 'blush',
     },
     {
       en: 'DEMO Lip tint',
@@ -538,7 +546,7 @@ const seed = async () => {
       amount: 2200,
       stock: 0,
       featured: false,
-      palette: 'clay',
+      tone: 'rose',
     },
     {
       en: 'DEMO Cleansing balm',
@@ -548,7 +556,7 @@ const seed = async () => {
       amount: 2800,
       stock: 8,
       featured: true,
-      palette: 'sand',
+      tone: 'blush',
     },
     {
       en: 'DEMO Green tea mask',
@@ -558,7 +566,7 @@ const seed = async () => {
       amount: 1600,
       stock: 5,
       featured: false,
-      palette: 'sage',
+      tone: 'plum',
     },
     {
       en: 'DEMO Brow gel',
@@ -568,7 +576,7 @@ const seed = async () => {
       amount: 1900,
       stock: 7,
       featured: false,
-      palette: 'sand',
+      tone: 'blush',
     },
     {
       en: 'DEMO Turmeric glow mask',
@@ -578,7 +586,7 @@ const seed = async () => {
       amount: 1700,
       stock: 4,
       featured: false,
-      palette: 'clay',
+      tone: 'rose',
     },
     {
       en: 'DEMO Silk scarf',
@@ -588,7 +596,7 @@ const seed = async () => {
       amount: 4000,
       stock: 3,
       featured: true,
-      palette: 'sage',
+      tone: 'plum',
     },
   ] as const
   const productIds: Partial<Record<(typeof products)[number]['en'], number>> = {}
@@ -596,7 +604,7 @@ const seed = async () => {
     const image = await uploadDemo(
       state,
       p.en.replace('DEMO ', ''),
-      p.palette,
+      p.tone,
       800,
       960,
       p.ar.replace('DEMO ', ''),
@@ -609,7 +617,7 @@ const seed = async () => {
             await uploadDemo(
               state,
               'Rose clay mask, jar',
-              'sand',
+              'blush',
               800,
               960,
               'ماسك الطين الوردي، العلبة',
@@ -880,20 +888,20 @@ const seed = async () => {
       service: 5,
     },
   ] as const
-  const palettes: Palette[] = ['clay', 'sage', 'sand']
+  const tones: Tone[] = ['rose', 'plum', 'blush']
   for (const [i, item] of galleryItems.entries()) {
     const label = item.en.replace('DEMO ', '')
     const arLabel = item.ar.replace('DEMO ', '')
     const before = await uploadDemo(
       state,
       item.pair ? `Before: ${label}` : label,
-      item.pair ? 'sand' : palettes[i % 3],
+      item.pair ? 'blush' : tones[i % 3],
       800,
       1070,
       item.pair ? `قبل: ${arLabel}` : arLabel,
     )
     const after = item.pair
-      ? await uploadDemo(state, `After: ${label}`, 'clay', 800, 1070, `بعد: ${arLabel}`)
+      ? await uploadDemo(state, `After: ${label}`, 'rose', 800, 1070, `بعد: ${arLabel}`)
       : undefined
     const doc = await payload.create({
       collection: 'gallery',
@@ -919,9 +927,9 @@ const seed = async () => {
   }
 
   // Page photos: the two service categories and the contact map.
-  const makeupPhoto = await uploadDemo(state, 'Makeup detail', 'clay', 600, 850, 'تفصيل مكياج')
-  const skincarePhoto = await uploadDemo(state, 'Facial treatment', 'sage', 600, 850, 'جلسة وجه')
-  const mapPhoto = await uploadDemo(state, 'Map of the street', 'sand', 1200, 1100, 'خريطة الشارع')
+  const makeupPhoto = await uploadDemo(state, 'Makeup detail', 'rose', 600, 850, 'تفصيل مكياج')
+  const skincarePhoto = await uploadDemo(state, 'Facial treatment', 'plum', 600, 850, 'جلسة وجه')
+  const mapPhoto = await uploadDemo(state, 'Map of the street', 'blush', 1200, 1100, 'خريطة الشارع')
   await updateBoth(
     'pages',
     { services: { makeupPhoto, skincarePhoto }, contact: { mapPhoto } },
@@ -932,11 +940,11 @@ const seed = async () => {
   )
 
   // About page: photos, placeholder story, facts and certifications, all marked DEMO.
-  const portrait = await uploadDemo(state, 'Portrait', 'clay', 900, 1210, 'الصورة الشخصية')
-  const hands = await uploadDemo(state, 'Hands at work', 'sage', 500, 500, 'اليدان أثناء العمل')
+  const portrait = await uploadDemo(state, 'Portrait', 'rose', 900, 1210, 'الصورة الشخصية')
+  const hands = await uploadDemo(state, 'Hands at work', 'plum', 500, 500, 'اليدان أثناء العمل')
   const storyPhotos = [
-    await uploadDemo(state, 'The studio', 'sand', 600, 800, 'الاستوديو'),
-    await uploadDemo(state, 'Her tools', 'clay', 600, 660, 'أدواتها'),
+    await uploadDemo(state, 'The studio', 'blush', 600, 800, 'الاستوديو'),
+    await uploadDemo(state, 'Her tools', 'rose', 600, 660, 'أدواتها'),
   ]
   await updateBoth(
     'about',

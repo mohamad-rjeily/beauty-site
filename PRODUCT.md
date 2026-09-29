@@ -57,6 +57,8 @@ appointments are picked as exact time slots.
 
 - Approved home design: "C1 · Sunlit Arch" (`design/home-c1-sunlit-arch.html`) with its motion
   notes (`design/motion-notes.md`).
+- Approved palette: "Blush", chosen by the owner: a soft, light, elegant pink (blush-white
+  grounds, one deep dusty rose accent). Still not candy pink.
 - Elegant, feminine, calm, premium. Not cliché pink, not a generic template.
 
 ## Evidence on Hand

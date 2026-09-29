@@ -132,7 +132,7 @@ export function Hero({
             <span
               key={i}
               style={{ ['--i' as string]: i }}
-              className={`motion-rise block ${i < 2 ? 'text-paper [text-shadow:0_2px_24px_rgb(42_37_33/0.35)]' : 'text-clay'}`}
+              className={`motion-rise block ${i < 2 ? 'text-paper [text-shadow:0_2px_24px_rgb(44_35_38/0.35)]' : 'text-clay'}`}
             >
               {i === 2 ? <em className="italic">{line}</em> : line}
             </span>
@@ -151,7 +151,7 @@ export function Hero({
               <p
                 lang={otherLocale}
                 dir={otherLocale === 'ar' ? 'rtl' : 'ltr'}
-                className={`m-0 text-sage ${
+                className={`m-0 text-clay-deep ${
                   otherLocale === 'ar'
                     ? 'font-[family-name:var(--font-amiri)] text-xl'
                     : 'font-[family-name:var(--font-fraunces)] text-lg italic'

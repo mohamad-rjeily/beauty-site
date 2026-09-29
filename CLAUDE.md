@@ -72,7 +72,7 @@ Goals, in order of importance:
 - Directional icons (arrows, chevrons) flip in RTL; the before/after slider and carousels must work correctly in RTL.
 
 ## Design direction
-- APPROVED DESIGN: direction "C1 · Sunlit Arch" (terracotta, arches, bolder). The reference files are in `design/`: follow them for layout, colors, typography and the motion notes. If code and design disagree, the design wins unless the developer says otherwise.
+- APPROVED DESIGN: direction "C1 · Sunlit Arch" (arches, bolder) in the owner-chosen "Blush" palette (soft, light pink; the `clay` tokens are the rose accent; sage is WhatsApp only). The reference files are in `design/`: follow them for layout, colors, typography and the motion notes. If code and design disagree, the design wins unless the developer says otherwise.
 - Elegant, feminine, calm, premium. NOT cliché pink, NOT generic template/SaaS look.
 - Mobile-first: design for a 390px wide phone first, then scale up.
 - Real photos are the hero. Layouts must make her work look good.

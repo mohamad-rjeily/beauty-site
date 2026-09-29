@@ -25,7 +25,7 @@ Arch photo rises 40 px over the marquee edge as its shadow deepens. Paragraph fa
 
 ## SERVICES · on scroll + tap
 
-Terracotta floods in as the section enters (400 ms). Cards slide in from alternating sides, 80 ms apart. On tap a card lifts (shadow grows, rises 4 px). The brushes circle drifts slightly slower than the page.
+Deep rose floods in as the section enters (400 ms). Cards slide in from alternating sides, 80 ms apart. On tap a card lifts (shadow grows, rises 4 px). The brushes circle drifts slightly slower than the page.
 
 ## BEFORE / AFTER · the big moment (works in Play)
 
@@ -61,7 +61,7 @@ Same header, sticky bar, footer and grain as the C1 home, same grammar: expo eas
 
 **Page head.** Title lines rise 24 px, 120 ms apart. The two chips fade in after. Tapping a chip scrolls smoothly to its group; the ink fill moves to the chosen chip (250 ms).
 
-**Makeup · terracotta field.** Clay floods in as the section enters (400 ms, a limestone layer fades away). The small arch rises 24 px. Service rows fade up 16 px, 60 ms apart.
+**Makeup · rose field.** Rose floods in as the section enters (400 ms, a limestone layer fades away). The small arch rises 24 px. Service rows fade up 16 px, 60 ms apart.
 
 **Bridal & occasions · request cards.** Cards slide in from alternating sides, 80 ms apart (home services grammar). On tap a card lifts 4 px as its shadow grows. "Send a request" opens the date and details form; no time picker appears.
 
@@ -75,7 +75,7 @@ Same header, sticky bar, footer and grain as the C1 home, same grammar: expo eas
 
 **Before / after (works in Play).** Same slider as the home page: one 50 → 70 → 50% sweep on first view, then drag on a spring. Pair chips cross-fade to the next pair and reset to 50%. Mirrored in RTL.
 
-**Book band.** Terracotta floods in (400 ms); heading rises, the button follows 120 ms later.
+**Book band.** Deep rose floods in (400 ms); heading rises, the button follows 120 ms later.
 
 ## ABOUT
 
@@ -85,13 +85,13 @@ Same header, sticky bar, footer and grain as the C1 home, same grammar: expo eas
 
 **Facts & signature.** Figures fade in 60 ms apart (no counting up). Certification rows fade in. The signature writes itself once in the reading direction (1.8 s stroke reveal).
 
-**Book · terracotta field.** Clay floods in (400 ms); heading rises, buttons follow 120 ms apart.
+**Book · rose field.** Rose floods in (400 ms); heading rises, buttons follow 120 ms apart.
 
 ## CONTACT
 
 **Map arch · on load.** Title lines rise as on every page. The map arch rises 24 px as its shadow deepens; the location chip pops in after it (scale 0.9 → 1, 200 ms). Info rows fade in 60 ms apart.
 
-**Hours · terracotta field.** Clay floods in (400 ms); the card rises 24 px. Today is marked when the page loads; nothing on it moves.
+**Hours · rose field.** Rose floods in (400 ms); the card rises 24 px. Today is marked when the page loads; nothing on it moves.
 
 **FAQ (works in Play).** One answer open at a time. The plus turns 45° into a cross (200 ms); the answer fades in and rises 8 px. Rows below move without a height tween (transform and opacity only). Reduced motion: no rise, just the fade.
 

@@ -1,22 +1,22 @@
 ---
 name: "[BRAND_NAME] Beauty Studio"
-description: "C1 · Sunlit Arch: a sunlit limestone studio seen through arches, bilingual English and Arabic."
+description: "C1 · Sunlit Arch in the Blush palette: a light, blush-white studio seen through arches, one deep rose accent, bilingual English and Arabic."
 colors:
-  clay: "#9c4f32"
-  clay-deep: "#733820"
-  clay-tint: "#d9a58a"
-  clay-mist: "#f2ddd0"
+  clay: "#a8475e"
+  clay-deep: "#7d3043"
+  clay-tint: "#e6b3bd"
+  clay-mist: "#f8e1e5"
   sage: "#5e6b55"
-  earth: "#3a2a22"
-  earth-soft: "#c9b9a4"
-  limestone: "#ede6da"
-  paper: "#f7f2ea"
-  paper-bright: "#fffcf7"
-  sand: "#e2d8c9"
-  line: "#d6cbbb"
-  stone: "#a39480"
-  ink: "#2a2521"
-  ink-soft: "#574c41"
+  earth: "#3a2529"
+  earth-soft: "#d3bcc0"
+  limestone: "#f8f2f0"
+  paper: "#fcf9f7"
+  paper-bright: "#fffdfc"
+  sand: "#f1e3e1"
+  line: "#e5d3d1"
+  stone: "#9a8387"
+  ink: "#2c2326"
+  ink-soft: "#5b4a4f"
 typography:
   display:
     fontFamily: "Fraunces, 'Iowan Old Style', Georgia, serif"
@@ -158,53 +158,71 @@ components:
 
 **Creative North Star: "The Sunlit Arch"**
 
-A limestone studio in Lebanese afternoon light, seen through arched windows. Warm, unhurried and hand-made: pale stone and paper grounds carry a single terracotta field, photographs of her work sit inside arch-topped frames, and every action is a soft pill. Surfaces are tactile rather than glossy: a pre-rendered paper grain lies under every section, and cards sit on layered, downward shadows as if on a sunlit table.
+A light-filled studio in Lebanese afternoon light, seen through arched windows. Soft, unhurried and hand-made: blush-white grounds carry a single deep rose field, photographs of her work sit inside arch-topped frames, and every action is a soft pill. Surfaces are tactile rather than glossy: a pre-rendered paper grain lies under every section, and cards sit on layered, downward shadows as if on a sunlit table.
 
 The system is bilingual by construction. English and Arabic are two equal pairings, not a translation layer: Fraunces light over Manrope, Amiri over Readex Pro, each with its own leading, tracking and size, and a handwritten signature in each script (Mrs Saint Delafield, Aref Ruqaa). Every layout is written in logical properties so Arabic mirrors without a second stylesheet. Density is low on phones (one idea per viewport) and composes onto a 12-column grid on desktop where photos break the grid, overlapping section edges.
 
-Motion is warm and brief: things settle and rise into place with an expo ease, the terracotta field floods in, a signature writes itself in the reading direction. Content is always present in the HTML without JavaScript; motion only decorates arrival.
+Motion is warm and brief: things settle and rise into place with an expo ease, the rose field floods in, a signature writes itself in the reading direction. Content is always present in the HTML without JavaScript; motion only decorates arrival.
 
 **Key Characteristics:**
-- Limestone and paper grounds with pre-rendered grain; one terracotta field per page.
+- Blush-white grounds with a light, rose-toned pre-rendered grain; one deep rose field per page.
 - Arch-topped photo frames (fully rounded top, small-radius foot) as the recurring silhouette.
 - Pill actions only; one Book destination.
 - Fraunces light display with italic emphasis marked by the CMS; Amiri in Arabic, never slanted.
-- Layered, warm-tinted, downward shadows; no hard or offset shadows.
+- Layered, rose-tinted, downward shadows; no hard or offset shadows.
 - Logical CSS everywhere; directional icons and motion mirror in RTL.
 
 ## Colors
 
-A warm, low-chroma stone palette with one saturated earth accent (terracotta) and one muted secondary (sage).
+**Blush**, the palette the owner chose: soft, light and elegant pink. Warm white grounds with a blush cast, pale blush tints, and one deep, dusty rose that carries every action. It is deliberately not candy pink: the saturated colour is kept dark and dusty (clay, clay-deep), the light pinks are pale and low-chroma, and ink is a deep plum-brown rather than black. One muted secondary (sage) belongs to WhatsApp alone.
+
+The token names come from the first, terracotta palette and were kept to avoid churn: **clay is now the rose accent**, earth is the deep plum-brown footer, limestone and sand are blush-white grounds.
 
 ### Primary
-- **Terracotta Clay** (clay): the brand's one voice. The services field background, the default Book pill, the rotating Book badge, the hero's third headline line, the signature, the "after" label, the focus ring.
-- **Fired Clay** (clay-deep): hover state of clay actions, rating stars, and text links on sand.
-- **Clay Blush** (clay-tint): selection highlight, the signature on the earth footer, marquee sparkle fills.
-- **Clay Mist** (clay-mist): a pale clay tint for fills and large type. It is not a text colour for body copy on the clay field (4.48:1, short of 4.5:1); body on clay is paper.
+- **Deep Rose** (clay, #a8475e): the brand's one voice. The services field background, the default Book pill, the rotating Book badge, the hero's third headline line, the signature, the "after" label, the focus ring, and the contact-row and map-pin icons.
+- **Garnet** (clay-deep, #7d3043): hover state of rose actions, rating stars, text links on sand, and the cross-script accent lines (the Arabic line on the English page, and the reverse).
+- **Blush** (clay-tint, #e6b3bd): selection highlight, the signature on the earth footer, marquee sparkle fills.
+- **Rose Mist** (clay-mist, #f8e1e5): a pale rose for fills and large type. On the rose field it passes AA only by a hair (4.53:1), so body copy on clay stays paper.
 
 ### Secondary
-- **Olive Sage** (sage): WhatsApp, and only WhatsApp, plus the cross-script accent lines (the Arabic line on the English page, and the reverse) and contact-row icons.
+- **Olive Sage** (sage, #5e6b55): WhatsApp, and only WhatsApp: the WhatsApp buttons, the floating WhatsApp button and its idle ring. It is the one colour not retuned to blush, so the WhatsApp channel stays recognisable. The admin's WhatsApp button uses the same sage; the rest of the admin keeps Payload's own colours.
 
 ### Tertiary
-- **Umber Earth** (earth): the footer ground with grain, the dark photo placeholder, the hero photo backing, hover state of ink actions.
-- **Dry Grass** (earth-soft): secondary text and the arch mark on the earth footer.
+- **Plum Earth** (earth, #3a2529): the footer ground with grain, the dark photo placeholder, the hero photo backing, hover state of ink actions.
+- **Dusk Rose** (earth-soft, #d3bcc0): secondary text and the arch mark on the earth footer.
 
 ### Neutral
-- **Limestone** (limestone): the page ground and theme colour; hero, intro, results and visit sections.
-- **Paper** (paper): cards, the sticky action bar, the menu panel, the shop section ground; text on clay, sage and ink.
-- **Bright Paper** (paper-bright): product cards, so they lift off the paper section.
-- **Sand** (sand): the reviews section ground, the light photo placeholder, row dividers, menu hover.
-- **Hairline** (line): the rule above the facts row.
-- **Weathered Stone** (stone): unselected toggle borders and inactive progress dots.
-- **Warm Ink** (ink): all primary text, the marquee band, ink pills.
-- **Soft Ink** (ink-soft): secondary text, captions, taglines, placeholder text.
+- **Blush White** (limestone, #f8f2f0): the page ground and theme colour; hero, intro, results and visit sections.
+- **Paper** (paper, #fcf9f7): cards, the sticky action bar, the menu panel, the shop section ground; text on clay, sage and ink.
+- **Bright Paper** (paper-bright, #fffdfc): product cards, so they lift off the paper section.
+- **Petal Sand** (sand, #f1e3e1): the reviews section ground, the light photo placeholder, row dividers, menu hover.
+- **Hairline** (line, #e5d3d1): the rule above the facts row.
+- **Mauve Stone** (stone, #9a8387): unselected toggle borders and inactive progress dots.
+- **Plum Ink** (ink, #2c2326): all primary text, the marquee band, ink pills.
+- **Soft Ink** (ink-soft, #5b4a4f): secondary text, captions, taglines, placeholder text.
+
+### Contrast (WCAG 2.x)
+| Text on ground | Ratio | Use |
+|---|---|---|
+| ink on limestone / paper / sand | 13.78 / 14.56 / 12.22 | all primary text |
+| ink-soft on limestone / paper / sand / paper-bright | 7.47 / 7.90 / 6.63 / 8.16 | secondary text |
+| paper on clay / clay-deep | 5.37 / 8.43 | rose pills and the rose field |
+| clay on limestone / paper / sand | 5.08 / 5.37 / 4.51 | rose type and links |
+| clay-deep on limestone / sand | 7.98 / 7.08 | links on sand, stars, cross-script accent lines |
+| clay-mist on clay | 4.53 | large type and fills only |
+| earth-soft / clay-tint on earth | 7.94 / 7.82 | footer text and signature |
+| paper on sage | 5.40 | WhatsApp |
+| paper on ink / earth | 14.56 / 13.57 | ink pills, footer |
+| stone on limestone / paper | 3.17 / 3.36 | borders and dots (non-text, ≥3:1) |
 
 ### Named Rules
-**The One Field Rule.** Terracotta floods exactly one section per page (services). Elsewhere clay is a point accent: a pill, a badge, a line of type.
+**The One Field Rule.** Deep rose floods exactly one section per page (services). Elsewhere clay is a point accent: a pill, a badge, a line of type.
 
-**The Sage Is WhatsApp Rule.** Sage marks the WhatsApp channel and the other-script accent line. It never becomes a general secondary button colour.
+**The Sage Is WhatsApp Rule.** Sage marks the WhatsApp channel and nothing else: not accent lines, not icons, never a general secondary button colour.
 
-**The Warm Neutral Rule.** Every neutral, shadow and placeholder stripe is tinted from ink (rgb 42 37 33) or clay; no pure black, white or cool grey appears anywhere.
+**The Blush Neutral Rule.** Every neutral, shadow and placeholder stripe is tinted from ink (rgb 44 35 38) or rose; no pure black, white or cool grey appears anywhere.
+
+**The Not Candy Rule.** Pink stays soft and grown-up: pale, low-chroma tints for grounds and fills, one dark dusty rose for actions. No bright or saturated pink (no fuchsia, bubblegum or hot pink), no pink gradients.
 
 ## Typography
 
@@ -245,14 +263,14 @@ The hero photo is full-bleed to 38.75rem on phones (min(78vh, 46rem) on desktop)
 
 ## Elevation & Depth
 
-Layered and warm. Depth is a tight contact shadow plus one or two long ambient shadows, always offset downward and tinted from ink (or from a deep clay on the terracotta field). Surfaces also layer tonally: limestone ground, paper card, bright-paper product card. Texture is part of depth: every major section paints the same pre-rendered 128px paper grain (`public/textures/grain.webp`, generated deterministically by `scripts/generate-grain.mjs`) together with its background colour.
+Layered and soft. Depth is a tight contact shadow plus one or two long ambient shadows, always offset downward and tinted from ink (or from a deep garnet on the rose field). Surfaces also layer tonally: limestone ground, paper card, bright-paper product card. Texture is part of depth: every major section paints the same pre-rendered 128px paper grain, light and rose-toned (`public/textures/grain.webp`, generated deterministically by `scripts/generate-grain.mjs`) together with its background colour.
 
 ### Shadow Vocabulary
-- **Soft** (`0 1px 2px rgb(42 37 33 / 0.08), 0 8px 18px rgb(42 37 33 / 0.08), 0 24px 44px rgb(42 37 33 / 0.08)`): resting cards: product cards, the visit card, side arches, stacked review backs.
-- **Lift** (`0 1px 2px rgb(42 37 33 / 0.12), 0 10px 24px rgb(42 37 33 / 0.14), 0 30px 60px rgb(42 37 33 / 0.14)`): the one focal object in a group: the book badge, intro arch, centre visit arch, active review card, slider, menu panel, desktop WhatsApp pill.
-- **On Clay** (`0 1px 2px rgb(60 22 8 / 0.2), 0 10px 24px rgb(60 22 8 / 0.22), 0 30px 60px rgb(60 22 8 / 0.18)`): paper cards sitting on the terracotta field.
-- **Bar** (`0 -1px 0 rgb(42 37 33 / 0.08), 0 -10px 30px rgb(42 37 33 / 0.12)`): the sticky bottom bar, casting upward.
-- **Photo Type** (`text-shadow: 0 2px 24px rgb(42 37 33 / 0.35)`): paper type set over a photo (the hero headline lines on the image), for legibility only.
+- **Soft** (`0 1px 2px rgb(44 35 38 / 0.07), 0 8px 18px rgb(44 35 38 / 0.07), 0 24px 44px rgb(44 35 38 / 0.07)`): resting cards: product cards, the visit card, side arches, stacked review backs.
+- **Lift** (`0 1px 2px rgb(44 35 38 / 0.11), 0 10px 24px rgb(44 35 38 / 0.12), 0 30px 60px rgb(44 35 38 / 0.12)`): the one focal object in a group: the book badge, intro arch, centre visit arch, active review card, slider, menu panel, desktop WhatsApp pill.
+- **On Clay** (`0 1px 2px rgb(74 20 36 / 0.2), 0 10px 24px rgb(74 20 36 / 0.22), 0 30px 60px rgb(74 20 36 / 0.18)`): paper cards sitting on the rose field (a deeper version fades in on hover).
+- **Bar** (`0 -1px 0 rgb(44 35 38 / 0.07), 0 -10px 30px rgb(44 35 38 / 0.1)`): the sticky bottom bar, casting upward.
+- **Photo Type** (`text-shadow: 0 2px 24px rgb(44 35 38 / 0.35)`): paper type set over a photo (the hero headline lines on the image), for legibility only.
 
 ### Named Rules
 **The Sunlight Falls Down Rule.** Shadows are soft, layered and offset downward (the bar alone casts upward because it sits at the bottom edge). No hard offset shadows, no glows, no coloured neon.
@@ -288,7 +306,7 @@ Soft, tactile and certain: one shape (the `PillLink`) for every action.
 ### Cards / Containers
 - **Corner Style:** 1.25rem.
 - **Background:** paper on limestone or clay; bright paper in the product rail.
-- **Shadow Strategy:** Soft at rest, On Clay on terracotta, Lift for the single focal card.
+- **Shadow Strategy:** Soft at rest, On Clay on the rose field, Lift for the single focal card.
 - **Border:** none; list rows inside cards divide with a sand hairline.
 - **Internal Padding:** 0.625rem around arch photos; 1.25–1.5rem for text cards.
 
@@ -328,7 +346,7 @@ A paper card with Lift over two rotated (+4deg, -3deg) stacked backs with Soft; 
 - **Do** keep touch targets at least 2.75rem.
 
 ### Don't:
-- **Don't** flood more than one section with clay, or use sage for anything but WhatsApp and the cross-script accent line.
+- **Don't** flood more than one section with clay, or use sage for anything but WhatsApp.
 - **Don't** add eyebrows or kickers above headings; headings stand alone.
 - **Don't** use hard offset shadows, glows or pure black shadows.
 - **Don't** italicize, skew or letter-space Arabic.

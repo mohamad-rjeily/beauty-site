@@ -67,7 +67,7 @@ export const HomePage: GlobalConfig = {
               { en: 'جمالكِ، بعناية', ar: 'Beauty, with care' },
               'text',
               t(
-                'Shown small in sage next to the line above, in the other language. Leave empty to hide.',
+                'Shown small in rose next to the line above, in the other language. Leave empty to hide.',
                 'يظهر صغيراً بلون المريمية بجانب السطر أعلاه، باللغة الأخرى. اتركيه فارغاً لإخفائه.',
               ),
             ),
