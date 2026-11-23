@@ -54,3 +54,6 @@ node_modules/
 
 # Demo seed state (npm run demo:seed / demo:clear)
 /.demo-seed.json
+
+# Local Netlify folder
+.netlify
